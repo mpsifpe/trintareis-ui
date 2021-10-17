@@ -1,8 +1,10 @@
-import React from 'react';
+import react from 'react';
 
 function App() {
   return (
-   <h1>Olá - Bem-Vindo ao Trinta Reis</h1>
+    <div className="App">
+      <h1>Trinta Reis</h1>
+    </div>
   );
 }
 
