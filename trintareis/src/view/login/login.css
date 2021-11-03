@@ -5,12 +5,22 @@
     background-color: #614ea6;
     height: 100vh;
 }
-
 .form-label-group{
     padding-top: 1mm;
-    width: 8cm;
+    width: 25vw;
+    height: 100%;
+    display: flex;
+    border-top-left-radius: 23px;
+    border-bottom-left-radius: 23px;
 }
-
 .form-label-sign-in{
     padding-top: 1mm;
+}
+.signinPrivacy{
+    border: none;
+    background-color: transparent;
+    font-weight: normal;
+    margin-top: 3rem;
+    margin-bottom: 60px;
+    color: aliceblue;
 }
