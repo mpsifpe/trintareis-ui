@@ -8,10 +8,18 @@
 }
 .col-12 a{
     text-decoration: none;
+    color: #614EA6;
+}
+.col-12 a:hover{
     color: #f21667;
 }
 .auth-form__account a{
+    margin-top: 20vw;
     text-decoration: none;
+    color: #614EA6;
+}
+.auth-form__account a:hover{
+    color: #f21667;
 }
 .signinPrivacy{
     border: none;
@@ -30,6 +38,5 @@
     transition: .1s ease-in;
 }
 .opcoes-login span{
-
     color: darkblue;
 }
