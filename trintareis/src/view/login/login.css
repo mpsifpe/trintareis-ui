@@ -5,16 +5,13 @@
     background-color: #614ea6;
     height: 100vh;
 }
-.form-label-group{
-    padding-top: 1mm;
-    width: 25vw;
-    height: 100%;
-    display: flex;
-    border-top-left-radius: 23px;
-    border-bottom-left-radius: 23px;
+.btn-lg{
+    background-color: #fff;
+    color: #614EA6;
 }
-.form-label-sign-in{
-    padding-top: 1mm;
+.btn-lg:hover{
+    background-color: #f21667;
+    color: #fff;
 }
 .signinPrivacy{
     border: none;
@@ -23,4 +20,12 @@
     margin-top: 3rem;
     margin-bottom: 60px;
     color: aliceblue;
+}
+.opcoes-login a{
+    text-decoration: none;
+    color: #fff;
+}
+.opcoes-login a:hover{
+    color: #f21667;
+    transition: .1s ease-in;
 }
