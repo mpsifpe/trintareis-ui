@@ -1,10 +1,3 @@
-.login-content{
-    width: 100%;
-    padding: 15%;
-    margin: auto;
-    background-color: #614ea6;
-    height: 100vh;
-}
 .btn-lg{
     background-color: #fff;
     color: #614EA6;
@@ -19,13 +12,17 @@
     font-weight: normal;
     margin-top: 3rem;
     margin-bottom: 60px;
-    color: aliceblue;
+    color: black;
 }
 .opcoes-login a{
     text-decoration: none;
-    color: #fff;
+    color: darkblue;
 }
 .opcoes-login a:hover{
     color: #f21667;
     transition: .1s ease-in;
+}
+.opcoes-login span{
+
+    color: darkblue;
 }
