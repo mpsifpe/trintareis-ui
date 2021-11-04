@@ -6,6 +6,13 @@
     background-color: #f21667;
     color: #fff;
 }
+.col-12 a{
+    text-decoration: none;
+    color: #f21667;
+}
+.auth-form__account a{
+    text-decoration: none;
+}
 .signinPrivacy{
     border: none;
     background-color: transparent;
