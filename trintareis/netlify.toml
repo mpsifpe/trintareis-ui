@@ -1,4 +1,4 @@
 [build]
-base = "trintareis/trintareis"
-command = "npm run build"
+base = "."
+command = "CI= npm run build"
 publish = "build/"
