@@ -1,6 +1,59 @@
-.btn-lg{
+@import 'https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css';
+
+.div-root{
+    background-color: rgb(245, 245, 241);
+    height: 105vh;
+}
+.div-container{
+    max-width: 900px;
+    margin: 0.5rem auto;
     background-color: #fff;
-    color: #614EA6;
+    height: 450px;
+    border-radius: 1vw;
+}
+.text-logo {    
+    margin-left: 40%;
+}
+.text-logo a{
+    font-weight: 900;
+    text-decoration: none;
+    font-size: 3vw;
+    color: #9ACD32;
+    font-style: normal;
+}
+.signin-container__form{
+    position: relative;
+    justify-content: center;
+    height: 100%;
+    padding: 0 5rem;
+    border-right: 1px solid #f8f8f8;
+    min-width: 480px;
+}
+.select, .textfield{
+    position: relative;
+    display: block;
+    width: 100%;
+    font-size: 1.4rem;
+    line-height: 1.5;
+    padding-top: 0.8rem;
+    cursor: initial;
+}
+.form-signin h3{
+    color: #363636;
+    text-align: center;
+}
+.form-signin input{
+    margin: auto;
+}
+.btn-lg{
+    background-color: #9ACD32;
+    color: #fff;
+    margin-top: 10px;
+}
+.btn-create{
+    background-color: #4682B4;
+    color: #fff;
+    margin-top: 10px;
 }
 .btn-lg:hover{
     background-color: #f21667;
@@ -39,4 +92,21 @@
 }
 .opcoes-login span{
     color: darkblue;
+}
+.div-create-account h1{
+    color: #f21667;
+
+}
+.div-create-account button{
+    background-color: #fff;
+    border-radius: 0.5vw;
+    color: #f21667;
+    height: 35px;
+    width: 95%;
+}
+.div-create-account button:hover{
+    background-color: #f21667;
+    border-radius: 1vw;
+    border-color: #f21667;
+    color: #fff;
 }
