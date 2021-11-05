@@ -13,17 +13,20 @@ function Login() {
                 <div className="div-container container-fluid d-flex justify-content-between align-items-center w-100">
                     <div className="form-signin mx-auto">
                         <form className="signin-container__form">
-                            <h3 class="fw-bold">Acesse sua conta</h3>
+                            <h1 class="title">Já têm uma conta?</h1>
+                            <p className="subtitle">Faça seu login e interaja com milhares de pessoas!</p>
                             <fieldset className="textfield mb-24 mt32">
-                                <input type="email" class="form-control my-2" placeholder="Digite seu email*" />
+                                <label>E-mail</label>
+                                <input type="email" class="form-control my-2" placeholder="Digite seu e-mail" />
                             </fieldset>
                             <fieldset className="textfield mb-12">
-                                <input type="password" class="form-control my-2" placeholder="Digite sua Senha*"/>
+                                <label>Senha</label>
+                                <input type="password" class="form-control my-2" placeholder="Digite sua Senha"/>
                             </fieldset>
+                            <button className="w-100 btn btn-lg fw-bold" type="submit">Entrar</button>
                             <div class="col-12 text-end mb-8">
                                 <a href="#" class="color-primary font-7 mb-24">Esqueci minha senha</a>
                             </div>
-                            <button className="w-100 btn btn-lg fw-bold" type="submit">Entrar</button>
 
                             {/* <div className="msg-login text-dark text-center my-5">
                                     <span><strong>WoW!</strong> Você está conectado! &#128526;</span>
@@ -39,9 +42,11 @@ function Login() {
                         </form>
                     </div>
                     <div className="div-create-account mx-auto">
-                        <h1>Criar uma conta é rápido,</h1>
-                        <h1>fácil e gratuito!</h1>
-                        <button type="submit">Criar minha conta</button>
+                        <h2>Criar uma conta</h2>
+                        <h2>é rápido, fácil</h2>
+                        <h2>e gratuito!!</h2>
+                        <h2>Faça agora mesmo &#128521;</h2>
+                        <button className="w-100 btn btn-lg fw-bold" type="submit">Criar minha conta</button>
                     </div>
                 </div>
             </main>

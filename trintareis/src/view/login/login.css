@@ -29,6 +29,20 @@
     border-right: 1px solid #f8f8f8;
     min-width: 480px;
 }
+.signin-container__form p{
+    color: #363636;
+}
+.title{
+    font-weight: 800;
+    letter-spacing: -.5px;
+    font-size: 2em;
+    color: #696969;
+}
+.subtitle{
+    font-weight: 1.2em;
+    letter-spacing: -.3px;
+    margin-bottom: 1em;
+}
 .select, .textfield{
     position: relative;
     display: block;
@@ -37,6 +51,16 @@
     line-height: 1.5;
     padding-top: 0.8rem;
     cursor: initial;
+}
+.textfield input::placeholder {
+    color: #f21667;
+  }
+.textfield label{
+    display: block;
+    text-align: left;
+    box-sizing: border-box;
+    color: #696969;
+    font-size: 1.2vw;
 }
 .form-signin h3{
     color: #363636;
@@ -50,17 +74,16 @@
     color: #fff;
     margin-top: 10px;
 }
+.btn-lg:hover{
+    background-color: #3CB371;
+    color: #fff;
+}
 .btn-create{
     background-color: #4682B4;
     color: #fff;
     margin-top: 10px;
 }
-.btn-lg:hover{
-    background-color: #f21667;
-    color: #fff;
-}
 .col-12 a{
-    text-decoration: none;
     color: #614EA6;
 }
 .col-12 a:hover{
@@ -93,20 +116,21 @@
 .opcoes-login span{
     color: darkblue;
 }
-.div-create-account h1{
+.div-create-account{
+    padding-top: 52px;
+}
+.div-create-account h2{
     color: #f21667;
-
 }
 .div-create-account button{
-    background-color: #fff;
-    border-radius: 0.5vw;
-    color: #f21667;
-    height: 35px;
-    width: 95%;
+    background-color: #f21667;
+    color: #fff;
+    border-color: #f21667;
+    margin-top: 22px;
 }
 .div-create-account button:hover{
-    background-color: #f21667;
-    border-radius: 1vw;
-    border-color: #f21667;
+    background-color: #614EA6;
+    border-radius: 0.5vw;
+    border-color: #614EA6;
     color: #fff;
 }
