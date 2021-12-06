@@ -22,8 +22,9 @@ function NewUser() {
     
     return (
         <div className="form-cadastro">
-            <for className="text-center form-login mx-auto mt-5">
-                <h1 class="title">Cadastro</h1>
+            <for className="form-login mx-auto mt-5">
+                <h1 class="title">Cadastre-se</h1>
+                <p className="subtitle">É rápido e fácil!</p>
                 <fieldset className="textfield mb-24 mt32">
                     <label>E-mail</label>
                     <input onChange={(e) => setEmail(e.target.value)} type="email" class="form-control my-2" placeholder="Digite seu e-mail" />

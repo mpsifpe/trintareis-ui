@@ -13,6 +13,11 @@
     color: #696969;
     padding-top: 2.0rem;
 }
+.form-login p{
+    font-weight: 1.2em;
+    letter-spacing: -.3px;
+    margin-bottom: 1em;
+}
 .btn-cadastro{
     background-color: #614EA6;
     color: #fff;
