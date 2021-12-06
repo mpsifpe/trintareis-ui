@@ -10,6 +10,11 @@ function NewUser() {
     const [carregando, setCarregando] = useState();
 
     function cadastrar() {
+        if(!email || !senha){
+            alert('Você precisa informa o email e senha para realizar o cadastro!');
+            return;
+        }
+
         setCarregando(1);
         firebase.auth().createUserWithEmailAndPassword(email, senha).then(resultado => {
             setCarregando(0);
