@@ -75,7 +75,7 @@
     margin-top: 10px;
 }
 .btn-lg:hover{
-    background-color: #3CB371;
+    background-color: #89b82b;
     color: #fff;
 }
 .btn-create{
@@ -129,8 +129,8 @@
     margin-top: 22px;
 }
 .div-create-account button:hover{
-    background-color: #614EA6;
+    background-color: #c71556;
     border-radius: 0.5vw;
-    border-color: #614EA6;
+    border-color: #c71556;
     color: #fff;
 }
