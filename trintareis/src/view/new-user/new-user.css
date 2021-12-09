@@ -19,11 +19,11 @@
     margin-bottom: 1em;
 }
 .btn-cadastro{
-    background-color: #614EA6;
+    background-color: #9ACD32;
     color: #fff;
 }
 .btn-cadastro:hover{
-    background-color: #F21667;
+    background-color: #89b82b;
     color: #fff;
 }
 .select, .textfield{

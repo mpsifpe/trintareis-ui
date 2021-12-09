@@ -17,7 +17,7 @@ function Login() {
     }
     return (
         <div className="div-main">
-            <nav className="navbar">
+            <nav className="navbar_login">
                 <div className="text-logo container-fluid">
                     <a href="#">&#9818;30Reis</a>
                 </div>

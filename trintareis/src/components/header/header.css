@@ -1,0 +1,176 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}   
+
+body{
+    background-color: #ccc;
+}
+
+.header{
+    background-color: white;
+    padding: 10px 0;
+    display: flex;
+}
+
+.headerLeft{
+    width: 50%;
+    flex-direction: row;
+    display: flex;
+}
+
+.logo-fb svg{
+    color: #9ACD32;
+    font-size: 40px;
+    margin: 0 40px;
+}
+
+.search-fb{
+    background-color: rgb(230, 230, 230);
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 40px;
+}
+
+.search-fb svg{
+    color: grey;
+    font-size: 15px;
+}
+
+.home-fb{
+    cursor: pointer;
+    margin-left: 25px;
+    position: relative;
+    padding: 8px 10px;
+}
+
+.home-fb:hover{
+    background-color: rgb(200, 200, 200);
+}
+
+.home-fb svg{
+    color: gray;
+    font-size: 25px;
+}
+
+.friend-fb{
+    cursor: pointer;
+    margin-left: 25px;
+    position: relative;
+    padding: 8px 10px;
+}
+
+.friend-fb:hover{
+    background-color: rgb(200, 200, 200);
+}
+
+.friend-fb svg{
+    color: gray;
+    font-size: 25px;
+}
+
+.chat-fb{
+    cursor: pointer;
+    margin-left: 25px;
+    position: relative;
+    padding: 8px 10px;
+}
+
+.chat-fb:hover{
+    background-color: rgb(200, 200, 200);
+}
+
+.chat-fb svg{
+    color: gray;
+    font-size: 25px;
+}
+
+.university-fb{
+    cursor: pointer;
+    margin-left: 25px;
+    position: relative;
+    padding: 8px 10px;
+}
+
+.university-fb:hover{
+    background-color: rgb(200, 200, 200);
+}
+
+.university-fb svg{
+    color: gray;
+    font-size: 25px;
+}
+
+.notification-fb{
+    cursor: pointer;
+    margin-left: 25px;
+    position: relative;
+    padding: 8px 10px;
+}
+
+.notification-fb:hover{
+    background-color: rgb(200, 200, 200);
+}
+
+.notification-fb svg{
+    color: gray;
+    font-size: 25px;
+}
+
+.school-fb{
+    cursor: pointer;
+    margin-left: 25px;
+    position: relative;
+    padding: 8px 10px;
+}
+
+.school-fb:hover{
+    background-color: rgb(200, 200, 200);
+}
+
+.school-fb svg{
+    color: gray;
+    font-size: 25px;
+}
+
+.university-fb svg{
+    color: gray;
+    font-size: 25px;
+}
+
+.group-fb{
+    cursor: pointer;
+    margin-left: 25px;
+    position: relative;
+    padding: 8px 10px;
+}
+
+.group-fb:hover{
+    background-color: rgb(200, 200, 200);
+}
+
+.group-fb svg{
+    color: gray;
+    font-size: 25px;
+}
+
+.headerRight{
+    width: 50%;
+    text-align: right;
+    margin: 0 50px;
+}
+
+.plus-btn{
+    width: 40px;
+    height: 40px;
+    display: inline-block;
+    border-radius: 20px;
+    background-color: rgb(230, 230, 230);
+    text-align: center;
+    line-height: 36px;
+    font-size: 28px;
+    cursor: pointer;
+}
