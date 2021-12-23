@@ -2,19 +2,25 @@ import React, { useState } from 'react';
 import './login.css';
 import firebase from '../../config/firebase';
 import 'firebase/auth';
-import {Link} from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
+
+import { useSelector, useDispatch } from 'react-redux';
 
 function Login() {
     const [email, setEmail] = useState();
     const [senha, setSenha] = useState();
 
+    const dispatch = useDispatch();
+
     function singIn() {
         firebase.auth().signInWithEmailAndPassword(email, senha).then(resultado => {
-            alert('Usuário conectado!')
+            //alert('Usuário conectado!')
+            dispatch({ type: 'LOG_IN', emailUser: email });
         }).catch(erro => {
             alert(erro)
         })
     }
+
     return (
         <div className="div-main">
             <nav className="navbar_login">
@@ -24,6 +30,8 @@ function Login() {
             </nav>
             <div className="div-container container-fluid d-flex justify-content-between align-items-center w-100">
                 <div className="form-signin mx-auto">
+                    {useSelector(state => state.loggedUSer) > 0 ? <Redirect to='/home' /> : null}
+
                     <form className="signin-container__form">
                         <h1 class="title">Já têm uma conta?</h1>
                         <p className="subtitle">Faça seu login e interaja com milhares de pessoas!</p>

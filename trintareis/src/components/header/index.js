@@ -2,13 +2,15 @@ import React from 'react';
 import { FaHome, FaRocketchat, FaEarlybirds, FaUserFriends, FaUniversity, FaSearch } from "react-icons/fa";
 import { IoIosNotifications, IoIosSchool } from "react-icons/io";
 import { MdOutlineGroups } from "react-icons/md";
-import { AiFillVideoCamera, AiFillPicture } from "react-icons/ai";
-import { BsCalendarDate } from "react-icons/bs";
 
-import Stories from '../../components/stories/index';
-import minios_bg from '../../resources/minios.jpg';
+
+import Stories from '../stories/index';
+import FeedForm from '../feed-form/index';
+import FeedPost from '../feed-post/FeedPost';
+
 
 import './header.css';
+import '../stories/stories.css'
 import { Link } from 'react-router-dom';
 
 function Header() {
@@ -50,42 +52,11 @@ function Header() {
                     </div>
                 </div>
             </div>
-
-            {/* <Stories/> */}
-
-            <div className="feed">
-                <div className="feedForm">
-                    <img src={minios_bg} />
-                    <input type="text" placeholder="Começar Publicar" />
-
-                    <div className="feedIcons">
-                        <div className="iconSingle img">
-                            <AiFillPicture />
-                            <span>Foto</span>
-                        </div>
-                        <div className="iconSingle">
-                            <AiFillVideoCamera />
-                            <span>Vídeo</span>
-                        </div>
-                        <div className="iconSingle evn">
-                            <BsCalendarDate />
-                            <span>Evento</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div className="feedPost">
-                    <div className="feedPostSingle">
-                        <div className="feedPost__profile">
-                            <img src={minios_bg} />
-                            <h3>TrintaReis<br/><span>20:00</span></h3>
-                        </div>
-                        <div className="feedPost__content">
-                            <p>Fazer parte do Trinta Reis significa ser do time vencedor!!</p>
-                            <img src="https://pbs.twimg.com/media/EKkDakiXsAECxgW.jpg" />
-                        </div>
-                    </div>
-                </div>
+            {/* <Stories /> */}
+            <FeedForm />
+            <FeedPost nome="Trinta Reis" horario="20:00 h" conteudo="Conheça os benéficios da maior rede social vocacional"/>
+            <FeedPost nome="IFPE" horario="10:00 h" conteudo="Incrições para os cursos de pós-graduação estão ABERTAS!!!"/>
+            <FeedPost nome="Marcos" horario="13:30 h" conteudo="Galera criando criei um grupo de estudo sobre tecnologias frontend."/>
         </div>
     )
 }
