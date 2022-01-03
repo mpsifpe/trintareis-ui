@@ -45,7 +45,7 @@ function Login() {
                         </fieldset>
                         <button onClick={singIn} className="w-100 btn btn-lg fw-bold" type="button">Entrar</button>
                         <div class="col-12 text-end mb-8">
-                            <a href="#" class="color-primary font-7 mb-24">Esqueci minha senha</a>
+                            <Link to="/recoveryPassword" className="color-primary font-7 mb-24">Esqueci minha senha</Link>
                         </div>
                     </form>
                 </div>
