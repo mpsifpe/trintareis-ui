@@ -26,13 +26,12 @@ body{
     margin: 0 40px;
 }
 
-.search-fb{
-    background-color: rgb(230, 230, 230);
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
+.search-form{    
+    width: 20px;
+    height: 20px;
     text-align: center;
     line-height: 40px;
+    padding: 8px 10px;
 }
 
 .search-fb svg{
@@ -42,7 +41,7 @@ body{
 
 .home-fb{
     cursor: pointer;
-    margin-left: 25px;
+    margin-left: 250px;
     position: relative;
     padding: 8px 10px;
 }
@@ -54,6 +53,10 @@ body{
 .home-fb svg{
     color: gray;
     font-size: 25px;
+}
+
+.home-fb label{
+    font-size: 12px;
 }
 
 .friend-fb{
@@ -72,6 +75,10 @@ body{
     font-size: 25px;
 }
 
+.friend-fb label{
+    font-size: 12px;
+}
+
 .chat-fb{
     cursor: pointer;
     margin-left: 25px;
@@ -86,6 +93,10 @@ body{
 .chat-fb svg{
     color: gray;
     font-size: 25px;
+}
+
+.chat-fb label{
+    font-size: 12px;
 }
 
 .university-fb{
@@ -104,6 +115,10 @@ body{
     font-size: 25px;
 }
 
+.university-fb label{
+    font-size: 12px;
+}
+
 .notification-fb{
     cursor: pointer;
     margin-left: 25px;
@@ -120,6 +135,10 @@ body{
     font-size: 25px;
 }
 
+.notification-fb label{
+    font-size: 12px;
+}
+
 .school-fb{
     cursor: pointer;
     margin-left: 25px;
@@ -134,6 +153,10 @@ body{
 .school-fb svg{
     color: gray;
     font-size: 25px;
+}
+
+.school-fb label{
+    font-size: 12px;
 }
 
 .university-fb svg{
@@ -155,6 +178,10 @@ body{
 .group-fb svg{
     color: gray;
     font-size: 25px;
+}
+
+.group-fb label{
+    font-size: 12px;
 }
 
 .headerRight{
