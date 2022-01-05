@@ -1,5 +1,6 @@
 import { AiFillVideoCamera, AiFillPicture } from "react-icons/ai";
 import { BsCalendarDate } from "react-icons/bs";
+import { Link } from "react-router-dom";
 import minios_bg from '../../resources/minios.jpg';
 
 export default function () {
@@ -8,19 +9,32 @@ export default function () {
             <div className="feedForm">
                 <img src={minios_bg} />
                 <input type="text" placeholder="Começar Publicar" />
-
                 <div className="feedIcons">
                     <div className="iconSingle img">
-                        <AiFillPicture />
-                        <span>Foto</span>
+                        <button>
+                            <AiFillPicture />
+                            <span className="">
+                                Foto
+                            </span>
+                        </button>
                     </div>
                     <div className="iconSingle">
-                        <AiFillVideoCamera />
-                        <span>Vídeo</span>
+                        <button className="">
+                            <AiFillVideoCamera />
+                            <span className="">
+                                Vídeo
+                            </span>
+                        </button>
                     </div>
                     <div className="iconSingle evn">
-                        <BsCalendarDate />
-                        <span>Evento</span>
+                        <Link to='event'>
+                            <button type="submit" className="">
+                                <BsCalendarDate />
+                                <span class="artdeco-button__text">
+                                    Evento
+                                </span>
+                            </button>
+                        </Link>
                     </div>
                 </div>
             </div>
