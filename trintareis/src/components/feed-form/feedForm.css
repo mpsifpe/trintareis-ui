@@ -1,0 +1,27 @@
+.feedForm__icons{
+    padding: 7px 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    column-gap: 8px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    font-weight: 500;
+}
+
+.feedForm__reaction button{
+    background-color: white;
+    border: none;    
+    padding: 10px 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    column-gap: 8px;
+    border-radius: 8px;
+    font-weight: 500;
+}
+
+.feedForm__reaction:hover button{
+    background-color: rgb(231, 223, 223, 0.4);
+    border-radius: 8px;
+}

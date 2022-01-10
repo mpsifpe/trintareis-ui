@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaHome, FaRocketchat, FaEarlybirds, FaUserFriends, FaUniversity, FaSearch } from "react-icons/fa";
 import { IoIosNotifications, IoIosSchool } from "react-icons/io";
 import { MdOutlineGroups } from "react-icons/md";
+import firebase from '../../config/firebase';
 
 
 import Stories from '../stories/index';
@@ -14,6 +15,21 @@ import '../stories/stories.css'
 import { Link } from 'react-router-dom';
 
 function Header() {
+    const [eventos, setEventos] = useState([]);
+    let listEventos = [];
+
+    useEffect(() => {
+        firebase.firestore().collection('events').get().then(async (result) => {
+            await result.docs.forEach(doc => {
+                listEventos.push({
+                    id: doc.id,
+                    ...doc.data()
+                })
+            })            
+            setEventos(listEventos);
+        })
+    });
+
     return (
         <div className="App">
             <div className="header">
@@ -64,10 +80,13 @@ function Header() {
                 </div>
             </div>
             {/* <Stories /> */}
-            <FeedForm />
-            <FeedPost nome="Trinta Reis" horario="20:00 h" conteudo="Conheça os benéficios da maior rede social vocacional" />
-            <FeedPost nome="IFPE" horario="10:00 h" conteudo="Incrições para os cursos de pós-graduação estão ABERTAS!!!" />
-            <FeedPost nome="Marcos" horario="13:30 h" conteudo="Galera criando criei um grupo de estudo sobre tecnologias frontend." />
+            <main className='feed_content'>
+                <FeedForm />
+                {eventos.map(item => <FeedPost key={item.id} img={item.photo} title={item.title} nome="Trinta Reis" horario={item.hour} conteudo={item.details} />)}
+                {/* <FeedPost nome="Trinta Reis" horario="20:00 h" conteudo="Conheça os benéficios da maior rede social vocacional" />
+                <FeedPost nome="IFPE" horario="10:00 h" conteudo="Incrições para os cursos de pós-graduação estão ABERTAS!!!" />
+                <FeedPost nome="Marcos" horario="13:30 h" conteudo="Galera criando criei um grupo de estudo sobre tecnologias frontend." /> */}
+            </main>
         </div>
     )
 }

@@ -2,6 +2,7 @@ import { AiFillVideoCamera, AiFillPicture } from "react-icons/ai";
 import { BsCalendarDate } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import minios_bg from '../../resources/minios.jpg';
+import './feedForm.css'
 
 export default function () {
     return (
@@ -9,28 +10,28 @@ export default function () {
             <div className="feedForm">
                 <img src={minios_bg} />
                 <input type="text" placeholder="Começar Publicar" />
-                <div className="feedIcons">
-                    <div className="iconSingle img">
+                <div className="feedForm__icons">
+                    <div className="iconSingle img feedForm__reaction">
                         <button>
                             <AiFillPicture />
-                            <span className="">
+                            <span>
                                 Foto
                             </span>
                         </button>
                     </div>
-                    <div className="iconSingle">
-                        <button className="">
+                    <div className="iconSingle feedForm__reaction">
+                        <button>
                             <AiFillVideoCamera />
-                            <span className="">
+                            <span>
                                 Vídeo
                             </span>
                         </button>
                     </div>
-                    <div className="iconSingle evn">
-                        <Link to='event'>
-                            <button type="submit" className="">
+                    <div className="iconSingle evn feedForm__reaction">
+                        <Link to='event' style={{ textDecoration: 'none' }}>
+                            <button type="submit">
                                 <BsCalendarDate />
-                                <span class="artdeco-button__text">
+                                <span className="feedForm__link">
                                     Evento
                                 </span>
                             </button>

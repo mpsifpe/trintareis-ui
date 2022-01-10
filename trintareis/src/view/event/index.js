@@ -7,13 +7,13 @@ import { useSelector } from 'react-redux';
 
 function ModalEvent() {
 
-    const [carregando, setCarregando] = useState();
-    const [titulo, setTitulo] = useState();
-    const [tipo, setTipo] = useState();
-    const [detalhes, setDetalhes] = useState();
+    const [load, setLoad] = useState();
+    const [title, setTitle] = useState();
+    const [type, setType] = useState();
+    const [details, setDetails] = useState();
     const [data, setData] = useState();
-    const [hora, setHora] = useState();
-    const [foto, setFoto] = useState();
+    const [hour, setHour] = useState();
+    const [photo, setPhoto] = useState();
     const emailUser = useSelector(state => state.emailUser);
 
     const storege = firebase.storage();
@@ -21,24 +21,24 @@ function ModalEvent() {
     const time = firebase.firestore.Timestamp;
 
     function enroll() {
-        setCarregando(1);
-        storege.ref(`images/${foto.name}`).put(foto).then(() => {
-            db.collection('eventos').add({
-                titulo: titulo,
-                tipo: tipo,
-                detalhes: detalhes,
+        setLoad(1);
+        storege.ref(`images/${photo.name}`).put(photo).then(() => {
+            db.collection('events').add({
+                title: title,
+                type: type,
+                details: details,
                 data: data,
-                hora: hora,
-                foto: foto.name,
+                hour: hour,
+                photo: photo.name,
                 emailUser: emailUser,
                 views: 0,
-                publico: 1,
-                criacao: new Date()
+                public: 1,
+                dataTime: new Date()
             }).then((docRef) => {
-                setCarregando(0);
+                setLoad(0);
                 console.log("Document written with ID: ", docRef.id);
             }).catch((error) => {
-                setCarregando(0);
+                setLoad(0);
                 console.error("Error adding document: ", error);
             });
         });
@@ -54,13 +54,13 @@ function ModalEvent() {
                     <form className="form">
                         <div className="form-title">
                             <label>Título:</label>
-                            <input onChange={(e) => setTitulo(e.target.value)} type="text" className="form-control" placeholder="Adicionar um título ao evento" />
+                            <input onChange={(e) => setTitle(e.target.value)} type="text" className="form-control" placeholder="Adicionar um título ao evento" />
                         </div>
                         <div className="row">
                             <div className="form-group">
                                 <div className="form-group">
                                     <label>Tipo de Evento:</label>
-                                    <select onChange={(e) => setTipo(e.target.value)} className="form-control">
+                                    <select onChange={(e) => setType(e.target.value)} className="form-control">
                                         <option disabled selected value>-- Selecione um tipo --</option>
                                         <option>On-line</option>
                                         <option>Presencial</option>
@@ -68,7 +68,7 @@ function ModalEvent() {
                                 </div>
                                 <div className="form-group">
                                     <label>Descrição do evento</label>
-                                    <textarea onChange={(e) => setDetalhes(e.target.value)} className="form-control" rows="3" placeholder="Ex.: tópicos, programa, etc."></textarea>
+                                    <textarea onChange={(e) => setDetails(e.target.value)} className="form-control" rows="3" placeholder="Ex.: tópicos, programa, etc."></textarea>
                                 </div>
                                 <div className="form-group row">
                                     <div className="col-6">
@@ -77,7 +77,7 @@ function ModalEvent() {
                                     </div>
                                     <div className="col-6">
                                         <label>Hora de início</label>
-                                        <input onChange={(e) => setHora(e.target.value)} className="form-control" type="time"></input>
+                                        <input onChange={(e) => setHour(e.target.value)} className="form-control" type="time"></input>
                                     </div>
                                 </div>
                                 {/* <select className="form-control">
@@ -87,11 +87,11 @@ function ModalEvent() {
                         </div>
                         <div className="form">
                             <label>Carregar imagem:</label>
-                            <input onChange={(e) => setFoto(e.target.files[0])} type="file" className="form-control" />
+                            <input onChange={(e) => setPhoto(e.target.files[0])} type="file" className="form-control" />
                         </div>
                         <div className="row">
                             {
-                                carregando ? <button className="form-control btn btn-lg btn-block mt-3 mb-5 btn-cadastro" type="button" disabled>
+                                load ? <button className="form-control btn btn-lg btn-block mt-3 mb-5 btn-cadastro" type="button" disabled>
                                     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                                 </button> :
                                     <button onClick={enroll} type="button" className="form-control btn btn-lg btn-block mt-3 mb-5 btn-cadastro">Públicar Evento</button>
