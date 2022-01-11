@@ -27,9 +27,11 @@ function Header() {
                     <div className="home-fb">
                         <FaHome />
                     </div>
-                    <div className="friend-fb">
-                        <FaUserFriends />
-                    </div>
+                    <Link to="/myfriends">
+                        <div className="friend-fb">
+                            <FaUserFriends />
+                        </div>
+                    </Link>
                     <div className="chat-fb">
                         <FaRocketchat />
                     </div>
@@ -54,9 +56,9 @@ function Header() {
             </div>
             {/* <Stories /> */}
             <FeedForm />
-            <FeedPost nome="Trinta Reis" horario="20:00 h" conteudo="Conheça os benéficios da maior rede social vocacional"/>
-            <FeedPost nome="IFPE" horario="10:00 h" conteudo="Incrições para os cursos de pós-graduação estão ABERTAS!!!"/>
-            <FeedPost nome="Marcos" horario="13:30 h" conteudo="Galera criando criei um grupo de estudo sobre tecnologias frontend."/>
+            <FeedPost nome="Trinta Reis" horario="20:00 h" conteudo="Conheça os benéficios da maior rede social vocacional" />
+            <FeedPost nome="IFPE" horario="10:00 h" conteudo="Incrições para os cursos de pós-graduação estão ABERTAS!!!" />
+            <FeedPost nome="Marcos" horario="13:30 h" conteudo="Galera criando criei um grupo de estudo sobre tecnologias frontend." />
         </div>
     )
 }
