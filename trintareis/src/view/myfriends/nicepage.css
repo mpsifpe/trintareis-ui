@@ -8398,6 +8398,8 @@ section.u-image,
 }
 .u-image-circle.u-image {
   border-radius: 50% !important;
+  width:160px;
+  height:150px;
 }
 .u-image-round {
   border-radius: 10px;

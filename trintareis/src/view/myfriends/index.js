@@ -75,50 +75,85 @@ function MyFriends() {
 
 
             <section class="u-align-center u-clearfix u-grey-10 u-section-2" id="sec-bd5e">
-                    
-                    <div class="u-expanded-width-sm u-expanded-width-xs u-list u-list-1">
-                        <div class="u-repeater u-repeater-1 ">
-                        
+
+                <div class="">
+                    <div class="u-repeater u-repeater-1 ">
 
 
 
-                        <div  class="box shadow-interpolacao u-align-center u-container-style u-list-item u-repeater-item u-white u-list-item-3">
-                                <div class="u-container-layout u-similar-container u-container-layout-3">
-                                    <div alt="" class="u-border-13 u-border-palette-2-base u-image u-image-circle u-image-3" data-image-width="598" data-image-height="598"></div>
-                                    <h4 class="u-text u-text-default u-text-6">Roberto Carlos</h4>
-                                    <p class="u-text u-text-7"> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. </p>
-                                    <a href="" class="botao">Conectar</a>
-                                </div>
+
+                    <div class="box shadow-interpolacao u-align-center u-container-style u-list-item u-repeater-item u-white u-list-item-3">
+                            <div class="u-container-layout u-similar-container u-container-layout-3">
+                                <div alt="" class=" u-image u-image-circle u-image-3 shadow-interpolacao" data-image-width="598" data-image-height="598"></div>
+                                <h4 class="u-text u-text-default u-text-6">Roberto Carlos</h4>
+                                <p class="u-text u-text-7"> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. </p>
+                                <a href="" class="botao shadow-interpolacao ">Conectar</a>
                             </div>
-
-                            <div  class="box shadow-interpolacao u-align-center u-container-style u-list-item u-repeater-item u-white u-list-item-3">
-                                <div class="u-container-layout u-similar-container u-container-layout-3">
-                                    <div alt="" class="u-border-13 u-border-palette-2-base u-image u-image-circle u-image-3" data-image-width="598" data-image-height="598"></div>
-                                    <h4 class="u-text u-text-default u-text-6">Julio Cesar</h4>
-                                    <p class="u-text u-text-7"> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. </p>
-                                    <a href="" class="botao">Conectar</a>
-                                </div>
-                            </div>
-
-                            <div  class="box shadow-interpolacao u-align-center u-container-style u-list-item u-repeater-item u-white u-list-item-3">
-                                <div class="u-container-layout u-similar-container u-container-layout-3">
-                                    <div alt="" class="u-border-13 u-border-palette-2-base u-image u-image-circle u-image-3" data-image-width="598" data-image-height="598"></div>
-                                    <h4 class="u-text u-text-default u-text-6">Roberto Carlos</h4>
-                                    <p class="u-text u-text-7"> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. </p>
-                                    <a href="" class="botao">Conectar</a>
-                                </div>
-                            </div>
-
-
-
-
-
-
-
-
-
                         </div>
+
+                        <div class="box shadow-interpolacao u-align-center u-container-style u-list-item u-repeater-item u-white u-list-item-3">
+                            <div class="u-container-layout u-similar-container u-container-layout-3">
+                                <div alt="" class=" u-image u-image-circle u-image-3 shadow-interpolacao" data-image-width="598" data-image-height="598"></div>
+                                <h4 class="u-text u-text-default u-text-6">Roberto Carlos</h4>
+                                <p class="u-text u-text-7"> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. </p>
+                                <a href="" class="botao shadow-interpolacao ">Conectar</a>
+                            </div>
+                        </div>
+
+                        <div class="box shadow-interpolacao u-align-center u-container-style u-list-item u-repeater-item u-white u-list-item-3">
+                            <div class="u-container-layout u-similar-container u-container-layout-3">
+                                <div alt="" class=" u-image u-image-circle u-image-3 shadow-interpolacao" data-image-width="598" data-image-height="598"></div>
+                                <h4 class="u-text u-text-default u-text-6">Roberto Carlos</h4>
+                                <p class="u-text u-text-7"> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. </p>
+                                <a href="" class="botao shadow-interpolacao ">Conectar</a>
+                            </div>
+                        </div>
+
+                        <div class="box shadow-interpolacao u-align-center u-container-style u-list-item u-repeater-item u-white u-list-item-3">
+                            <div class="u-container-layout u-similar-container u-container-layout-3">
+                                <div alt="" class=" u-image u-image-circle u-image-3 shadow-interpolacao" data-image-width="598" data-image-height="598"></div>
+                                <h4 class="u-text u-text-default u-text-6">Roberto Carlos</h4>
+                                <p class="u-text u-text-7"> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. </p>
+                                <a href="" class="botao shadow-interpolacao ">Conectar</a>
+                            </div>
+                        </div>
+
+                        <div class="box shadow-interpolacao u-align-center u-container-style u-list-item u-repeater-item u-white u-list-item-3">
+                            <div class="u-container-layout u-similar-container u-container-layout-3">
+                                <div alt="" class=" u-image u-image-circle u-image-3 shadow-interpolacao" data-image-width="598" data-image-height="598"></div>
+                                <h4 class="u-text u-text-default u-text-6">Roberto Carlos</h4>
+                                <p class="u-text u-text-7"> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. </p>
+                                <a href="" class="botao shadow-interpolacao ">Conectar</a>
+                            </div>
+                        </div>
+
+                        <div class="box shadow-interpolacao u-align-center u-container-style u-list-item u-repeater-item u-white u-list-item-3">
+                            <div class="u-container-layout u-similar-container u-container-layout-3">
+                                <div alt="" class=" u-image u-image-circle u-image-3 shadow-interpolacao" data-image-width="598" data-image-height="598"></div>
+                                <h4 class="u-text u-text-default u-text-6">Roberto Carlos</h4>
+                                <p class="u-text u-text-7"> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. </p>
+                                <a href="" class="botao shadow-interpolacao ">Conectar</a>
+                            </div>
+                        </div>
+
+                        <div class="box shadow-interpolacao u-align-center u-container-style u-list-item u-repeater-item u-white u-list-item-3">
+                            <div class="u-container-layout u-similar-container u-container-layout-3">
+                                <div alt="" class=" u-image u-image-circle u-image-3 shadow-interpolacao" data-image-width="598" data-image-height="598"></div>
+                                <h4 class="u-text u-text-default u-text-6">Roberto Carlos</h4>
+                                <p class="u-text u-text-7"> Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. </p>
+                                <a href="" class="botao shadow-interpolacao ">Conectar</a>
+                            </div>
+                        </div>
+
+
+
+
+
+
+
+
                     </div>
+                </div>
             </section>
 
 
