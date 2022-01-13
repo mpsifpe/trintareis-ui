@@ -3,6 +3,7 @@ import { FaHome, FaRocketchat, FaEarlybirds, FaUserFriends, FaUniversity, FaSear
 import { IoIosNotifications, IoIosSchool } from "react-icons/io";
 import { MdOutlineGroups } from "react-icons/md";
 import firebase from '../../config/firebase';
+import { MdEventNote } from "react-icons/md";
 
 
 import Stories from '../stories/index';
@@ -52,25 +53,29 @@ function Header() {
                         <FaUserFriends />
                         <label>Rede</label>
                     </div>
-                    <div className="chat-fb">
-                        <FaRocketchat />
-                        <label>Chat</label>
+                    <div className="group-fb">
+                        <MdOutlineGroups />
+                        <label>Amigos</label>
                     </div>
                     <div className="university-fb">
                         <FaUniversity />
                         <label>Instituições</label>
+                    </div>                    
+                    <div className="school-fb">
+                        <IoIosSchool />
+                        <label>Cursos</label>
+                    </div>
+                    <div className="event-fb">
+                        <MdEventNote />
+                        <label>Eventos</label>
                     </div>
                     <div className="notification-fb">
                         <IoIosNotifications />
                         <label>Notificações</label>
                     </div>
-                    <div className="school-fb">
-                        <IoIosSchool />
-                        <label>Cursos</label>
-                    </div>
-                    <div className="group-fb">
-                        <MdOutlineGroups />
-                        <label>Amigos</label>
+                    <div className="chat-fb">
+                        <FaRocketchat />
+                        <label>Chat</label>
                     </div>
                 </div>
                 <div className="headerRight">
@@ -82,7 +87,7 @@ function Header() {
             {/* <Stories /> */}
             <main className='feed_content'>
                 <FeedForm />
-                {eventos.map(item => <FeedPost key={item.id} img={item.photo} title={item.title} nome="Trinta Reis" horario={item.hour} conteudo={item.details} />)}
+                {eventos.map(item => <FeedPost key={item.id} id={item.id} img={item.photo} title={item.title} nome="Trinta Reis" horario={item.hour} conteudo={item.details} />)}
                 {/* <FeedPost nome="Trinta Reis" horario="20:00 h" conteudo="Conheça os benéficios da maior rede social vocacional" />
                 <FeedPost nome="IFPE" horario="10:00 h" conteudo="Incrições para os cursos de pós-graduação estão ABERTAS!!!" />
                 <FeedPost nome="Marcos" horario="13:30 h" conteudo="Galera criando criei um grupo de estudo sobre tecnologias frontend." /> */}

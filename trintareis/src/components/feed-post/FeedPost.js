@@ -4,7 +4,7 @@ import { BiLike } from "react-icons/bi";
 import { CgComment } from "react-icons/cg";
 import { FaShare } from "react-icons/fa";
 import './feedPost.css'
-//import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import firebase from '../../config/firebase';
 
@@ -23,11 +23,12 @@ export default function (props) {
                     <h3>{props.nome}<br /><span>{props.horario}</span></h3>
                 </div>
                 <div className="feedPost__content">
-                    <h2 className='p-3'>{props.title}<br/><br/></h2>
-                    <p>{props.conteudo}</p>
-                    {/* <br/>
-                    <Link>...ver mais</Link>
-                    <br/> */}
+                    <h2 className='p-3'>{props.title}</h2>
+                    <p>
+                        {props.conteudo}<br/>
+                        <Link to={'/detailsEvents/' + props.id} className="feed__details">...ver mais</Link>
+                    </p>
+
                     <img src={urlImages} />
                 </div>
 

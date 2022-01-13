@@ -9,6 +9,7 @@ import NewUser from './view/new-user/';
 import Home from './view/home/';
 import RecoveryPassword from './view/recovery-password/';
 import Event from './view/event/';
+import PostPhoto from './view/post-photo/';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
         <Route exact path='/home' component={Home}/>
         <Route exact path='/recoveryPassword' component={RecoveryPassword}/>
         <Route exact path='/event' component={Event}/>
+        <Route exact path='/postPhoto' component={PostPhoto}/>
       </Router>
     </Provider>
   );

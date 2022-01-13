@@ -80,6 +80,27 @@ body{
     font-size: 12px;
 }
 
+.event-fb{
+    cursor: pointer;
+    margin-left: 25px;
+    position: relative;
+    padding: 8px 10px;
+}
+
+.event-fb:hover{
+    background-color: rgb(200, 200, 200);
+    border-radius: 5%;
+}
+
+.event-fb svg{
+    color: gray;
+    font-size: 25px;
+}
+
+.event-fb label{
+    font-size: 12px;
+}
+
 .chat-fb{
     cursor: pointer;
     margin-left: 25px;

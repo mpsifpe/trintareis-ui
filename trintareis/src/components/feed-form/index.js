@@ -12,20 +12,24 @@ export default function () {
                 <input type="text" placeholder="Começar Publicar" />
                 <div className="feedForm__icons">
                     <div className="iconSingle img feedForm__reaction">
-                        <button>
+                    <Link to='postPhoto' style={{ textDecoration: 'none' }}>
+                        <button type="submit">
                             <AiFillPicture />
                             <span>
                                 Foto
                             </span>
                         </button>
+                        </Link>
                     </div>
                     <div className="iconSingle feedForm__reaction">
-                        <button>
+                    
+                        <button type="submit">
                             <AiFillVideoCamera />
                             <span>
                                 Vídeo
                             </span>
                         </button>
+                        
                     </div>
                     <div className="iconSingle evn feedForm__reaction">
                         <Link to='event' style={{ textDecoration: 'none' }}>

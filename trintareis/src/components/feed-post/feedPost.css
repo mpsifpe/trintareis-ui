@@ -33,3 +33,12 @@
     margin: 10px 10px;
     margin-top: 40px;
 }
+
+.feed__details{
+    text-decoration: none;
+    color: rgb(90, 86, 86);
+    padding: 10px;
+}
+.feed__details:hover{
+    text-decoration: underline;
+}
