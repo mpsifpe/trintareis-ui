@@ -41,37 +41,39 @@ function ModalPostPhoto() {
         <>
             <div className="col-12">
                 <Modal isOpen={true}>
-                    <div className="div__header">
-                        <di>
-                            <h3 className="mx-auto font-weight-bold">Selecione sua foto</h3>
-                        </di>
-                        <div>
-                            <ButtonBackhome />
+                    <div className="div__main">
+                        <div className="div__header">
+                            <div className="w-100">
+                                <h3>Selecione sua foto</h3>
+                            </div>
+                            <div>
+                                <ButtonBackhome />
+                            </div>
                         </div>
-                    </div>
-                    <div>
-                        <form className="form">
-                            <div className="row">
-                                <div>
-                                    <div className="form-group">
-                                        <label>Descrição</label>
-                                        <textarea onChange={(e) => setDetails(e.target.value)} className="form-control" rows="3" placeholder="Ex.: tópicos, programa, etc."></textarea>
+                        <div>
+                            <form className="form">
+                                <div className="row">
+                                    <div>
+                                        <div className="form-group">
+                                            <label>Descrição</label>
+                                            <textarea onChange={(e) => setDetails(e.target.value)} className="form-control" rows="3" placeholder="Ex.: tópicos, programa, etc."></textarea>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div className="form">
-                                <label>Carregar imagem:</label>
-                                <input onChange={(e) => setPhoto(e.target.files[0])} type="file" className="form-control" />
-                            </div>
-                            <div className="row">
-                                {
-                                    load ? <button className="form-control btn btn-lg btn-block mt-3 mb-5 btn-cadastro" type="button" disabled>
-                                        <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                    </button> :
-                                        <button onClick={enroll} type="button" className="form-control btn btn-lg btn-block mt-3 mb-5 btn-cadastro">Concluído</button>
-                                }
-                            </div>
-                        </form>
+                                <div className="form">
+                                    <label>Carregar imagem:</label>
+                                    <input onChange={(e) => setPhoto(e.target.files[0])} type="file" className="form-control" />
+                                </div>
+                                <div>
+                                    {
+                                        load ? <button className="form-control btn btn-lg btn-block mt-3 mb-5 btn-cadastro" type="button" disabled>
+                                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                        </button> :
+                                            <button onClick={enroll} type="button" className="form-control btn btn-lg btn-block mt-3 mb-5 btn-cadastro">Concluído</button>
+                                    }
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </Modal>
             </div>

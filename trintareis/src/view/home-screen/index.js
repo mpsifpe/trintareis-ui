@@ -33,9 +33,6 @@ function HomeScreen() {
                 </div>
                 <div>
                     <form>
-                        <Link to="/">
-                            <button className="btn__register" type="submit">Cadastre-se agora</button>
-                        </Link>
                         <Link to="/login">
                             <button className="btn__login" type="submit">Entrar</button>
                         </Link>

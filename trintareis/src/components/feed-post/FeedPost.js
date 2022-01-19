@@ -26,7 +26,7 @@ export default function (props) {
                     <h2 className='p-3'>{props.title}</h2>
                     <p>
                         {props.conteudo}<br/>
-                        <Link to={'/detailsEvents/' + props.id} className="feed__details">...ver mais</Link>
+                        {/* <Link to={'/detailsEvents/' + props.id} className="feed__details">...ver mais</Link> */}
                     </p>
 
                     <img src={urlImages} />
