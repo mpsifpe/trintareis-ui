@@ -1,6 +1,8 @@
 import { AiFillVideoCamera, AiFillPicture } from "react-icons/ai";
 import { BsCalendarDate } from "react-icons/bs";
+import { Link } from "react-router-dom";
 import minios_bg from '../../resources/minios.jpg';
+import './feedForm.css'
 
 export default function () {
     return (
@@ -8,19 +10,36 @@ export default function () {
             <div className="feedForm">
                 <img src={minios_bg} />
                 <input type="text" placeholder="Começar Publicar" />
-
-                <div className="feedIcons">
-                    <div className="iconSingle img">
-                        <AiFillPicture />
-                        <span>Foto</span>
+                <div className="feedForm__icons">
+                    <div className="iconSingle img feedForm__reaction">
+                    <Link to='postPhoto' style={{ textDecoration: 'none' }}>
+                        <button type="submit">
+                            <AiFillPicture />
+                            <span>
+                                Foto
+                            </span>
+                        </button>
+                        </Link>
                     </div>
-                    <div className="iconSingle">
-                        <AiFillVideoCamera />
-                        <span>Vídeo</span>
+                    <div className="iconSingle feedForm__reaction">
+                    
+                        <button type="submit">
+                            <AiFillVideoCamera />
+                            <span>
+                                Vídeo
+                            </span>
+                        </button>
+                        
                     </div>
-                    <div className="iconSingle evn">
-                        <BsCalendarDate />
-                        <span>Evento</span>
+                    <div className="iconSingle evn feedForm__reaction">
+                        <Link to='event' style={{ textDecoration: 'none' }}>
+                            <button type="submit">
+                                <BsCalendarDate />
+                                <span className="feedForm__link">
+                                    Evento
+                                </span>
+                            </button>
+                        </Link>
                     </div>
                 </div>
             </div>
