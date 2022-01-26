@@ -8,28 +8,40 @@ export default function () {
     return (
         <div className="feed">
             <div className="feedForm">
-                <img src={minios_bg} />
-                <input type="text" placeholder="Começar Publicar" />
+                <div className="div__header">
+                    <div className="div__foto">
+                        <div>
+                            <img src={minios_bg} />
+                        </div>
+                    </div>
+                    <div className="div__button">
+                    <Link to='postPhoto' style={{ textDecoration: 'none' }}>
+                        <div>
+                            <span>Começar publicar...</span>
+                        </div>
+                        </Link>
+                    </div>
+                </div>
                 <div className="feedForm__icons">
                     <div className="iconSingle img feedForm__reaction">
-                    <Link to='postPhoto' style={{ textDecoration: 'none' }}>
-                        <button type="submit">
-                            <AiFillPicture />
-                            <span>
-                                Foto
-                            </span>
-                        </button>
+                        <Link to='postPhoto' style={{ textDecoration: 'none' }}>
+                            <button type="submit">
+                                <AiFillPicture />
+                                <span>
+                                    Foto
+                                </span>
+                            </button>
                         </Link>
                     </div>
                     <div className="iconSingle feedForm__reaction">
-                    
+
                         <button type="submit">
                             <AiFillVideoCamera />
                             <span>
                                 Vídeo
                             </span>
                         </button>
-                        
+
                     </div>
                     <div className="iconSingle evn feedForm__reaction">
                         <Link to='event' style={{ textDecoration: 'none' }}>

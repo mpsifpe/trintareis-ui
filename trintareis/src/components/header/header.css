@@ -81,6 +81,7 @@ body{
     display: flex;
     flex-direction: column;
     align-items: center;
+    cursor: pointer;
     position: relative;
     padding: 8px 10px;
 }
