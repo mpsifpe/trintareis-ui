@@ -25,16 +25,24 @@ body{
 .div__logo{
     display: flex;
     margin: 5px;
+    margin-left: 10%;
 }
 
 .logo__fb{
+    display: flex;
+    width: 40px;
+    margin: 2px;
+    height: 100%;
+    align-items: center;
+    align-self: center;
     align-self: center;
 }
 
 .logo__fb svg{
-    color: #9ACD32;
-    font-size: 30px;
-    margin: 0 40px;
+    border: 2px solid;
+    border-radius: 3px;
+    color: #45bd62;
+    font-size: 40px;
 }
 
 .search-form{
@@ -47,12 +55,18 @@ body{
 }
 
 .search__fb{
+    margin-left: 5px;
     align-self: center;
 }
 
 .search__fb svg{
     color: grey;
     font-size: 15px;
+}
+
+.search__fb input{
+    width: 280px;
+    height: 40px;
 }
 
 .div__content_header{

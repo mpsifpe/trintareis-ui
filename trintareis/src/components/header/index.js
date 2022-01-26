@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { FaHome, FaRocketchat, FaEarlybirds, FaUserFriends, FaUniversity, FaSearch } from "react-icons/fa";
+import { FaHome, FaRocketchat, FaUserFriends, FaUniversity, FaSearch } from "react-icons/fa";
 import { IoIosNotifications, IoIosSchool } from "react-icons/io";
 import { MdOutlineGroups } from "react-icons/md";
+import { GiHummingbird } from "react-icons/gi";
 import firebase from '../../config/firebase';
 import { MdEventNote } from "react-icons/md";
 import { useSelector, useDispatch } from 'react-redux';
@@ -40,14 +41,10 @@ function Header() {
                 <div className="header__left">
                     <div className="div__logo">
                         <div className="logo__fb">
-                            <FaEarlybirds />
+                            <GiHummingbird />
                         </div>
                         <div className="search__fb">
-                            {/* <form className="search-form" method="post" name="header_search"> */}
-                            <div className="relative white div__input">
-                                <input type="search" name="header_search_query" placeholder="Pesquisar" class="input-reset color-inherit input-focus all-animate br-pill ph4 sans-serif fw6 header-search-input ba bw1 bg-white-10 b--transparent" />
-                            </div>
-                            {/* </form> */}
+                            <input type="search" name="header_search_query" placeholder="Pesquisar" />
                         </div>
                     </div>
                     <div className="div__content_header">
@@ -86,7 +83,7 @@ function Header() {
                     </div>
                 </div>
                 <div className="header__right">
-                    {useSelector(state => state.loggedUSer) == 0 ? <Redirect to='/' /> : null}
+                    {/* {useSelector(state => state.loggedUSer) == 0 ? <Redirect to='/' /> : null} */}
                     <div className="div__plus_btn">
                         <span onClick={() => dispatch({ type: 'LOG_OUT' })}>Sair</span>
                     </div>
