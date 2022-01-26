@@ -3,6 +3,7 @@ import './login.css';
 import firebase from '../../config/firebase';
 import 'firebase/auth';
 import { Link, Redirect } from 'react-router-dom';
+import Header from '../../components/header-login/index';
 
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -23,18 +24,7 @@ function Login() {
 
     return (
         <div className="div__main">
-            <div className="div__header_login">
-                <div>
-                    <a href="#">Trinta Reis</a>
-                </div>
-                <div>
-                    <form>
-                        <Link to="/">
-                            <button className="btn__register" type="submit">Cadastre-se agora</button>
-                        </Link>
-                    </form>
-                </div>
-            </div>
+            <Header/>
             <hr />
             <div className="div-container container-fluid d-flex justify-content-between align-items-center w-100">
                 <div className="form__signin mx-auto">

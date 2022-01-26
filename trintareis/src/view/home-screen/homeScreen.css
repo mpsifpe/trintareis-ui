@@ -5,18 +5,8 @@
     height: 100%
 }
 
-.div__header{
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-}
-
-.div__header a{
-    text-decoration: none;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 20px;
-    font-weight: bold;
-    color: rgb(75, 126, 86);
+.div__main hr{
+    margin-top: 0px;
 }
 
 .btn__register{
@@ -57,7 +47,8 @@
 }
 
 .div__primary_content{
-    margin: 50px;
+    margin-right: 8rem;
+    margin-left: 15%;
     margin-top: 10px;
     display: flex;
     justify-content: space-between;
@@ -76,10 +67,11 @@
 }
 
 .div__img{
+    max-width: 50%;
+    margin: 0%;
+    height: 450px;
     margin-top: 10px;
     margin-bottom: 10px;
-    height: 400px;
-    width: 400px;
 }
 
 .div__img img{
@@ -107,23 +99,20 @@
     color: black;
 }
 
-
-
-
 .form__cadastro{
     display: flex;
-    max-width: 400px;
-    margin: auto;    
+    max-width: 50%;
+    margin: 0%;
     height: 450px;
 }
 .form-login{
     display: flex;
-    width: 650px;
+    max-width: 450px;
 }
 .form-login h1{
-    font-weight: 800;
+    font-weight: 500;
     letter-spacing: -.5px;
-    font-size: 2.5em;
+    font-size: 3.5em;
     color: #696969;
 }
 .form-login p{
@@ -166,4 +155,5 @@
     box-sizing: border-box;
     color: #696969;
     font-size: 1.0vw;
+    margin: 2px;
 }

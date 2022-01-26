@@ -19,6 +19,14 @@
     height: 100%;
 }
 
+.div__main hr{
+    margin-top: 0px;
+}
+
+.div__title{
+    margin-left: 15%;
+}
+
 .div__header_login{
     display: flex;
     justify-content: space-around;
