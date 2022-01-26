@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FaHome, FaRocketchat, FaUserFriends, FaUniversity, FaSearch } from "react-icons/fa";
+import { FaHome, FaRocketchat, FaUserFriends, FaUniversity } from "react-icons/fa";
 import { IoIosNotifications, IoIosSchool } from "react-icons/io";
 import { MdOutlineGroups } from "react-icons/md";
 import { GiHummingbird } from "react-icons/gi";

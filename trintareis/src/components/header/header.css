@@ -12,20 +12,21 @@ body{
     background-color: white;
     height: 70px;
     padding: 7px 0;
-    display: flex;    
+    display: flex;
 }
 
 .header__left{
     width: 100%;
     height: 100%;
     margin-top: 0px;
+    margin-left: 6%;
+    margin-right: 10px;
     display: flex;
 }
 
 .div__logo{
     display: flex;
     margin: 5px;
-    margin-left: 10%;
 }
 
 .logo__fb{
@@ -280,9 +281,10 @@ body{
 }
 
 .header__right{
+    display: flex;    
     width: 100%;
-    text-align: right;
-    margin: 0 50px;
+    margin-right: 50px;
+    justify-content: end;
 }
 
 .div__plus_btn{
