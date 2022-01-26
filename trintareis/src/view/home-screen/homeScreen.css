@@ -157,3 +157,8 @@
     font-size: 1.0vw;
     margin: 2px;
 }
+
+.span__agreement a{
+    margin-left: 3px;
+    margin-right: 3px;
+}
