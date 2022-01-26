@@ -1,0 +1,32 @@
+.div__header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.div__title{
+    margin-left: 15%;
+}
+
+.div__btn_login button{
+    margin-right: 8rem;
+    height: 33px;
+    border-radius: 50px;
+    color: rgb(108, 119, 99);
+    background-color: white;
+    border: 1px solid;
+    width: 200px;
+}
+
+.div__btn_login button:hover{
+    background-color: rgb(223, 240, 227);
+    color: black;
+}
+
+.div__title a{
+    text-decoration: none;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 25px;
+    font-weight: bold;
+    color: rgb(75, 126, 86);
+}
