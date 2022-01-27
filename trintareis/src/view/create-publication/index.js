@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal';
-import './postPhoto.css';
+import './createPublication.css';
 
 import firebase from '../../config/firebase';
 import { useSelector } from 'react-redux';
 import ButtonBackhome from '../../components/button-backhome';
 
-function ModalPostPhoto() {
+function ModalCreatePublication() {
 
     const [load, setLoad] = useState();
     const [details, setDetails] = useState();
@@ -40,11 +40,11 @@ function ModalPostPhoto() {
     return (
         <>
             <div className="col-12">
-                <Modal isOpen={true}>
+                <Modal className="" isOpen={true}>
                     <div className="div__main">
                         <div className="div__header">
                             <div className="w-100">
-                                <h3>Selecione sua foto</h3>
+                                <h3>Criar publicação</h3>
                             </div>
                             <div>
                                 <ButtonBackhome />
@@ -57,7 +57,7 @@ function ModalPostPhoto() {
                                     <div>
                                         <div className="form-group">
                                             <label>Descrição</label>
-                                            <textarea onChange={(e) => setDetails(e.target.value)} className="form-control" rows="3" placeholder="Ex.: tópicos, programa, etc."></textarea>
+                                            <textarea onChange={(e) => setDetails(e.target.value)} className="form-control" rows="3" placeholder="Use sua criatividade aqui, para inspirar pessoas!"></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -82,4 +82,5 @@ function ModalPostPhoto() {
     )
 }
 
-export default ModalPostPhoto;
+export default ModalCreatePublication;
+

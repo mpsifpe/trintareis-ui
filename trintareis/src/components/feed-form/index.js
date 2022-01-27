@@ -15,8 +15,8 @@ export default function () {
                         </div>
                     </div>
                     <div className="div__button">
-                    <Link to='postPhoto' style={{ textDecoration: 'none' }}>
-                        <div>
+                    <Link to='createPublication' style={{ textDecoration: 'none' }}>
+                        <div className="div__span">
                             <span>Começar publicar...</span>
                         </div>
                         </Link>

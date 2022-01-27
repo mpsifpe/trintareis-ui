@@ -83,7 +83,7 @@ function Header() {
                     </div>
                 </div>
                 <div className="header__right">
-                    {/* {useSelector(state => state.loggedUSer) == 0 ? <Redirect to='/' /> : null} */}
+                    {useSelector(state => state.loggedUSer) == 0 ? <Redirect to='/' /> : null}
                     <div className="div__plus_btn">
                         <span onClick={() => dispatch({ type: 'LOG_OUT' })}>Sair</span>
                     </div>
