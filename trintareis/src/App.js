@@ -11,6 +11,7 @@ import RecoveryPassword from './view/recovery-password/';
 import Event from './view/event/';
 import PostPhoto from './view/post-photo/';
 import HomeScreen from './view/home-screen';
+import CreatePublication from './view/create-publication/';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <Route exact path='/recoveryPassword' component={RecoveryPassword}/>
         <Route exact path='/event' component={Event}/>
         <Route exact path='/postPhoto' component={PostPhoto}/>
+        <Route exact path='/createPublication' component={CreatePublication}/>
       </Router>
     </Provider>
   );

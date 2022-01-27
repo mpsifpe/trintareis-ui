@@ -12,13 +12,15 @@ body{
     background-color: white;
     height: 70px;
     padding: 7px 0;
-    display: flex;    
+    display: flex;
 }
 
 .header__left{
     width: 100%;
     height: 100%;
     margin-top: 0px;
+    margin-left: 6%;
+    margin-right: 10px;
     display: flex;
 }
 
@@ -28,13 +30,20 @@ body{
 }
 
 .logo__fb{
+    display: flex;
+    width: 40px;
+    margin: 2px;
+    height: 100%;
+    align-items: center;
+    align-self: center;
     align-self: center;
 }
 
 .logo__fb svg{
-    color: #9ACD32;
-    font-size: 30px;
-    margin: 0 40px;
+    border: 2px solid;
+    border-radius: 3px;
+    color: #45bd62;
+    font-size: 40px;
 }
 
 .search-form{
@@ -47,12 +56,18 @@ body{
 }
 
 .search__fb{
+    margin-left: 5px;
     align-self: center;
 }
 
 .search__fb svg{
     color: grey;
     font-size: 15px;
+}
+
+.search__fb input{
+    width: 280px;
+    height: 40px;
 }
 
 .div__content_header{
@@ -66,6 +81,7 @@ body{
     display: flex;
     flex-direction: column;
     align-items: center;
+    cursor: pointer;
     position: relative;
     padding: 8px 10px;
 }
@@ -266,9 +282,10 @@ body{
 }
 
 .header__right{
+    display: flex;    
     width: 100%;
-    text-align: right;
-    margin: 0 50px;
+    margin-right: 50px;
+    justify-content: end;
 }
 
 .div__plus_btn{

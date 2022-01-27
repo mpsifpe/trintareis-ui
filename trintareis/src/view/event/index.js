@@ -58,6 +58,7 @@ function ModalEvent() {
                                 <ButtonBackhome />
                             </div>
                         </div>
+                        <hr/>
                         <div>
                             <form className="form">
                                 <div className="form-title">
