@@ -26,6 +26,7 @@ function HomeScreen() {
             setCarregando(0);
         })
     }
+
     return (
         <div className="div__main">
             <Header/>
@@ -37,19 +38,19 @@ function HomeScreen() {
                         <p className="subtitle">Conheça pessoas, instituições e desfrute de uma rede colaborativa para seu descobrimento profissional!</p>
                         <fieldset className="textfield mb-24 mt32">
                             <label>E-mail</label>
-                            <input onChange={(e) => setEmail(e.target.value)} type="email" class="form-control my-2" placeholder="Digite seu e-mail" />
+                            <input id="homescreen_email_npt" onChange={(e) => setEmail(e.target.value)} type="email" class="form-control my-2" placeholder="Digite seu e-mail" />
                         </fieldset>
                         <fieldset className="textfield mb-12">
                             <label>Senha</label>
-                            <input onChange={(e) => setSenha(e.target.value)} type="password" class="form-control my-2" placeholder="Digite sua Senha" />
+                            <input id="homescreen_passw_npt" onChange={(e) => setSenha(e.target.value)} type="password" class="form-control my-2" placeholder="Digite sua Senha" />
                         </fieldset>
                         <span className="span__agreement">
                             Ao clicar em Aceite e cadastre-se, você aceita o
-                            <a href="">Contrato do Usuário</a>
+                            <a id="homescreen_contract_link"href="">Contrato do Usuário</a>
                             , a
-                            <a href="">Política de Privacidade</a>
+                            <a id="homescreen_privacy_link"href="">Política de Privacidade</a>
                             e a
-                            <a href="">Política de Cookies</a>
+                            <a id="homescreen__cookies_link" href="">Política de Cookies</a>
                             do Trinta Reis.
                         </span>
                         <div>
@@ -57,7 +58,7 @@ function HomeScreen() {
                             carregando ? <button className="form-control btn btn-lg btn-block mt-1 mb-5 btn-cadastro" type="button" disabled>
                                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                             </button> :
-                                <button onClick={cadastrar} type="button" className="form-control btn btn-lg btn-block mt-3 mb-5 btn-cadastro">Aceite e cadastre-se</button>
+                                <button id="homescreen_accept_btn" onClick={cadastrar} type="button" className="form-control btn btn-lg btn-block mt-3 mb-5 btn-cadastro">Aceite e cadastre-se</button>
                         }
                         </div>
                     </form>
@@ -71,3 +72,13 @@ function HomeScreen() {
 }
 
 export default HomeScreen;
+
+/* automation ids list
+
+    homescreen_email_npt
+    homescreen_passw_npt
+    homescreen_contract_link
+    homescreen_privacy_link
+    homescreen__cookies_link
+    homescreen_accept_btn
+*/
