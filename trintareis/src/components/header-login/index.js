@@ -12,7 +12,7 @@ function Header() {
                 </div>
                 <div className="div__btn_login">
                     <Link to="/">
-                        <button type="submit">Cadastre-se agora</button>
+                        <button id="header_log_register_btn" type="submit">Cadastre-se agora</button>
                     </Link>
                 </div>
             </div>
@@ -21,3 +21,8 @@ function Header() {
 }
 
 export default Header;
+
+/* automation ids list
+
+    header_log_register_btn
+*/
