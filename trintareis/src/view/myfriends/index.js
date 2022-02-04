@@ -1,18 +1,16 @@
 import React, { useState } from 'react';
 import './myFriends.css';
 import { Link } from "react-router-dom";
-import Header from '../../components/header/index'
+import Header from '../../components/header/index';
 function MyFriends() {
     return (
         <div className="App">
             <Header />
-            {/* <div className="feedPost"> */}
-                <div className="div__main">
-                    <div className="div__title">
+                <div className="div__main_myfriends">
+                    <div className="div__title_myfriends">
                         <span>Meus amigos</span>
                     </div>
                     <section className="u-align-center u-clearfix u-grey-10 u-section-2" id="sec-bd5e">
-                        {/* u-repeater u-repeater-1 tela1400 */}
                         <div className="div__content">
                             <div className="div__perfil box shadow-interpolacao u-align-center u-container-style u-list-item u-repeater-item u-white u-list-item-3">
                                 <div className="u-container-layout u-similar-container u-container-layout-3">
@@ -121,8 +119,6 @@ function MyFriends() {
                         </div>
                     </section>
                 </div>
-            {/* </div> */}
-
         </div>
     )
 }

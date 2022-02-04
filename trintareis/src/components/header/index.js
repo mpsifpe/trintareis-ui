@@ -3,37 +3,15 @@ import { FaHome, FaRocketchat, FaUserFriends, FaUniversity } from "react-icons/f
 import { IoIosNotifications, IoIosSchool } from "react-icons/io";
 import { MdOutlineGroups } from "react-icons/md";
 import { GiHummingbird } from "react-icons/gi";
-import firebase from '../../config/firebase';
 import { MdEventNote } from "react-icons/md";
 import { useSelector, useDispatch } from 'react-redux';
-
-
-import Stories from '../stories/index';
-import FeedForm from '../feed-form/index';
-import FeedPost from '../feed-post/FeedPost';
-
 
 import './header.css';
 import '../stories/stories.css'
 import { Link, Redirect } from 'react-router-dom';
 
 function Header() {
-    const [eventos, setEventos] = useState([]);
-    let listEventos = [];
-
     const dispatch = useDispatch();
-
-    useEffect(() => {
-        firebase.firestore().collection('events').get().then(async (result) => {
-            await result.docs.forEach(doc => {
-                listEventos.push({
-                    id: doc.id,
-                    ...doc.data()
-                })
-            })
-            setEventos(listEventos);
-        })
-    });
 
     return (
         <div className="App">
@@ -48,18 +26,22 @@ function Header() {
                         </div>
                     </div>
                     <div className="div__content_header">
+                    <Link to="/home">
                         <div className="home__fb">
                             <FaHome />
                             <span>Início</span>
                         </div>
+                    </Link>
                         <div className="friend__fb">
                             <FaUserFriends />
                             <span>Rede</span>
                         </div>
-                        <div className="group__fb">
-                            <MdOutlineGroups />
-                            <span>Amigos</span>
-                        </div>
+                        <Link to="/myfriends">
+                            <div className="group__fb link_preto">
+                                <MdOutlineGroups />
+                                <span>Amigos</span>
+                            </div>
+                        </Link>
                         <div className="university__fb">
                             <FaUniversity />
                             <span>Instituições</span>
@@ -83,17 +65,12 @@ function Header() {
                     </div>
                 </div>
                 <div className="header__right">
-                    {useSelector(state => state.loggedUSer) == 0 ? <Redirect to='/' /> : null}
+                    {/* {useSelector(state => state.loggedUSer) == 0 ? <Redirect to='/' /> : null} */}
                     <div className="div__plus_btn">
                         <span onClick={() => dispatch({ type: 'LOG_OUT' })}>Sair</span>
                     </div>
                 </div>
             </div>
-            {/* <Stories /> */}
-            <main className='feed_content'>
-                <FeedForm />
-                {eventos.map(item => <FeedPost key={item.id} id={item.id} img={item.photo} title={item.title} nome="Trinta Reis" horario={item.hour} conteudo={item.details} />)}
-            </main>
         </div>
     )
 }

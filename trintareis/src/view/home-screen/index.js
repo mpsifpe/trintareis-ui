@@ -72,13 +72,3 @@ function HomeScreen() {
 }
 
 export default HomeScreen;
-
-/* automation ids list
-
-    homescreen_email_npt
-    homescreen_passw_npt
-    homescreen_contract_link
-    homescreen_privacy_link
-    homescreen__cookies_link
-    homescreen_accept_btn
-*/
