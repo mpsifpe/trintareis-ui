@@ -161,4 +161,10 @@
 .span__agreement a{
     margin-left: 3px;
     margin-right: 3px;
+    color: blue;
+}
+
+.span__agreement a:hover{
+    text-decoration: underline;
+    color: blue;
 }

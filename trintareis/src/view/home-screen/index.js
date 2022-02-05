@@ -17,10 +17,13 @@ function HomeScreen() {
             return;
         }
 
+        var saveSucess = false;
         setCarregando(1);
         firebase.auth().createUserWithEmailAndPassword(email, senha).then(resultado => {
             setCarregando(0);
-            alert('Sucesso');
+            alert('Usuário cadastrado com sucesso!');
+            setEmail('');
+            setSenha('');
         }).catch(erro => {
             alert(erro);
             setCarregando(0);
@@ -38,11 +41,11 @@ function HomeScreen() {
                         <p className="subtitle">Conheça pessoas, instituições e desfrute de uma rede colaborativa para seu descobrimento profissional!</p>
                         <fieldset className="textfield mb-24 mt32">
                             <label>E-mail</label>
-                            <input id="homescreen_email_npt" onChange={(e) => setEmail(e.target.value)} type="email" class="form-control my-2" placeholder="Digite seu e-mail" />
+                            <input id="homescreen_email_npt" onChange={(e) => setEmail(e.target.value)} value={email} type="email" class="form-control my-2" placeholder="Digite seu e-mail" />
                         </fieldset>
                         <fieldset className="textfield mb-12">
                             <label>Senha</label>
-                            <input id="homescreen_passw_npt" onChange={(e) => setSenha(e.target.value)} type="password" class="form-control my-2" placeholder="Digite sua Senha" />
+                            <input id="homescreen_passw_npt" onChange={(e) => setSenha(e.target.value)} value={senha} type="password" class="form-control my-2" placeholder="Digite sua Senha" />
                         </fieldset>
                         <span className="span__agreement">
                             Ao clicar em Aceite e cadastre-se, você aceita o
@@ -72,13 +75,3 @@ function HomeScreen() {
 }
 
 export default HomeScreen;
-
-/* automation ids list
-
-    homescreen_email_npt
-    homescreen_passw_npt
-    homescreen_contract_link
-    homescreen_privacy_link
-    homescreen__cookies_link
-    homescreen_accept_btn
-*/

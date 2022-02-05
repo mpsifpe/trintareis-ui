@@ -10,8 +10,9 @@ import Home from './view/home/';
 import RecoveryPassword from './view/recovery-password/';
 import Event from './view/event/';
 import PostPhoto from './view/post-photo/';
-import HomeScreen from './view/home-screen';
+import HomeScreen from './view/home-screen/';
 import CreatePublication from './view/create-publication/';
+import MyFriends from './view/myfriends/';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Route exact path='/event' component={Event}/>
         <Route exact path='/postPhoto' component={PostPhoto}/>
         <Route exact path='/createPublication' component={CreatePublication}/>
+        <Route exact path='/myFriends' component={MyFriends}/>
       </Router>
     </Provider>
   );
