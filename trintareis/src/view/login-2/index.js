@@ -41,8 +41,8 @@ function Login() {
                             <label>Senha</label>
                             <input id="login2_passw_npt" onChange={(e) => setSenha(e.target.value)} type="password" class="form-control my-2" placeholder="Digite sua Senha" />
                         </fieldset>
-                        <div class="col-12 text-end mb-8">
-                            <Link to="/recoveryPassword" className="color-primary font-7 mb-24">Esqueci minha senha</Link>
+                        <div class="link__recovery">
+                            <Link to="/recoveryPassword" className=""><span>Esqueci minha senha</span></Link>
                         </div>
                         <button id="login2_enter_btn" onClick={singIn} className="w-100 btn btn-lg fw-bold bor" type="button">Entrar</button>
                     </form>

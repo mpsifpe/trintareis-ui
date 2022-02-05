@@ -169,3 +169,15 @@
 .opcoes-login span{
     color: darkblue;
 }
+
+.link__recovery span{
+    display: flex;
+    text-decoration: underline;
+    justify-content: end;
+    color: blue;
+}
+
+.link__recovery span:hover{
+    text-decoration: underline;
+    color: red;
+}
