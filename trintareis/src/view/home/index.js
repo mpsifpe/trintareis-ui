@@ -10,7 +10,7 @@ function Home() {
     let listEventos = [];
 
     useEffect(() => {
-        firebase.firestore().collection('events').get().then(async (result) => {
+        firebase.firestore().collection('events').orderBy("dataTime", "desc").get().then(async (result) => {
             await result.docs.forEach(doc => {
                 listEventos.push({
                     id: doc.id,
