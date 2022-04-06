@@ -5,6 +5,7 @@ import { MdOutlineGroups } from "react-icons/md";
 import { GiHummingbird } from "react-icons/gi";
 import { MdEventNote } from "react-icons/md";
 import { useSelector, useDispatch } from 'react-redux';
+import minios_bg from '../../resources/minios.jpg';
 
 import './header.css';
 import '../stories/stories.css'
@@ -66,6 +67,11 @@ function Header() {
                 </div>
                 <div className="header__right">
                     {useSelector(state => state.loggedUSer) == 0 ? <Redirect to='/' /> : null}
+                    <Link to="/profile">
+                        <div className="feedPost__profile">
+                            <img src={minios_bg} />
+                        </div>
+                    </Link>
                     <div className="div__plus_btn">
                         <span onClick={() => dispatch({ type: 'LOG_OUT' })}>Sair</span>
                     </div>
