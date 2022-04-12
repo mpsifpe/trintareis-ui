@@ -6,7 +6,7 @@ import { FiEdit2 } from "react-icons/fi";
 
 import firebase from '../../config/firebase';
 
-import { Perfil, DivMain } from './styles';
+import { Perfil, DivMain, Content } from './styles';
 
 function Profile() {
     const [photo, setPhoto] = useState({ preview: "", raw: "" });
@@ -24,43 +24,45 @@ function Profile() {
         <div className="App">
             <Header />
             <DivMain photo={photo.preview}>
-                <div className="div__btn_edit">
+                <div>
                     <Perfil>
-                            {photo.preview ? (
-                                <h5 className="text-center">Salvar foto</h5>                                
-                                // <img src={photo.preview} alt="dummy" className="img__" />
-                            ) : (
-                                <>
-                                    <h5 className="text-center">Carregar foto da capa</h5>
-                                </>
-                            )}
-                        <input
-                            type="file"
-                            id="upload-button"
-                            style={{ display: "none" }}
-                            onChange={handleChange}
-                        />
+                        <div>
+                            <label>
+                                {photo.preview ? (
+                                    <h5 className="text-center">Salvar foto</h5>
+                                ) : (
+                                    <>
+                                        <h5 className="text-center">Carregar foto da capa</h5>
+                                    </>
+                                )}
+                            </label>
+                            <input
+                                type="file"
+                                id="upload-button"
+                                style={{ display: "none" }}
+                                onChange={handleChange}
+                            />
+                        </div>
                     </Perfil>
-                    {/* <FiEdit2 />
-                    </input> */}
-                    {/* <button onChange={handleChange} type="file" className="btn_icon__edit">
-                        {photo.preview ? (
-                            <img src={photo.preview} alt="dummy" width="300" height="300" />
-                        ) : (
-                            <>
-                                <FiEdit2 />
-                            </>
-                        )}
-                    </button> */}
+                    <Content>
+                        <div>
+                            <form className="form">                            
+                                <div className="div__main_form">
+                                    <div className="div__foto">
+                                        <h1>Foto</h1>
+                                    </div>
+                                    <div>
+                                        <span>Marcos Souza</span>
+                                        <label>Editar</label>
+                                    </div>
+                                    <div>
+                                        <p>Formado em Sistemas de Informação | Cursando Pós-graduação no IFPE-Jaboatão | Trabalho como desenvolvedor backend na South System</p>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </Content>
                 </div>
-                {/* <div className="div__content_profile">
-                    <div className="div__foto">
-
-                    </div>
-                    <div className="div__title_profile">
-                        <a>Seu Nome</a>
-                    </div>
-                </div> */}
             </DivMain>
         </div>
     )
