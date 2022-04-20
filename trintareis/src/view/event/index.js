@@ -19,7 +19,7 @@ function ModalEvent() {
 
     const storege = firebase.storage();
     const db = firebase.firestore();
-    const time = firebase.firestore.Timestamp;
+    // const time = firebase.firestore.Timestamp;
 
     function enroll() {
         setLoad(1);

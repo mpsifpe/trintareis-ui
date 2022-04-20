@@ -47,6 +47,7 @@ export const Content = stayled.div`
 
     .div__foto{
         background: rgb(160, 235, 160);
+        background-image: url(${props => `${props.photoProfile}`});
         width: 200px;
         height: 200px;
         margin-top: -210px;

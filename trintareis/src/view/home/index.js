@@ -20,6 +20,7 @@ function Home() {
             setEventos(listEventos);
         })
     });
+    
     return (
         <div className="App">
             <Header />
