@@ -98,7 +98,7 @@ function ModalEvent() {
                                 <div className="row">
                                     {
                                         load ? <button className="form-control btn btn-lg btn-block mt-3 mb-5 btn-cadastro" type="button" disabled>
-                                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                            <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                                         </button> :
                                             <button onClick={enroll} type="button" className="form-control btn btn-lg btn-block mt-3 mb-5 btn-cadastro">Públicar Evento</button>
                                     }

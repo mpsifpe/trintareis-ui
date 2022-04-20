@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './profile.css';
 import { Link } from "react-router-dom";
 import Header from '../../components/header/index';
@@ -10,6 +10,13 @@ import { Perfil, DivMain, Content } from './styles';
 
 function Profile() {
     const [photo, setPhoto] = useState({ preview: "", raw: "" });
+
+    // useEffect(() => {
+    //     handleChange();
+    //     return () => {
+    //         setPhoto({ preview: "", raw: "" }); // This worked for me
+    //     };
+    // }, []);
 
     const handleChange = e => {
         if (e.target.files.length) {
@@ -23,13 +30,14 @@ function Profile() {
     return (
         <div className="App">
             <Header />
-            <DivMain photo={photo.preview}>
+            {/* <DivMain photo={photo.preview}> */}
                 <div>
-                    <Perfil>
+                    <Perfil photo={photo.preview}>
                         <div>
                             <label>
                                 {photo.preview ? (
                                     <h5 className="text-center">Salvar foto</h5>
+                                    // <img src={photo.preview} alt="dummy" className="img__" />
                                 ) : (
                                     <>
                                         <h5 className="text-center">Carregar foto da capa</h5>
@@ -38,7 +46,7 @@ function Profile() {
                             </label>
                             <input
                                 type="file"
-                                id="upload-button"
+                                // id="upload-button"
                                 style={{ display: "none" }}
                                 onChange={handleChange}
                             />
@@ -63,7 +71,7 @@ function Profile() {
                         </div>
                     </Content>
                 </div>
-            </DivMain>
+            {/* </DivMain> */}
         </div>
     )
 }

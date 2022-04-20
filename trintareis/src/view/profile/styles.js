@@ -31,7 +31,7 @@ export const Perfil = stayled.div`
     }
 `;
 
-export const DivMain = stayled.div``;
+// export const DivMain = stayled.div``;
 
 export const Content = stayled.div`
     background: red;

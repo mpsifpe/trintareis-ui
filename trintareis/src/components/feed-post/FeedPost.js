@@ -35,7 +35,7 @@ export default function (props) {
                 <hr />
 
                 <div className="feedPost__util">
-                    <div class="feedPost__reaction">
+                    <div className="feedPost__reaction">
                         <BiLike />
                         <span className="">Gostei</span>
                     </div>

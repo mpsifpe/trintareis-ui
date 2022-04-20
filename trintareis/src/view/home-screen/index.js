@@ -37,15 +37,15 @@ function HomeScreen() {
             <div className="div__primary_content">
                 <div className="form__cadastro">
                     <form className="form-login row">
-                        <h1 class="title">Cadastre-se</h1>
+                        <h1 className="title">Cadastre-se</h1>
                         <p className="subtitle">Conheça pessoas, instituições e desfrute de uma rede colaborativa para seu descobrimento profissional!</p>
                         <fieldset className="textfield mb-24 mt32">
                             <label>E-mail</label>
-                            <input id="homescreen_email_npt" onChange={(e) => setEmail(e.target.value)} value={email} type="email" class="form-control my-2" placeholder="Digite seu e-mail" />
+                            <input id="homescreen_email_npt" onChange={(e) => setEmail(e.target.value)} value={email} type="email" className="form-control my-2" placeholder="Digite seu e-mail" />
                         </fieldset>
                         <fieldset className="textfield mb-12">
                             <label>Senha</label>
-                            <input id="homescreen_passw_npt" onChange={(e) => setSenha(e.target.value)} value={senha} type="password" class="form-control my-2" placeholder="Digite sua Senha" />
+                            <input id="homescreen_passw_npt" onChange={(e) => setSenha(e.target.value)} value={senha} type="password" className="form-control my-2" placeholder="Digite sua Senha" />
                         </fieldset>
                         <span className="span__agreement">
                             Ao clicar em Aceite e cadastre-se, você aceita o
@@ -59,7 +59,7 @@ function HomeScreen() {
                         <div>
                         {
                             carregando ? <button className="form-control btn btn-lg btn-block mt-1 mb-5 btn-cadastro" type="button" disabled>
-                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                             </button> :
                                 <button id="homescreen_accept_btn" onClick={cadastrar} type="button" className="form-control btn btn-lg btn-block mt-3 mb-5 btn-cadastro">Aceite e cadastre-se</button>
                         }
