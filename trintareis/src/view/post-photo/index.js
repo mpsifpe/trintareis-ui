@@ -25,6 +25,9 @@ function ModalPostPhoto() {
                 photo: photo.name,
                 emailUser: emailUser,
                 views: 0,
+                like: 0,
+                share: 0,
+                amountComment: 0,
                 public: 1,
                 dataTime: new Date()
             }).then((docRef) => {

@@ -11,8 +11,29 @@ import './header.css';
 import '../stories/stories.css'
 import { Link, Redirect } from 'react-router-dom';
 
+import firebase from '../../config/firebase';
+
 function Header() {
     const dispatch = useDispatch();
+    const [urlImageProfile, setUrlImageProfile] = useState('');
+
+    const emailUser = useSelector(state => state.emailUser);
+
+    useEffect(() => {
+        const abortController = new AbortController()
+
+        firebase.firestore().collection('profiles').get().then(async (result) => {
+            await result.docs.forEach(doc => {
+                if (doc.data().emailUser === emailUser) {
+                    firebase.storage().ref(`profile_images/${doc.data().profilePhoto}`).getDownloadURL().then(url => setUrlImageProfile(url));
+                }
+            })
+        })
+
+        return function cleanup() {
+            abortController.abort()
+        }
+    }, []);
 
     return (
         <div className="App">
@@ -27,12 +48,12 @@ function Header() {
                         </div>
                     </div>
                     <div className="div__content_header">
-                    <Link to="/home">
-                        <div className="home__fb">
-                            <FaHome />
-                            <span>Início</span>
-                        </div>
-                    </Link>
+                        <Link to="/home">
+                            <div className="home__fb">
+                                <FaHome />
+                                <span>Início</span>
+                            </div>
+                        </Link>
                         <div className="friend__fb">
                             <FaUserFriends />
                             <span>Rede</span>
@@ -69,7 +90,7 @@ function Header() {
                     {useSelector(state => state.loggedUSer) == 0 ? <Redirect to='/' /> : null}
                     <Link to="/profile">
                         <div className="feedPost__profile">
-                            <img src={minios_bg} />
+                            <img src={urlImageProfile} />
                         </div>
                     </Link>
                     <div className="div__plus_btn">

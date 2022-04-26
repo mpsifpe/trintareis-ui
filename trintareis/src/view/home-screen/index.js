@@ -7,8 +7,8 @@ import Header from '../../components/header-register/index';
 
 
 function HomeScreen() {
-    const [email, setEmail] = useState();
-    const [senha, setSenha] = useState();
+    const [email, setEmail] = useState('');
+    const [senha, setSenha] = useState('');
     const [carregando, setCarregando] = useState();
 
     function cadastrar() {

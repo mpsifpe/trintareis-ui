@@ -2,100 +2,104 @@ import React, { useState, useEffect } from 'react';
 import './profile.css';
 import { Link } from "react-router-dom";
 import Header from '../../components/header/index';
-import { FiEdit2 } from "react-icons/fi";
+import FeedForm from '../../components/feed-form/index';
+import TimeLine from '../../components/timeline_profile/index';
 
 import firebase from '../../config/firebase';
 import { useSelector } from 'react-redux';
 
-import { Perfil, DivMain, Content } from './styles';
+import { Perfil, Content, Details } from './styles';
 
 function Profile() {
-    const [profile, setProfile] = useState([]);
-    const [photo, setPhoto] = useState([]);
-    let profileInfo = [];
+    const [profileInfo, setProfileInfo] = useState([]);
+    const [userName, setUserName] = useState([]);
+    const [eventos, setEventos] = useState([]);
+    let listEventos = [];
 
     const emailUser = useSelector(state => state.emailUser);
 
-    const [urlImageProfile, seturlImageProfile] = useState();
+    const [urlImageProfile, setUrlImageProfile] = useState();
     const [urlImageCover, seturlImageCover] = useState();
 
 
     useEffect(() => {
-        firebase.firestore().collection('profiles').get().then(async (result) => {
+        const abortController = new AbortController()
+
+        firebase.firestore().collection('events').orderBy("dataTime", "desc").get().then(async (result) => {
             await result.docs.forEach(doc => {
-                console.log(emailUser);
-                console.log(doc.data().emailUser);
-                console.log(doc.data());
-                if(doc.data().emailUser === emailUser){
-                    firebase.storage().ref(`profile_images/${doc.data().profilePhoto}`).getDownloadURL().then(url => urlImageProfile(url));
-                    firebase.storage().ref(`profile_images/${doc.data().coverPhoto}`).getDownloadURL().then(url => seturlImageCover(url));
-                    // profileInfo.push({
-                    //     id: doc.id,
-                    //     ...doc.data()
-                    // })
-                    //setPhoto(doc.data());
+                if (doc.data().emailUser === emailUser) {
+                    const date = new Date(doc.data().dataTime);
+
+                    listEventos.push({
+                        id: doc.id,
+                        timePublication: date.getHours() + ':' + date.getMinutes(),
+                        ...doc.data()
+                    })
                 }
             })
-            profileInfo(profileInfo);
         })
-    });
 
-    // const handleChange = e => {
-    //     if (e.target.files.length) {
-    //         setPhoto({
-    //             preview: URL.createObjectURL(e.target.files[0]),
-    //             raw: e.target.files[0]
-    //         });
-    //     }
-    // };
+        firebase.firestore().collection('profiles').get().then(async (result) => {
+            await result.docs.forEach(doc => {
+                if (doc.data().emailUser === emailUser) {
+                    firebase.storage().ref(`profile_images/${doc.data().profilePhoto}`).getDownloadURL().then(url => setUrlImageProfile(url));
+                    firebase.storage().ref(`profile_images/${doc.data().coverPhoto}`).getDownloadURL().then(url => seturlImageCover(url));
+
+                    setUserName(doc.data().userName);
+                    setProfileInfo(doc.data());
+                }
+            })
+        })
+        setEventos(listEventos);
+
+        return function cleanup() {
+            abortController.abort()
+        }
+    }, []);
 
     return (
         <div className="App">
             <Header />
-            {/* <DivMain photo={photo.preview}> */}
-                <div>
-                    <Perfil photo={urlImageCover}>
-                        <div>
-                            {/* <label>
-                                {photo.preview ? (
-                                    <h5 className="text-center">Salvar foto</h5>
-                                    // <img src={photo.preview} alt="dummy" className="img__" />
-                                ) : (
-                                    <>
-                                        <h5 className="text-center">Carregar foto da capa</h5>
-                                    </>
-                                )}
-                            </label>
-                            <input
-                                type="file"
-                                // id="upload-button"
-                                style={{ display: "none" }}
-                                onChange={handleChange}
-                            /> */}
-                        </div>
-                    </Perfil>
-                    <Content photoProfile={urlImageProfile}>
-                        <div>
-                            <form className="form">                            
-                                <div className="div__main_form">
-                                    <div className="div__foto">
-                                        <h1>Foto</h1>
-                                    </div>
-                                    <div>
-                                        <span>Marcos Souza</span>
-                                        <Link to='editProfile' style={{ textDecoration: 'none' }}>
-                                            <label>Editar</label>
-                                        </Link>
-                                    </div>
-                                    <div>
-                                        <p>Formado em Sistemas de Informação | Cursando Pós-graduação no IFPE-Jaboatão | Trabalho como desenvolvedor backend na South System</p>
-                                    </div>
+            <div>
+                <Perfil photo={urlImageCover}>
+                    <div />
+                </Perfil>
+                <Content photoProfile={urlImageProfile}>
+                    <div>
+                        <form className="form">
+                            <div className="div__main_form">
+                                <div className="div__foto" />
+                                <div>
+                                    <span>{profileInfo.userName}</span>
+                                    <Link to='editProfile' style={{ textDecoration: 'none' }}>
+                                        <label>Editar</label>
+                                    </Link>
                                 </div>
-                            </form>
+                                <div>
+                                    <p className="p__profileInformation">{profileInfo.profileInformatio}</p>
+                                    <p className="p__region">{profileInfo.city}, {profileInfo.region}</p>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </Content>
+                <Details>
+                    <div>
+                        <div className="div__span">
+                            <span>Sobre</span>
                         </div>
-                    </Content>
+                        <div className="div__p">
+                            <p>{profileInfo.details}</p>
+                        </div>
+                    </div>
+                </Details>
+                <div className='div__feedform'>
+                    <FeedForm />
                 </div>
-            {/* </DivMain> */}
+                <div className="div__timeline">
+                    {eventos.map(item => <TimeLine key={item.id} id={item.id} userName={userName} profileInf={profileInfo.profileInformatio} profilePhoto={urlImageProfile} img={item.photo} title={item.title} nome={item.userName} horario={item.timePublication} conteudo={item.details} />)}
+                </div>
+            </div>
         </div>
     )
 }

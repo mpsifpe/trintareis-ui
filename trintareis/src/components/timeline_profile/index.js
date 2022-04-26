@@ -1,17 +1,20 @@
 import React, { useState, useEffect } from 'react';
+import minios_bg from '../../resources/minios.jpg';
 import { BiLike } from "react-icons/bi";
 import { CgComment } from "react-icons/cg";
 import { FaShare } from "react-icons/fa";
-import './feedPost.css'
+import './timeline.css'
+
+import { Link } from 'react-router-dom';
 
 import firebase from '../../config/firebase';
-import { Link } from 'react-router-dom';
 
 export default function (props) {
     const [urlImages, setUrlImages] = useState('');
-
+    
     useEffect(() => {
         const abortController = new AbortController()
+
         firebase.storage().ref(`images/${props.img}`).getDownloadURL().then(url => setUrlImages(url));
 
         return function cleanup() {
@@ -31,11 +34,11 @@ export default function (props) {
                     <div className="div__info">
                         <div>
                             <Link to="profile">
-                                <a>{props.nome}</a>
+                                <a>{props.userName}</a>
                             </Link>
                         </div>
                         <div>
-                            <span>{props.profileInformation}</span>
+                            <span>{props.profileInf}</span>
                         </div>
                         <div>
                             <span>{props.horario}</span>
@@ -46,7 +49,6 @@ export default function (props) {
                     <h2 className='p-3'>{props.title}</h2>
                     <p>
                         {props.conteudo}<br />
-                        {/* <Link to={'/detailsEvents/' + props.id} className="feed__details">...ver mais</Link> */}
                     </p>
 
                     <img src={urlImages} />

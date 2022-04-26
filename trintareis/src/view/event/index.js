@@ -23,6 +23,8 @@ function ModalEvent() {
 
     function enroll() {
         setLoad(1);
+        const date = new Date();
+        const datePublication = date.getHours + ":" + date.getMinutes;
         storege.ref(`images/${photo.name}`).put(photo).then(() => {
             db.collection('events').add({
                 title: title,
@@ -33,8 +35,11 @@ function ModalEvent() {
                 photo: photo.name,
                 emailUser: emailUser,
                 views: 0,
+                like: 0,
+                share: 0,
+                amountComment: 0,
                 public: 1,
-                dataTime: new Date()
+                dataTime: Date.now()
             }).then((docRef) => {
                 setLoad(0);
                 console.log("Document written with ID: ", docRef.id);
