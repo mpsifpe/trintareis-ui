@@ -5,6 +5,7 @@ import { CgComment } from "react-icons/cg";
 import { FaShare } from "react-icons/fa";
 import './feedPost.css'
 import { Link } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 
 import firebase from '../../config/firebase';
 
@@ -14,6 +15,24 @@ export default function (props) {
     useEffect(() => {
         firebase.storage().ref(`images/${props.img}`).getDownloadURL().then(url => setUrlImages(url));
     });
+
+  
+
+    const dispatch = useDispatch();
+
+    function funcGostei() {
+        alert('aaaa');
+        firebase.auth().signInWithEmailAndPassword('', '').then(resultado => {
+            alert('Usuário conectado!')
+            dispatch({ type: 'LOG_IN', emailUser: 'aaa' });
+        }).catch(erro => {
+            alert(erro)
+        })
+    }
+
+
+
+
 
     return (
         <div className="feedPost">
@@ -37,6 +56,8 @@ export default function (props) {
                 <div className="feedPost__util">
                     <div class="feedPost__reaction">
                         <BiLike />
+                        <button onClick={funcGostei} className="w-100 btn btn-lg fw-bold" type="button">Entrar</button>
+
                         <span className="">Gostei</span>
                     </div>
 
