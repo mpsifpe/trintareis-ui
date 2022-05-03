@@ -14,9 +14,8 @@ function Login() {
     const dispatch = useDispatch();
 
     function singIn() {
-        firebase.auth().signInWithEmailAndPassword(email, senha).then(resultado => {
-            //alert('Usuário conectado!')
-            dispatch({ type: 'LOG_IN', emailUser: email });
+        firebase.auth().signInWithEmailAndPassword(email, senha).then(result => {
+            dispatch({ type: 'LOG_IN', emailUser: result.user.email });
         }).catch(erro => {
             alert(erro)
         })
@@ -53,10 +52,3 @@ function Login() {
 }
 
 export default Login;
-
-/* automation ids list
-
-    login2_email_npt
-    login2_passw_npt
-    login2_enter_btn
-*/

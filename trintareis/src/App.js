@@ -31,6 +31,7 @@ function App() {
         <Route exact path='/myFriends' component={MyFriends}/>
         <Route exact path='/profile' component={Profile}/>
         <Route exact path='/editProfile' component={EditProfile}/>
+        <Route exact path='/editProfile/:id' component={EditProfile}/>
       </Router>
     </Provider>
   );

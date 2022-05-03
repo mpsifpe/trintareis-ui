@@ -29,11 +29,11 @@ export default function (props) {
                         </Link>
                     </div>
                     <div className="div__info">
-                        <div>
-                            <Link to="profile">
-                                <a>{props.nome}</a>
-                            </Link>
-                        </div>
+                        <Link to="profile">
+                            <div>
+                                <span>{props.nome}</span>
+                            </div>
+                        </Link>
                         <div>
                             <span>{props.profileInformation}</span>
                         </div>

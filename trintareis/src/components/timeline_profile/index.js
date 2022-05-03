@@ -34,7 +34,7 @@ export default function (props) {
                     <div className="div__info">
                         <div>
                             <Link to="profile">
-                                <a>{props.userName}</a>
+                                <span>{props.userName}</span>
                             </Link>
                         </div>
                         <div>

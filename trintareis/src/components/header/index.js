@@ -5,7 +5,6 @@ import { MdOutlineGroups } from "react-icons/md";
 import { GiHummingbird } from "react-icons/gi";
 import { MdEventNote } from "react-icons/md";
 import { useSelector, useDispatch } from 'react-redux';
-import minios_bg from '../../resources/minios.jpg';
 
 import './header.css';
 import '../stories/stories.css'
@@ -13,9 +12,11 @@ import { Link, Redirect } from 'react-router-dom';
 
 import firebase from '../../config/firebase';
 
+const profileFoto = "https://firebasestorage.googleapis.com/v0/b/trintareis-23e4c.appspot.com/o/profile_foto_default%2Fperfil_second(1).png?alt=media&token=f815209f-00c0-4591-ad8b-43eda529d21b"
+
 function Header() {
     const dispatch = useDispatch();
-    const [urlImageProfile, setUrlImageProfile] = useState('');
+    const [urlImageProfile, setUrlImageProfile] = useState(profileFoto);
 
     const emailUser = useSelector(state => state.emailUser);
 
