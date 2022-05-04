@@ -19,10 +19,12 @@ function ModalEvent() {
 
     const storege = firebase.storage();
     const db = firebase.firestore();
-    const time = firebase.firestore.Timestamp;
+    // const time = firebase.firestore.Timestamp;
 
     function enroll() {
         setLoad(1);
+        const date = new Date();
+        const datePublication = date.getHours + ":" + date.getMinutes;
         storege.ref(`images/${photo.name}`).put(photo).then(() => {
             db.collection('events').add({
                 title: title,
@@ -33,8 +35,11 @@ function ModalEvent() {
                 photo: photo.name,
                 emailUser: emailUser,
                 views: 0,
+                like: 0,
+                share: 0,
+                amountComment: 0,
                 public: 1,
-                dataTime: new Date()
+                dataTime: Date.now()
             }).then((docRef) => {
                 setLoad(0);
                 console.log("Document written with ID: ", docRef.id);
@@ -98,7 +103,7 @@ function ModalEvent() {
                                 <div className="row">
                                     {
                                         load ? <button className="form-control btn btn-lg btn-block mt-3 mb-5 btn-cadastro" type="button" disabled>
-                                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                            <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                                         </button> :
                                             <button onClick={enroll} type="button" className="form-control btn btn-lg btn-block mt-3 mb-5 btn-cadastro">Públicar Evento</button>
                                     }

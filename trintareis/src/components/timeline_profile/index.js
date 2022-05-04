@@ -1,71 +1,26 @@
 import React, { useState, useEffect } from 'react';
+import minios_bg from '../../resources/minios.jpg';
 import { BiLike } from "react-icons/bi";
 import { CgComment } from "react-icons/cg";
 import { FaShare } from "react-icons/fa";
-import './feedPost.css'
+import './timeline.css'
+
 import { Link } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
 
 import firebase from '../../config/firebase';
 
 export default function (props) {
     const [urlImages, setUrlImages] = useState('');
-    const emailUser = useSelector(state => state.emailUser);
-
+    
     useEffect(() => {
         const abortController = new AbortController()
+
         firebase.storage().ref(`images/${props.img}`).getDownloadURL().then(url => setUrlImages(url));
 
         return function cleanup() {
             abortController.abort()
         }
     }, []);
-
-
-    function funcGostei(obj) {
-        let evento = firebase.firestore().collection('events');
-        var likes = [];
-        evento.get().then(async (result) => {
-            await result.docs.forEach(doc => {
-                if (doc.id == obj.id) {
-                    likes = doc.data().like;
-                    if (likes.length >= 0) {
-                        likes.push(emailUser);
-                        evento.doc(obj.id).update({
-                            like: likes
-                        })
-                    }
-                }
-            })
-        })
-
-
-
-
-        /*firebase.firestore().collection('events').doc(idPubl).set({
-            amountComment: 0,
-            data: "2022-04-11",
-            dataTime: 1650682444189,
-            details: "Evento agilista.",
-            emailUser: "marcos@email.com",
-            hour: "20:00",
-            like: 11,
-            photo: "Screenshot_3.png",
-            public: 1,
-            share: 0,
-            title: "Agile Trend",
-            type: "Presencial",
-            views: 0,
-        });
-        */
-    }
-
-
-
-
-
-
-
 
     return (
         <div className="feedPost">
@@ -79,11 +34,11 @@ export default function (props) {
                     <div className="div__info">
                         <div>
                             <Link to="profile">
-                                <a>{props.nome}</a>
+                                <a>{props.userName}</a>
                             </Link>
                         </div>
                         <div>
-                            <span>{props.profileInformation}</span>
+                            <span>{props.profileInf}</span>
                         </div>
                         <div>
                             <span>{props.horario}</span>
@@ -94,23 +49,16 @@ export default function (props) {
                     <h2 className='p-3'>{props.title}</h2>
                     <p>
                         {props.conteudo}<br />
-                        {/* <Link to={'/detailsEvents/' + props.id} className="feed__details">...ver mais</Link> */}
                     </p>
 
                     <img src={urlImages} />
                 </div>
-                <div className="div__info">
-                    <div>
-                        <span>0 curtidas</span>
-                    </div>
-                </div>
+
                 <hr />
 
                 <div className="feedPost__util">
                     <div className="feedPost__reaction">
                         <BiLike />
-                        <button onClick={() => funcGostei({ id: props.id })} className="w-100 btn btn-lg fw-bold" type="button">Entrar</button>
-
                         <span className="">Gostei</span>
                     </div>
 

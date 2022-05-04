@@ -1,17 +1,18 @@
 import { AiFillVideoCamera, AiFillPicture } from "react-icons/ai";
 import { BsCalendarDate } from "react-icons/bs";
 import { Link } from "react-router-dom";
-import minios_bg from '../../resources/minios.jpg';
 import './feedForm.css'
 
-export default function () {
+export default function (props) {
     return (
         <div className="feed">
             <div className="feedForm">
                 <div className="div__header">
                     <div className="div__foto">
                         <div>
-                            <img src={minios_bg} />
+                            <Link to="profile">
+                                <img src={props.profilePhoto} />
+                            </Link>
                         </div>
                     </div>
                     <div className="div__button">

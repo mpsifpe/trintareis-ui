@@ -33,18 +33,18 @@ function Login() {
                     {useSelector(state => state.loggedUSer) > 0 ? <Redirect to='/home' /> : null}
 
                     <form className="signin-container__form">
-                        <h1 class="title">Já têm uma conta?</h1>
+                        <h1 className="title">Já têm uma conta?</h1>
                         <p className="subtitle">Faça seu login e interaja com milhares de pessoas!</p>
                         <fieldset className="textfield mb-24 mt32">
                             <label>E-mail</label>
-                            <input onChange={(e) => setEmail(e.target.value)} type="email" class="form-control my-2" placeholder="Digite seu e-mail" />
+                            <input onChange={(e) => setEmail(e.target.value)} type="email" className="form-control my-2" placeholder="Digite seu e-mail" />
                         </fieldset>
                         <fieldset className="textfield mb-12">
                             <label>Senha</label>
-                            <input onChange={(e) => setSenha(e.target.value)} type="password" class="form-control my-2" placeholder="Digite sua Senha" />
+                            <input onChange={(e) => setSenha(e.target.value)} type="password" className="form-control my-2" placeholder="Digite sua Senha" />
                         </fieldset>
                         <button onClick={singIn} className="w-100 btn btn-lg fw-bold" type="button">Entrar</button>
-                        <div class="col-12 text-end mb-8">
+                        <div className="col-12 text-end mb-8">
                             <Link to="/recoveryPassword" className="color-primary font-7 mb-24">Esqueci minha senha</Link>
                         </div>
                     </form>
