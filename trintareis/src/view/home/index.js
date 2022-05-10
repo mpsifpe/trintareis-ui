@@ -25,7 +25,7 @@ function Home() {
             <Header />
             <div className="feed_content">
                 <FeedForm />
-                {eventos.map(item => <FeedPost key={item.id} id={item.id} img={item.photo} title={item.title} nome="Trinta Reis" horario={item.hour} conteudo={item.details} like={item.like} />)}
+                {eventos.map(item => <FeedPost key={item.id} id={item.id} img={item.photo} title={item.title} nome="Trinta Reis" horario={item.hour} conteudo={item.details} like={item.like}  share={item.share}/>)}
             </div>
         </div>
     )

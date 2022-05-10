@@ -42,3 +42,13 @@
 .feed__details:hover{
     text-decoration: underline;
 }
+
+.feed__coments{
+    padding: 13px;
+}
+
+.btn-coments{
+    background-color: #9ACD32;
+    color: #fff;
+    margin-top: 0px;
+}
