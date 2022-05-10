@@ -1,8 +1,10 @@
 import './myFriends.css';
+import React from 'react';
 import Header from '../../components/header/index';
-import FriendCard from '../../components/friend-card';
+import UserList from '../../components/user-list';
 
-function MyFriends() {
+function MyFriends(props) {
+       
     return (
         <div className="App">
             <Header />
@@ -11,8 +13,8 @@ function MyFriends() {
                         <span>Meus amigos</span>
                     </div>
                     <section className="section_friends_list" id="sec-bd5e">
-                        <FriendCard/>
-                        <FriendCard/>
+                        
+                        <UserList/>
                     </section>
                 </div>
         </div>
@@ -20,3 +22,5 @@ function MyFriends() {
 }
 
 export default MyFriends;
+
+//<FriendCard/> <FriendCard/>
