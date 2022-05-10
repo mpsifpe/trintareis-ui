@@ -10,48 +10,73 @@ const profileFoto = "https://firebasestorage.googleapis.com/v0/b/trintareis-23e4
 
 function Home() {
     const [eventos, setEventos] = useState([]);
-    const [profileInformation, setProfileInformation] = useState('');
     const [urlImageProfile, setUrlImageProfile] = useState(profileFoto);
-    const [userName, setUserName] = useState('');
+
     let listEventos = [];
+    let listProfiles = [];
 
     const emailUser = useSelector(state => state.emailUser);
 
     useEffect(() => {
         const abortController = new AbortController()
 
-        firebase.firestore().collection('profiles').get().then(async (result) => {
-            await result.docs.forEach(doc => {
-                if (doc.data().emailUser === emailUser) {
-                    firebase.storage().ref(`profile_images/${doc.data().profilePhoto}`).getDownloadURL().then(url => setUrlImageProfile(url));
-                    setProfileInformation(doc.data().profileInformatio);
-                    setUserName(doc.data().userName);
-                }
-            })
-        })
+        async function fetch() {
+            const profiles = await firebase.firestore().collection('profiles').get();
 
-        firebase.firestore().collection('events').orderBy("dataTime", "desc").get().then(async (result) => {
-            await result.docs.forEach(doc => {
-                listEventos.push({
+            for (const doc of profiles.docs) {
+                console.log(doc.data().emailUser);
+
+                if (doc.data().emailUser === emailUser) {
+                    const url = await firebase.storage().ref(`profile_images/${doc.data().profilePhoto}`).getDownloadURL();
+                    setUrlImageProfile(url);
+                }
+
+                listProfiles.push({
                     id: doc.id,
-                    profileInformation: profileInformation,
                     ...doc.data()
                 })
-            })
+            }
+
+            const events = await firebase.firestore().collection('events').orderBy("dataTime", "desc").get();
+
+            for (const doc of events.docs) {
+                if (!isEmpty(listProfiles)) {
+                    for (const docProfile of listProfiles) {
+                        if (doc.data().emailUser === docProfile.emailUser) {
+                            const url = await firebase.storage().ref(`profile_images/${docProfile.profilePhoto}`).getDownloadURL();
+                            listEventos.push({
+                                id: doc.id,
+                                profileId: docProfile.id,
+                                userName: docProfile.userName,
+                                profileInformation: docProfile.profileInformatio,
+                                profilePhoto: url,
+                                ...doc.data()
+                            })
+                        }
+                    }
+                }
+            }
+        }
+
+        fetch().then(() => {
             setEventos(listEventos);
-        })
+        });
 
         return function cleanup() {
             abortController.abort()
         }
     }, []);
 
+    function isEmpty(value) {
+        return (value == null || value.length === 0);
+    }
+
     return (
         <div className="App">
             <Header />
             <div className="feed_content">
                 <FeedForm profilePhoto={urlImageProfile} />
-                {eventos.map(item => <FeedPost key={item.id} id={item.id} img={item.photo} profilePhoto={urlImageProfile} profileInformation={profileInformation} title={item.title} nome={userName} horario={item.hour} conteudo={item.details} />)}
+                {eventos.map(item => <FeedPost key={item.id} id={item.id} img={item.photo} profilePhoto={item.profilePhoto} profileInformation={item.profileInformation} title={item.title} nome={item.userName} horario={item.hour} conteudo={item.details} />)}
             </div>
         </div>
     )

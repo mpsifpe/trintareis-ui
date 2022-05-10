@@ -12,6 +12,7 @@ export default function (props) {
 
     useEffect(() => {
         const abortController = new AbortController()
+
         firebase.storage().ref(`images/${props.img}`).getDownloadURL().then(url => setUrlImages(url));
 
         return function cleanup() {
