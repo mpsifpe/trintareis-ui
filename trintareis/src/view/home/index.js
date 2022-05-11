@@ -22,10 +22,7 @@ function Home() {
 
         async function fetch() {
             const profiles = await firebase.firestore().collection('profiles').get();
-
             for (const doc of profiles.docs) {
-                console.log(doc.data().emailUser);
-
                 if (doc.data().emailUser === emailUser) {
                     const url = await firebase.storage().ref(`profile_images/${doc.data().profilePhoto}`).getDownloadURL();
                     setUrlImageProfile(url);
@@ -38,7 +35,6 @@ function Home() {
             }
 
             const events = await firebase.firestore().collection('events').orderBy("dataTime", "desc").get();
-
             for (const doc of events.docs) {
                 if (!isEmpty(listProfiles)) {
                     for (const docProfile of listProfiles) {
