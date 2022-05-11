@@ -29,36 +29,43 @@ function Profile() {
     useEffect(() => {
         const abortController = new AbortController()
 
-        firebase.firestore().collection('events').orderBy("dataTime", "desc").get().then(async (result) => {
-            await result.docs.forEach(doc => {
+        async function fetch(){
+            const events = await firebase.firestore().collection('events').orderBy("dataTime", "desc").get();
+            for (const doc of events.docs) {
                 if (doc.data().emailUser === emailUser) {
                     const date = new Date(doc.data().dataTime);
-
                     listEventos.push({
                         id: doc.id,
                         timePublication: date.getHours() + ':' + date.getMinutes(),
                         ...doc.data()
                     })
                 }
-            })
-        })
+            }
 
-        firebase.firestore().collection('profiles').get().then(async (result) => {
-            await result.docs.forEach(doc => {
+            const profiles = await firebase.firestore().collection('profiles').get();
+            for (const doc of profiles.docs) {
                 if (doc.data().emailUser === emailUser) {
                     if(!isEmpty(doc.data().profilePhoto)){
-                        firebase.storage().ref(`profile_images/${doc.data().profilePhoto}`).getDownloadURL().then(url => setUrlImageProfile(url));
+                        const url = await firebase.storage().ref(`profile_images/${doc.data().profilePhoto}`).getDownloadURL();
+                        setUrlImageProfile(url);
                     }
-                    firebase.storage().ref(`profile_images/${doc.data().coverPhoto}`).getDownloadURL().then(url => seturlImageCover(url));
-
+                    const urlCover = await firebase.storage().ref(`profile_images/${doc.data().coverPhoto}`).getDownloadURL().catch(() => {
+                        return profileFoto;
+                    });
+                    console.log(urlCover);
+                    
+                    seturlImageCover(urlCover);
                     setIdDoc(doc.id);
                     setUserName(doc.data().userName);
                     setProfileInfo(doc.data());
                 }
-            })
-        })
+            }
 
-        setEventos(listEventos);
+        }
+        
+        fetch().then(() => {
+            setEventos(listEventos);
+        })
 
         return function cleanup() {
             abortController.abort()
