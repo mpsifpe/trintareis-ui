@@ -13,6 +13,8 @@ import PostPhoto from './view/post-photo/';
 import HomeScreen from './view/home-screen/';
 import CreatePublication from './view/create-publication/';
 import MyFriends from './view/myfriends/';
+import Profile from './view/profile/';
+import EditProfile from './view/edit-profile/';
 
 function App() {
   return (
@@ -27,6 +29,9 @@ function App() {
         <Route exact path='/postPhoto' component={PostPhoto}/>
         <Route exact path='/createPublication' component={CreatePublication}/>
         <Route exact path='/myFriends' component={MyFriends}/>
+        <Route exact path='/profile' component={Profile}/>
+        <Route exact path='/editProfile' component={EditProfile}/>
+        <Route exact path='/editProfile/:id' component={EditProfile}/>
       </Router>
     </Provider>
   );

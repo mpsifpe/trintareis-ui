@@ -7,6 +7,7 @@ import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
 import firebase from '../../config/firebase';
+import { Link } from 'react-router-dom';
 
 export default function (props) {
     const [urlImages, setUrlImages] = useState('');
@@ -330,7 +331,6 @@ export default function (props) {
 
                 <div className="feedPost__util">
                     <div className="feedPost__reaction">
-
                         <BiLike />
 
                         <span onClick={() => funcGostei({ id: props.id })} className="">Gostei</span>

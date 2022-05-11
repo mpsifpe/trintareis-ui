@@ -14,9 +14,8 @@ function Login() {
     const dispatch = useDispatch();
 
     function singIn() {
-        firebase.auth().signInWithEmailAndPassword(email, senha).then(resultado => {
-            //alert('Usuário conectado!')
-            dispatch({ type: 'LOG_IN', emailUser: email });
+        firebase.auth().signInWithEmailAndPassword(email, senha).then(result => {
+            dispatch({ type: 'LOG_IN', emailUser: result.user.email });
         }).catch(erro => {
             alert(erro)
         })
@@ -31,17 +30,17 @@ function Login() {
                     {useSelector(state => state.loggedUSer) > 0 ? <Redirect to='/home' /> : null}
 
                     <form className="signin-container__form">
-                        <h1 class="title">Bem-vindo de volta!</h1>
+                        <h1 className="title">Bem-vindo de volta!</h1>
                         <p className="subtitle">Faça seu login e interaja com milhares de pessoas!</p>
                         <fieldset className="textfield mb-24 mt32">
                             <label>E-mail</label>
-                            <input id="login2_email_npt" onChange={(e) => setEmail(e.target.value)} type="email" class="form-control my-2" placeholder="Digite seu e-mail"/>
+                            <input id="login2_email_npt" onChange={(e) => setEmail(e.target.value)} type="email" className="form-control my-2" placeholder="Digite seu e-mail"/>
                         </fieldset>
                         <fieldset className="textfield mb-12">
                             <label>Senha</label>
-                            <input id="login2_passw_npt" onChange={(e) => setSenha(e.target.value)} type="password" class="form-control my-2" placeholder="Digite sua Senha" />
+                            <input id="login2_passw_npt" onChange={(e) => setSenha(e.target.value)} type="password" className="form-control my-2" placeholder="Digite sua Senha" />
                         </fieldset>
-                        <div class="link__recovery">
+                        <div className="link__recovery">
                             <Link to="/recoveryPassword" className=""><span>Esqueci minha senha</span></Link>
                         </div>
                         <button id="login2_enter_btn" onClick={singIn} className="w-100 btn btn-lg fw-bold bor" type="button">Entrar</button>
@@ -53,10 +52,3 @@ function Login() {
 }
 
 export default Login;
-
-/* automation ids list
-
-    login2_email_npt
-    login2_passw_npt
-    login2_enter_btn
-*/
