@@ -17,6 +17,7 @@ export default function (props) {
     const [compartilhar, setCompartilhar] = useState('');
     const [compartilhou, setCompartilhou] = useState('');
     const [element, setElement] = useState('');
+    const [elementComentarios, setElementComentarios] = useState('');
 
 
     // .log(state.emailUser);
@@ -50,6 +51,34 @@ export default function (props) {
             setCompartilhar(1);
             setCompartilhou(0);
         }
+
+        if (Array.isArray(props.coments) && props.coments.length > 0) {
+            var retorno = "";
+            props.coments.forEach(function (coment) {
+                let object1 = JSON.parse(coment);
+
+               // console.log(coment);
+                retorno += '<span>aaa' + object1 + '</span>';
+
+           })
+            setElementComentarios(
+                retorno
+            );
+
+
+        }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -111,16 +140,24 @@ export default function (props) {
         var id = obj.id;
 
 
-
         let evento = firebase.firestore().collection('events');
         var likes = [];
         evento.get().then(async (result) => {
             await result.docs.forEach(doc => {
                 if (doc.id == obj.id) {
+                    doc.data().coments.forEach(function (coment) {
 
-                    //  let object1 = JSON.parse(doc.data().coments);
-                    console.log(doc.data().coments);
-                    //         console.log(object1);
+                        let object1 = JSON.parse(coment);
+                        console.log(object1);
+                        let objeto = [];
+                        objeto.push('aaaa');
+
+                        // console.log(doc.data().coments);
+                        console.log('1' + elementComentarios);
+
+                    })
+
+
 
                 }
             })
@@ -132,19 +169,12 @@ export default function (props) {
         setElement(
             <div>
                 <h5>Comentários</h5>
-                <br />
                 <div className='feedPost__util feed__coments'>
                     <input id="textComent" type="textComent" class="form-control my-2" placeholder="Comentário" />
                     <button id="login2_enter_btn" onClick={() => salvaComentario({ id })} className="w-10 btn btn-coments fw-bold bor" type="button">enviar</button>
                 </div>
-
-
-
-
-
-
-
             </div>
+           , {elementComentarios}
         );
     }
 
