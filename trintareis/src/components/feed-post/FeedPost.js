@@ -7,27 +7,61 @@ import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
 import firebase from '../../config/firebase';
-import { Link } from 'react-router-dom';
 
 export default function (props) {
     const [urlImages, setUrlImages] = useState('');
     const emailUser = useSelector(state => state.emailUser);
+    const loggedUSer = useSelector(state => state.loggedUSer);
     const [curtir, setCurti] = useState('');
     const [curtiu, setCurtiu] = useState('');
+    const [userName, setUserName] = useState('');
+    const date = new Date();
 
     const [compartilhar, setCompartilhar] = useState('');
     const [compartilhou, setCompartilhou] = useState('');
     const [element, setElement] = useState('');
-    const [elementComentarios, setElementComentarios] = useState('');
+    const [todosComentarios, setTodosComentarios] = useState('');
 
 
-    // .log(state.emailUser);
+    firebase.firestore().collection('profiles').get().then(async (result) => {
+        await result.docs.forEach(doc => {
+            if (doc.data().emailUser == emailUser) {
+                setUserName(doc.data().userName);
+            }
+        })
+    })
 
+
+    function atualizarComentario(props) {
+        let listItems2 = [];
+        var coment = "";
+        if (props.comentario) {
+            coment = props.comentario;
+        } else {
+            coment = props;
+        }
+        if (coment) {
+            var json = '[' + coment.replace('[object Object],', '') + ']';
+            var json = json.replace('undefined,', '');
+            console.log(json);
+            if (JSON.parse(json)) {
+                json = JSON.parse(json);
+                console.log(json);
+                listItems2 = json.map(
+                    (number) =>
+                        <div>
+                            <h5>{number.autor}</h5>
+                            <span>{number.content}</span>
+                        </div>
+                );
+            }
+        }
+        setTodosComentarios(listItems2);
+    }
 
     useEffect(() => {
         const abortController = new AbortController()
         firebase.storage().ref(`images/${props.img}`).getDownloadURL().then(url => setUrlImages(url));
-
         if (Array.isArray(props.like) && props.like.length > 0) {
             setCurti(props.like.length);
             props.like.forEach(function (like) {
@@ -39,8 +73,6 @@ export default function (props) {
             setCurti(1);
             setCurtiu(0);
         }
-
-
         if (Array.isArray(props.share) && props.share.length > 0) {
             setCompartilhar(props.share.length);
             props.share.forEach(function (share) {
@@ -53,132 +85,77 @@ export default function (props) {
             setCompartilhou(0);
         }
 
-        if (Array.isArray(props.coments) && props.coments.length > 0) {
-            var retorno = "";
-            props.coments.forEach(function (coment) {
-                let object1 = JSON.parse(coment);
-
-               // console.log(coment);
-                retorno += '<span>aaa' + object1 + '</span>';
-
-           })
-            setElementComentarios(
-                retorno
-            );
-
-
-        }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         return function cleanup() {
             abortController.abort()
         }
     }, []);
 
     function salvaComentario(obj) {
-        console.log('Id: ' + obj.id);
-        console.log('Id: ' + obj);
+        obj.preventDefault();
         let evento = firebase.firestore().collection('events');
-
-        /* evento.doc(obj.id).update({
-                coments: null
+        /*evento.doc(obj.id).update({
+                coments: { data: 1, autor: 'Tiago', content: 'Welcome to learning React!' }
             })
             return false;*/
-        var comentarios = [];
+        var comentarios = "";
         evento.get().then(async (result) => {
             await result.docs.forEach(doc => {
-                let comentario = ['tiago', 'email', 'oi, eu sou o goku', 'data'];
-                comentario = JSON.stringify(comentario);
-                if (doc.id == obj.id) {
+                let comentario = { data: date.getDate(), autor: userName, content: obj.target[0].value };
+                console.log(comentario);
+                if (doc.id == obj.target[1].value) {
                     if (doc.data().coments == '') {
-                        evento.doc(obj.id).update({
+                        evento.doc(obj.target[1].value).update({
                             coments: comentario
                         })
                     } else if (doc.data().coment != '' && !Array.isArray(doc.data().coments)) {
-                        comentarios.push(doc.data().coments);
-                        comentarios.push(comentario);
-                        evento.doc(obj.id).update({
-                            coments: comentarios
-                        })
+                        try {
+                            JSON.parse(doc.data().coments);
+                            comentarios = JSON.stringify(doc.data().coments);
+                            comentarios += ',' + JSON.stringify(comentario);
+                            console.log(comentarios);
+                            evento.doc(obj.target[1].value).update({
+                                coments: comentarios
+                            })
+
+                        } catch (e) {
+                            comentarios = doc.data().coments;
+                            comentarios += ',' + JSON.stringify(comentario);
+                            comentarios = comentarios.replace('undefined,', '');
+                            evento.doc(obj.target[1].value).update({
+                                coments: comentarios
+                            })
+                        }
                     } else {
                         comentarios = doc.data().coments;
-                        comentarios.push(comentario);
+                        comentarios += ',' + JSON.stringify(comentario);
                         evento.doc(obj.id).update({
                             coments: comentarios
                         })
                     }
-
-
+                    atualizarComentario(comentarios);
                 }
             });
         });
-
-
-
-
-
-
-
-
         alert('salvar comentario');
     }
 
 
-    function comentarios(obj) {
-        var id = obj.id;
+    function comentarios(obj, comentarios) {
 
-
-        let evento = firebase.firestore().collection('events');
-        var likes = [];
-        evento.get().then(async (result) => {
-            await result.docs.forEach(doc => {
-                if (doc.id == obj.id) {
-                    doc.data().coments.forEach(function (coment) {
-
-                        let object1 = JSON.parse(coment);
-                        console.log(object1);
-                        let objeto = [];
-                        objeto.push('aaaa');
-
-                        // console.log(doc.data().coments);
-                        console.log('1' + elementComentarios);
-
-                    })
-
-
-
-                }
-            })
-        })
-
-
-
-
+        atualizarComentario(comentarios);
         setElement(
-            <div>
-                <h5>Comentários</h5>
-                <div className='feedPost__util feed__coments'>
-                    <input id="textComent" type="textComent" class="form-control my-2" placeholder="Comentário" />
-                    <button id="login2_enter_btn" onClick={() => salvaComentario({ id })} className="w-10 btn btn-coments fw-bold bor" type="button">enviar</button>
+            <form onSubmit={salvaComentario}>
+                <div>
+                    <h5>Comentários</h5>
+                    <div className='feedPost__util feed__coments'>
+                        <input id="textComent" type="textComent" className="form-control my-2" placeholder="Comentário" />
+                        <input id="textComent" type="hidden" value={obj.id} />
+                        <input type="submit" value="Enviar" className="w-10 btn btn-coments fw-bold bor" />
+                    </div>
                 </div>
-            </div>
-           , {elementComentarios}
+            </form>
         );
     }
-
 
 
     function funcGostei(obj) {
@@ -324,7 +301,7 @@ export default function (props) {
                 <div className="div__info">
                     <div>
                         <span>
-                            <BiLike />{curtir} curtidas</span> {props.id}
+                            <BiLike />{curtir} curtidas</span>
                     </div>
                 </div>
                 <hr />
@@ -332,15 +309,12 @@ export default function (props) {
                 <div className="feedPost__util">
                     <div className="feedPost__reaction">
                         <BiLike />
-
                         <span onClick={() => funcGostei({ id: props.id })} className="">Gostei</span>
-
-
                     </div>
 
                     <div className="feedPost__reaction">
                         <CgComment />
-                        <span onClick={() => comentarios({ id: props.id })} className="">comentar</span>
+                        <span onClick={() => comentarios({ id: props.id }, { comentario: props.coments })} className="">comentar</span>
                     </div>
 
                     <div className="feedPost__reaction">
@@ -348,7 +322,10 @@ export default function (props) {
                         <span onClick={() => funcCompartilhar({ id: props.id })} className="">Compartilhar</span>
                     </div>
                 </div>
-                {element}
+                <div className='p-3'>
+                    {element}
+                    {todosComentarios}
+                </div>
             </div>
         </div>
     )
