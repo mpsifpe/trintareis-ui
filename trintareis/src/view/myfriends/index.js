@@ -1,10 +1,36 @@
 import './myFriends.css';
-import React from 'react';
+import React, {useState} from 'react';
 import Header from '../../components/header/index';
-import UserList from '../../components/user-list';
+import FriendCard from '../../components/friend-card';
+import firebase from '../../config/firebase';
 
-function MyFriends(props) {
-       
+
+export default function MyFriends() {
+    
+    const [users, setUsers] = useState([]);
+    let idCount = 0; // valor para gerar os IDs dos componentes, necessário para a função map
+
+    let data = [];
+    //carregamento dos dados do Firebase
+    firebase.firestore().collection('profiles').get().then(  
+        (result) => {
+            console.log("começou o processamento");
+            result.docs.forEach(doc => {    data.push({ id: idCount,
+                                                        nome: doc.get("userName"),
+                                                        course: doc.get("city"),
+                                                        type: "aluno"});                                            
+                                            idCount = idCount + 1;                                            
+                                            console.log(data.length);
+                                        
+                                            if((idCount+1) == result.length){
+                                                    result = null;
+                                            }
+                                        }
+                                );
+            setUsers(data);
+        }
+    );
+
     return (
         <div className="App">
             <Header />
@@ -13,14 +39,21 @@ function MyFriends(props) {
                         <span>Meus amigos</span>
                     </div>
                     <section className="section_friends_list" id="sec-bd5e">
-                        
-                        <UserList/>
+
                     </section>
                 </div>
         </div>
     )
-}
 
-export default MyFriends;
+};
 
-//<FriendCard/> <FriendCard/>
+/*
+                        {users.map( user => ( 
+                                                <FriendCard 
+                                                    key={user.id}
+                                                    nome={user.nome}
+                                                    course={user.course}
+                                                    type={user.type} />
+                                            ))
+                            }
+*/

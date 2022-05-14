@@ -4,12 +4,12 @@ import FriendCard from '../friend-card'
 import firebase from '../../config/firebase';
 
 export default function UserList(){
-
-    //lista para exportar
-    let list = [];
+    
     let data = [];
 
     async function getUsers(){
+        console.log("start getusers")
+        
         let tempList = [];
 
         await firebase.firestore().collection('profiles').get().then(  
@@ -19,41 +19,21 @@ export default function UserList(){
                 );
             }
         );
-        //console.log(tempList); 
-        list = tempList;
+        
+        for (var i = 0; i < tempList.length; i++){
+            data.push(
+                {
+                    id: i,
+                    nome: tempList[i][0],
+                    course: tempList[i][1],
+                    type: "aluno"  
+                }
+            )
+        };
+        
+        console.log(data);
+        return ( data ); 
     };
     
-    //obriga a prosseguir apenas quando acabar getUsers
-    async function makeList(){
-        await getUsers();
-        //console.log(list);
-
-        for (var i = 0; i < list.length; i++){
-            data.push({
-                id: i,
-                name: list[i][0],
-                course: list[i][1],
-                type: "aluno"
-            })
-            //console.log(data[i]) 
-        }
-
-        //console.log(data)
-
-    };
-
-    makeList();
-
-    return (
-        <div> 
-            <p>teste</p>
-            {data.map(d => (
-                <FriendCard 
-                    key={d.id} 
-                    name={d.name} 
-                    course={d.course} 
-                    type={d.type}/>
-            ))}
-        </div>
-    );
-}
+    getUsers();
+};
