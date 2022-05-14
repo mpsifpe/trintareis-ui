@@ -25,6 +25,9 @@ function ModalPostPhoto() {
                 photo: photo.name,
                 emailUser: emailUser,
                 views: 0,
+                like: 0,
+                share: 0,
+                amountComment: 0,
                 public: 1,
                 dataTime: new Date()
             }).then((docRef) => {
@@ -68,7 +71,7 @@ function ModalPostPhoto() {
                                 <div>
                                     {
                                         load ? <button className="form-control btn btn-lg btn-block mt-3 mb-5 btn-cadastro" type="button" disabled>
-                                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                            <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                                         </button> :
                                             <button onClick={enroll} type="button" className="form-control btn btn-lg btn-block mt-3 mb-5 btn-cadastro">Concluído</button>
                                     }
