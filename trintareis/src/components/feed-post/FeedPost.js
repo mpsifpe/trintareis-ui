@@ -32,7 +32,7 @@ export default function (props) {
     })
 
 
-    function atualizarComentario(props) {
+    function exibirComentario(props) {
         let listItems2 = [];
         var coment = "";
         if (props.comentario) {
@@ -43,21 +43,78 @@ export default function (props) {
         if (coment) {
             var json = '[' + coment.replace('[object Object],', '') + ']';
             var json = json.replace('undefined,', '');
+            json = JSON.parse(json);
             console.log(json);
-            if (JSON.parse(json)) {
-                json = JSON.parse(json);
-                console.log(json);
-                listItems2 = json.map(
-                    (number) =>
-                        <div>
-                            <h5>{number.autor}</h5>
-                            <span>{number.content}</span>
-                        </div>
-                );
-            }
+            var posicao = 0
+            listItems2 = json.map(
+                (number) =>
+                    <div>
+                        <h5>{number.autor}</h5>
+                        <span>{number.content}</span>
+                        | <a onClick={() => atualizarComentario({ json }, { posicao })} className="">editar</a>
+                        | <a onClick={() => atualizarComentario({ json }, { posicao })} className="">apagar</a>
+                        <div className='dv-ocult'>{posicao = posicao + 1}</div>
+                    </div>
+            );
+            setTodosComentarios(listItems2);
         }
-        setTodosComentarios(listItems2);
     }
+
+
+
+    function atualizarComentario(props, posicao) {
+        let listItems2 = [];
+
+        if (props) {
+            console.log(posicao);
+            var i = 0
+            listItems2 = props.json.map(
+                (number) =>
+
+                    <div>
+
+                        <div className='dv-ocult'>{i = i + 1}</div>
+
+                        {i == parseInt(4) ?
+                            <div>
+                                <h5>{number.autor}</h5>
+                                <form onSubmit={salvaComentario}>
+                                    <div>
+                                        <div className='feedPost__util feed__coments'>
+                                            <input id="textComent" type="textComent" value={number.content} className="form-control my-2" placeholder="Comentário" />
+                                            <input id="textComent" type="hidden" value='1' />
+                                            <input type="submit" value="editar" className="w-10 btn btn-coments fw-bold bor" />
+                                        </div>
+                                    </div>
+                                </form>
+                            </div> :
+                            <div>
+                                <h5>{number.autor}</h5>
+                                <span>{number.content}</span>
+                                | <a onClick={() => atualizarComentario({ props })} className="">editar---</a>
+                                | <a onClick={() => atualizarComentario({ props })} className="">apagar---</a>
+                            </div>}
+
+
+
+
+                    </div>
+            );
+            console.log(i);
+            setTodosComentarios(listItems2);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
 
     useEffect(() => {
         const abortController = new AbortController()
@@ -90,6 +147,12 @@ export default function (props) {
         }
     }, []);
 
+
+
+    function carregarEditar(obj, lista) {
+        console.log(lista);
+        alert('editar ');
+    }
     function salvaComentario(obj) {
         obj.preventDefault();
         let evento = firebase.firestore().collection('events');
@@ -132,7 +195,7 @@ export default function (props) {
                             coments: comentarios
                         })
                     }
-                    atualizarComentario(comentarios);
+                    exibirComentario(comentarios);
                 }
             });
         });
@@ -142,7 +205,7 @@ export default function (props) {
 
     function comentarios(obj, comentarios) {
 
-        atualizarComentario(comentarios);
+        exibirComentario(comentarios);
         setElement(
             <form onSubmit={salvaComentario}>
                 <div>
