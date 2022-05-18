@@ -15,6 +15,7 @@ import CreatePublication from './view/create-publication/';
 import MyFriends from './view/myfriends/';
 import Profile from './view/profile/';
 import EditProfile from './view/edit-profile/';
+import ConectScreen from './view/conect';
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
         <Route exact path='/profile' component={Profile}/>
         <Route exact path='/editProfile' component={EditProfile}/>
         <Route exact path='/editProfile/:id' component={EditProfile}/>
+        <Route exact path='/conect' component={ConectScreen}/>
       </Router>
     </Provider>
   );
