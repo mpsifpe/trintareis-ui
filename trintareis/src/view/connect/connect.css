@@ -1,3 +1,7 @@
+.cards-display{
+  display: flex;
+}
+
 .div__main_myfriends{
     width: 80%;
     margin-left: 10%;

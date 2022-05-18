@@ -15,7 +15,7 @@ import CreatePublication from './view/create-publication/';
 import MyFriends from './view/myfriends/';
 import Profile from './view/profile/';
 import EditProfile from './view/edit-profile/';
-import ConnectScreen from './view/conect';
+import ConnectScreen from './view/connect';
 
 function App() {
   return (

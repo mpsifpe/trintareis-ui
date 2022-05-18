@@ -1,5 +1,5 @@
 import './myFriends.css';
-import React from 'react';
+import React, {useEffect} from 'react';
 import { useStateIfMounted } from 'use-state-if-mounted';
 import Header from '../../components/header/index';
 import FriendCard from '../../components/friend-card';
@@ -11,14 +11,23 @@ export default function MyFriends() {
     
     const [users, setUsers] = useStateIfMounted([]);
     const [loaded, setLoaded] = useStateIfMounted(false);
-    const [cardList, setCardList] = useStateIfMounted(<span> </span>)
+    const [cardsLoaded, setCardsLoaded] = useStateIfMounted (false);
+    const [cardList, setCardList] = useStateIfMounted(<span> </span>);
+
+    useEffect(()=>{
+        getFriends();
+        if (!cardsLoaded){
+            mountFriendsCards();
+            setCardsLoaded(true);
+        }
+    });
 
     function getFriends(){
         let tempList = [];
         if (!loaded){
             let idCount = 0; // valor para gerar os IDs dos componentes, necessário para a função map        
             
-            console.log("getfriends em execução");
+            console.log("getfriends em execução /myfriends");
             
             firebase.firestore().collection('profiles').get().then(  
                 (result) => {      
@@ -32,9 +41,10 @@ export default function MyFriends() {
                                             idCount = idCount + 1;                                                                                                 
                                         
                                             if((idCount+1) == result.docs.length){
-                                                console.log("getfriends finalizado");
+                                                console.log("getfriends finalizado /myfriends");
                                                 setLoaded(true);
                                                 setUsers(tempList);
+                                                setCardsLoaded(false);
                                             }
                 })}
             );
@@ -43,7 +53,7 @@ export default function MyFriends() {
 
     function mountFriendsCards(){
         setCardList (
-           <span>
+           <span className='cards-display'>
                 {users.map(user => ( 
                                     <FriendCard 
                                         key={user.id}
@@ -54,10 +64,6 @@ export default function MyFriends() {
             </span>
         );
     }
-
-
-    /*execução--------------------------------------------------------------------------------------*/
-    getFriends()
 
     return (
         <div className="App">
