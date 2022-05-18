@@ -69,7 +69,7 @@ export default function ConnectScreen() {
         <div className="App">
             <Header />
                 <div className="div__main_myfriends">
-                    <div className="div__title_myfriends" onClick={mountFriendsCards}>
+                    <div className="div__title_myfriends">
                         <span>Conecte-se</span>
                     </div>
                     

@@ -69,7 +69,7 @@ export default function MyFriends() {
         <div className="App">
             <Header />
                 <div className="div__main_myfriends">
-                    <div className="div__title_myfriends" onClick={mountFriendsCards}>
+                    <div className="div__title_myfriends">
                         <span>Meus amigos</span>
                     </div>
                     
