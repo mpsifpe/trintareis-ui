@@ -55,7 +55,7 @@ function Header() {
                                 <span>Início</span>
                             </div>
                         </Link >
-                        <Link to="/conect">
+                        <Link to="/connect">
                             <div className="friend__fb">
                                 <FaUserFriends />
                                 <span>Conectar</span>

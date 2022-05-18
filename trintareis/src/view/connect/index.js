@@ -1,4 +1,4 @@
-import './conect.css';
+import './connect.css';
 import React from 'react';
 import { useStateIfMounted } from 'use-state-if-mounted';
 import Header from '../../components/header/index';
@@ -7,7 +7,7 @@ import firebase from '../../config/firebase';
 
 
 
-export default function ConectScreen() {
+export default function ConnectScreen() {
     
     const [users, setUsers] = useStateIfMounted([]);
     const [loaded, setLoaded] = useStateIfMounted(false);
