@@ -7,8 +7,11 @@ import './feedPost.css'
 import firebase from '../../config/firebase';
 import { Link } from 'react-router-dom';
 
+import { useSelector } from 'react-redux';
+
 export default function (props) {
     const [urlImages, setUrlImages] = useState('');
+    const emailUser = useSelector(state => state.emailUser);
 
     useEffect(() => {
         const abortController = new AbortController()
@@ -25,12 +28,13 @@ export default function (props) {
             <div className="feedPostSingle">
                 <div className="feedPost__profile">
                     <div>
-                        <Link to="profile">
+
+                        <Link to={props.emailUser === emailUser ? `/profile` : `/profile/${props.profileId}`}>
                             <img src={props.profilePhoto} />
                         </Link>
                     </div>
                     <div className="div__info">
-                        <Link to="profile">
+                    <Link to={props.emailUser === emailUser ? `/profile` : `/profile/${props.profileId}`}>
                             <div>
                                 <span>{props.nome}</span>
                             </div>
@@ -47,7 +51,6 @@ export default function (props) {
                     <h2 className='p-3'>{props.title}</h2>
                     <p>
                         {props.conteudo}<br />
-                        {/* <Link to={'/detailsEvents/' + props.id} className="feed__details">...ver mais</Link> */}
                     </p>
 
                     <img src={urlImages} />
