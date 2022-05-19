@@ -8,6 +8,7 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import firebase from '../../config/firebase';
 
+
 export default function (props) {
     const [urlImages, setUrlImages] = useState('');
     const emailUser = useSelector(state => state.emailUser);
@@ -334,16 +335,17 @@ export default function (props) {
             <div className="feedPostSingle">
                 <div className="feedPost__profile">
                     <div>
-                        <Link to="profile">
+
+                        <Link to={props.emailUser === emailUser ? `/profile` : `/profile/${props.profileId}`}>
                             <img src={props.profilePhoto} />
                         </Link>
                     </div>
                     <div className="div__info">
-                        <div>
-                            <Link to="profile">
-                                <a>{props.nome}</a>
-                            </Link>
-                        </div>
+                    <Link to={props.emailUser === emailUser ? `/profile` : `/profile/${props.profileId}`}>
+                            <div>
+                                <span>{props.nome}</span>
+                            </div>
+                        </Link>
                         <div>
                             <span>{props.profileInformation}</span>
                         </div>
@@ -356,7 +358,6 @@ export default function (props) {
                     <h2 className='p-3'>{props.title}</h2>
                     <p>
                         {props.conteudo}<br />
-                        {/* <Link to={'/detailsEvents/' + props.id} className="feed__details">...ver mais</Link> */}
                     </p>
 
                     <img src={urlImages} />
