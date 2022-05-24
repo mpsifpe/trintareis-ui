@@ -1,20 +1,29 @@
 import './friend-card.css';
-import { Link } from "react-router-dom";
 import React from 'react';
+import { Link } from "react-router-dom";
+import { useSelector } from 'react-redux';
 import { useStateIfMounted } from 'use-state-if-mounted';
 
 
 export default function FriendCard(props) {
     
+    const emailUser = useSelector(state => state.emailUser);
+
     const [name, setName] = useStateIfMounted("empty");
     const [course, setCourse] = useStateIfMounted("empty");    
     const [userType, setUserType] = useStateIfMounted("empty");
 
     function updateInfo(){
-        if (props.nome != null){
-            setName(props.nome)    
-        }
-
+        setName(
+            <div>
+                <Link to={props.email === emailUser ? `/profile` : `/profile/${props.profileId}`}> 
+                    <div>
+                        <span>{props.nome}</span>
+                    </div>
+                </Link>
+            </div>
+        )    
+        
         if (props.course != null){
 
             setCourse(props.course)     

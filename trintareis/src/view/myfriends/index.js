@@ -6,11 +6,11 @@ import FriendCard from '../../components/friend-card';
 import firebase from '../../config/firebase';
 
 
-
 export default function MyFriends() {
     
     const [users, setUsers] = useStateIfMounted([]);
     const [loaded, setLoaded] = useStateIfMounted(false);
+    const [loadStarted, setLoadStarted] = useStateIfMounted(false);
     const [cardsLoaded, setCardsLoaded] = useStateIfMounted (false);
     const [cardList, setCardList] = useStateIfMounted(<span> </span>);
 
@@ -24,7 +24,8 @@ export default function MyFriends() {
 
     function getFriends(){
         let tempList = [];
-        if (!loaded){
+        if (!loaded && !loadStarted){
+            setLoadStarted(true);
             let idCount = 0; // valor para gerar os IDs dos componentes, necessário para a função map        
             
             console.log("getfriends em execução /myfriends");
@@ -36,7 +37,10 @@ export default function MyFriends() {
                                                         id: idCount,
                                                         nome: doc.get("userName"),
                                                         course: doc.get("city"),
-                                                        type: "aluno"
+                                                        type: "aluno",
+                                                        photo: doc.get("profilePhoto"),
+                                                        email: doc.get("emailUser"),
+                                                        profileId: doc.id
                                                     });                                            
                                             idCount = idCount + 1;                                                                                                 
                                         
@@ -59,7 +63,10 @@ export default function MyFriends() {
                                         key={user.id}
                                         nome={user.nome}
                                         course={user.course}
-                                        type={user.type} />
+                                        type={user.type}
+                                        photo={user.profilePhoto}
+                                        email={user.email}
+                                        profileId={user.profileId} />
                 ))}
             </span>
         );
