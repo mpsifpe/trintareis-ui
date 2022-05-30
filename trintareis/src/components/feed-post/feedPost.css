@@ -86,3 +86,24 @@
 .dv-ocult{
    display: none;
 }
+
+.shadow-interpolacao-feed {
+    color: #000;
+
+}
+
+.shadow-interpolacao-feed:hover {
+    color: #276013;
+}
+
+.feed-comentario-top{
+    display: flex;
+}
+.feed-comentario-metad-right{
+    text-align: right;
+    width: 50%;
+}
+.feed-comentario-metad-left{
+    width: 50%;
+    text-align: left;
+}
