@@ -40,13 +40,13 @@
 
 }
 
-.button-disconnect{
+.card-button{
     border: 1px solid;
     display: flex;
     justify-content: center;
     align-items: center;
     border-radius: 15px;
-    color: #45bd62;
+    color: #3d8a50;
     height: 35px;
     width: 80%;
     align-self: center;
@@ -54,16 +54,16 @@
     margin-bottom: 10px;
 }
 
-.button-disconnect span{
-  color: #45bd62;
+.card-button span{
+  color: #3d8a50;
   font-size: 17px;
 }
 
-.button-disconnect span:hover{
-  color: #3d8a50;
+.card-button span:hover{
+  color: #206130;
 }
 
-.button-disconnect:hover {
+.card-button:hover {
     border: 2px solid;
-    color: #3d8a50;
+    color: #206130;
 }

@@ -15,10 +15,16 @@ export default function MyFriends() {
     const [cardList, setCardList] = useStateIfMounted(<span> </span>);
 
     useEffect(()=>{
+        let abortController = new AbortController();
+
         getFriends();
         if (!cardsLoaded){
             mountFriendsCards();
             setCardsLoaded(true);
+        }
+
+        return function cleanup() {
+            abortController.abort();
         }
     });
 
@@ -66,15 +72,20 @@ export default function MyFriends() {
                                         type={user.type}
                                         photo={user.profilePhoto}
                                         email={user.email}
-                                        profileId={user.profileId} />
+                                        profileId={user.profileId}
+                                        isFriend={true} />
                 ))}
             </span>
         );
     }
 
+    function unmountFriendsCards(){
+        setCardList (<span> </span>);
+    }
+
     return (
         <div className="App">
-            <Header />
+            <div onClick={unmountFriendsCards} ><Header/></div>
                 <div className="div__main_myfriends">
                     <div className="div__title_myfriends">
                         <span>Meus amigos</span>
