@@ -35,20 +35,20 @@ export default function MyFriends() {
             let idCount = 0; // valor para gerar os IDs dos componentes, necessário para a função map        
             
             console.log("getfriends em execução /myfriends");
-            
+
             firebase.firestore().collection('profiles').get().then(  
                 (result) => {      
-                    result.docs.forEach(doc => {    
+                    result.docs.forEach(doc => {
                                             tempList.push({
                                                         id: idCount,
                                                         nome: doc.get("userName"),
                                                         course: doc.get("city"),
                                                         type: "aluno",
-                                                        photo: doc.get("profilePhoto"),
+                                                        profilePhoto: doc.get("profilePhoto"),
                                                         email: doc.get("emailUser"),
                                                         profileId: doc.id
-                                                    });                                            
-                                            idCount = idCount + 1;                                                                                                 
+                                                    });                       
+                                            idCount = idCount + 1;
                                         
                                             if((idCount+1) == result.docs.length){
                                                 console.log("getfriends finalizado /myfriends");
@@ -70,14 +70,14 @@ export default function MyFriends() {
                                         nome={user.nome}
                                         course={user.course}
                                         type={user.type}
-                                        photo={user.profilePhoto}
+                                        profilePhoto={user.profilePhoto}
                                         email={user.email}
                                         profileId={user.profileId}
                                         isFriend={true} />
                 ))}
             </span>
         );
-    }
+    };
 
     function unmountFriendsCards(){
         setCardList (<span> </span>);

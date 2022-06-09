@@ -3,14 +3,10 @@ import React from 'react';
 import { Link } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import { useStateIfMounted } from 'use-state-if-mounted';
-
+import loading from '../../resources/loading.gif';
 import firebase from '../../config/firebase';
 
-
 export default function FriendCard(props) {
-    
-    const storage = firebase.storage();
-    const db = firebase.firestore();
 
     const emailUser = useSelector(state => state.emailUser);
 
@@ -18,8 +14,9 @@ export default function FriendCard(props) {
     const [course, setCourse] = useStateIfMounted("empty");    
     const [userType, setUserType] = useStateIfMounted("empty");
     const [cardButton, setCardButton] = useStateIfMounted(<button hidden={true}>button</button>);
+    const [cardImage, setCardImage] = useStateIfMounted(loading);
 
-    function updateInfo(){
+    async function updateInfo(){
         setName(
             <div>
                 <Link to={props.email === emailUser ? `/profile` : `/profile/${props.profileId}`}> 
@@ -44,9 +41,17 @@ export default function FriendCard(props) {
         } else {
             setCardButton(<button className='card-button' onClick={clickAction}>Conectar</button>)
         }
+
+        if (props.profilePhoto != null){
+            firebase.storage().ref(`profile_images/`+ props.profilePhoto).getDownloadURL().then(url => setCardImage(url));
+        }
     }
 
+
+
     function clickAction(){
+
+        //exemplo
         if(props.isFriend){
             setCardButton(<button className='card-button'>Desconectado</button>)
         } else {
@@ -58,7 +63,7 @@ export default function FriendCard(props) {
         <div onLoad={updateInfo}>
             <div className="friend-card">
                     <span className="friend-content">
-                        <img className="friend-img" src="/static/media/minios.8f62a453.jpg" />
+                        <img className="friend-img" src={cardImage} />
                         <h4 className="friend-name">{name}</h4>
                         <p className="friend-course"><b>{course}</b> </p>
                         <p className="friend-usertype">{userType}</p>

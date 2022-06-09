@@ -1,5 +1,5 @@
 import './connect.css';
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import { useStateIfMounted } from 'use-state-if-mounted';
 import Header from '../../components/header/index';
 import FriendCard from '../../components/friend-card';
@@ -44,7 +44,7 @@ export default function ConnectScreen() {
                                                         nome: doc.get("userName"),
                                                         course: doc.get("city"),
                                                         type: "aluno",
-                                                        photo: doc.get("profilePhoto"),
+                                                        profilePhoto: doc.get("profilePhoto"),
                                                         email: doc.get("emailUser"),
                                                         profileId: doc.id
                                                     });                                            
@@ -70,14 +70,14 @@ export default function ConnectScreen() {
                                         nome={user.nome}
                                         course={user.course}
                                         type={user.type}
-                                        photo={user.profilePhoto}
+                                        profilePhoto={user.profilePhoto}
                                         email={user.email}
                                         profileId={user.profileId}
                                         isFriend={false} />
                 ))}
             </span>
         );
-    }
+    };
 
     function unmountFriendsCards(){
         setCardList (<span> </span>);
@@ -85,7 +85,7 @@ export default function ConnectScreen() {
 
     return (
         <div className="App">
-            <div  > <Header/> </div>
+            <div onClick={unmountFriendsCards} ><Header/></div>
                 <div className="div__main_myfriends">
                     <div className="div__title_myfriends">
                         <span>Conecte-se</span>
@@ -101,7 +101,6 @@ export default function ConnectScreen() {
 };
 
 /* métodos auxiliares pra debug
-
       function printUsers(){
         console.log('');
         console.log(users.length);
