@@ -54,17 +54,20 @@ function Header() {
                                 <FaHome />
                                 <span>Início</span>
                             </div>
+                        </Link >
+                        <Link to="/connect">
+                            <div className="friend__fb">
+                                <FaUserFriends />
+                                <span>Conectar</span>
+                            </div>
                         </Link>
-                        <div className="friend__fb">
-                            <FaUserFriends />
-                            <span>Rede</span>
-                        </div>
                         <Link to="/myfriends">
                             <div className="group__fb link_preto">
                                 <MdOutlineGroups />
                                 <span>Amigos</span>
                             </div>
                         </Link>
+                        {/* TODO - ESSAS DUAS ABAS VAI FICAR OFF, NÃO DELETAR ESSE CÓDIGO
                         <div className="university__fb">
                             <FaUniversity />
                             <span>Instituições</span>
@@ -72,7 +75,7 @@ function Header() {
                         <div className="school__fb">
                             <IoIosSchool />
                             <span>Cursos</span>
-                        </div>
+                        </div> */}
                         <div className="event__fb">
                             <MdEventNote />
                             <span>Eventos</span>

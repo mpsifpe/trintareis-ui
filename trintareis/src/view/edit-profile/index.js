@@ -18,6 +18,7 @@ function ModalEditProfile(props) {
     const [coverPhotoNew, setCoverPhotoNew] = useState();
     const [region, setRegion] = useState();
     const [city, setCity] = useState();
+    const [friendsList, setFriendsList] = useState({});
     const emailUser = useSelector(state => state.emailUser);
 
     const storege = firebase.storage();
@@ -94,7 +95,8 @@ function ModalEditProfile(props) {
                 region: region,
                 city: city,
                 public: 1,
-                dataTime: new Date()
+                dataTime: new Date(),
+                friends: friendsList
             }).then((docRef) => {
                 setLoad(0);
                 console.log("Document written with ID: ", docRef.id);

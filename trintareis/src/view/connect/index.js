@@ -1,4 +1,4 @@
-import './myFriends.css';
+import './connect.css';
 import React, {useEffect} from 'react';
 import { useStateIfMounted } from 'use-state-if-mounted';
 import Header from '../../components/header/index';
@@ -6,7 +6,7 @@ import FriendCard from '../../components/friend-card';
 import firebase from '../../config/firebase';
 
 
-export default function MyFriends() {
+export default function ConnectScreen() {
     
     const [users, setUsers] = useStateIfMounted([]);
     const [loaded, setLoaded] = useStateIfMounted(false);
@@ -34,11 +34,11 @@ export default function MyFriends() {
             setLoadStarted(true);
             let idCount = 0; // valor para gerar os IDs dos componentes, necessário para a função map        
             
-            console.log("getfriends em execução /myfriends");
-
+            console.log("getfriends em execução /connectscreen");
+            
             firebase.firestore().collection('profiles').get().then(  
                 (result) => {      
-                    result.docs.forEach(doc => {
+                    result.docs.forEach(doc => {    
                                             tempList.push({
                                                         id: idCount,
                                                         nome: doc.get("userName"),
@@ -47,11 +47,11 @@ export default function MyFriends() {
                                                         profilePhoto: doc.get("profilePhoto"),
                                                         email: doc.get("emailUser"),
                                                         profileId: doc.id
-                                                    });                       
-                                            idCount = idCount + 1;
+                                                    });                                            
+                                            idCount = idCount + 1;                                                                                                 
                                         
                                             if((idCount+1) == result.docs.length){
-                                                console.log("getfriends finalizado /myfriends");
+                                                console.log("getfriends finalizado /connectscreen");
                                                 setLoaded(true);
                                                 setUsers(tempList);
                                                 setCardsLoaded(false);
@@ -73,7 +73,7 @@ export default function MyFriends() {
                                         profilePhoto={user.profilePhoto}
                                         email={user.email}
                                         profileId={user.profileId}
-                                        isFriend={true} />
+                                        isFriend={false} />
                 ))}
             </span>
         );
@@ -88,7 +88,7 @@ export default function MyFriends() {
             <div onClick={unmountFriendsCards} ><Header/></div>
                 <div className="div__main_myfriends">
                     <div className="div__title_myfriends">
-                        <span>Meus amigos</span>
+                        <span>Conecte-se</span>
                     </div>
                     
                     <section className="section_friends_list" id="sec-bd5e">
@@ -112,4 +112,9 @@ export default function MyFriends() {
     <div>
                         <button onClick={mountFriendsCards}> mount content </button>
                     </div>
+
+    
+    const sleep = (milliseconds) => {
+        return new Promise(resolve => setTimeout(resolve, milliseconds))
+    }
 */
