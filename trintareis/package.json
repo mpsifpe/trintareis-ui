@@ -16,6 +16,7 @@
     "react-scripts": "^4.0.3",
     "redux": "^4.1.2",
     "styled-components": "^5.3.5",
+    "use-state-if-mounted": "^1.0.7",
     "web-vitals": "^1.0.1"
   },
   "scripts": {
