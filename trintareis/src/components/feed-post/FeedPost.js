@@ -174,7 +174,21 @@ export default function (props) {
     }
 
     function salvarComentario(obj) {
+
+      
+
+
+
+
+     //   comentarios();
+alert("bbbbb");
+console.log('aaaaaaaaaa');
+     //   return "aaaaaa";
         obj.preventDefault();
+
+
+      
+
         let evento = firebase.firestore().collection('events');
         var comentarios = "";
         evento.get().then(async (result) => {
@@ -289,7 +303,7 @@ export default function (props) {
                 <div>
                     <h5>Comentários</h5>
                     <div className='feedPost__util feed__coments'>
-                        <input type="textComent" className="form-control my-2" placeholder="Comentário" />
+                        <input type="textComent" className="form-control my-2" defaultValue="" placeholder="Comentário" />
                         <input type="hidden" value={obj.id} />
                         <input type="submit" value="Salvar" className="w-10 btn btn-coments fw-bold bor" />
                     </div>
