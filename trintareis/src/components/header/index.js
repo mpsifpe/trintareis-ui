@@ -67,6 +67,7 @@ function Header() {
                                 <span>Amigos</span>
                             </div>
                         </Link>
+                        {/* TODO - ESSAS DUAS ABAS VAI FICAR OFF, NÃO DELETAR ESSE CÓDIGO
                         <div className="university__fb">
                             <FaUniversity />
                             <span>Instituições</span>
@@ -74,7 +75,7 @@ function Header() {
                         <div className="school__fb">
                             <IoIosSchool />
                             <span>Cursos</span>
-                        </div>
+                        </div> */}
                         <div className="event__fb">
                             <MdEventNote />
                             <span>Eventos</span>
