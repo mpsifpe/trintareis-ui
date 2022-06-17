@@ -4,6 +4,7 @@ import { useStateIfMounted } from 'use-state-if-mounted';
 import Header from '../../components/header/index';
 import FriendCard from '../../components/friend-card';
 import firebase from '../../config/firebase';
+import { useSelector } from 'react-redux';
 
 
 export default function MyFriends() {
@@ -13,6 +14,9 @@ export default function MyFriends() {
     const [loadStarted, setLoadStarted] = useStateIfMounted(false);
     const [cardsLoaded, setCardsLoaded] = useStateIfMounted (false);
     const [cardList, setCardList] = useStateIfMounted(<span> </span>);
+    const [friends, setFriends] = useStateIfMounted([]);
+
+    const emailUser = useSelector(state => state.emailUser);
 
     useEffect(()=>{
         let abortController = new AbortController();
@@ -34,49 +38,67 @@ export default function MyFriends() {
             setLoadStarted(true);
             let idCount = 0; // valor para gerar os IDs dos componentes, necessário para a função map        
             
-            console.log("getfriends em execução /myfriends");
-
+            console.log("getfriends em execução /connectscreen");
+            
             firebase.firestore().collection('profiles').get().then(  
                 (result) => {      
                     result.docs.forEach(doc => {
-                                            tempList.push({
-                                                        id: idCount,
-                                                        nome: doc.get("userName"),
-                                                        course: doc.get("city"),
-                                                        type: "aluno",
-                                                        profilePhoto: doc.get("profilePhoto"),
-                                                        email: doc.get("emailUser"),
-                                                        profileId: doc.id
-                                                    });                       
-                                            idCount = idCount + 1;
-                                        
-                                            if((idCount+1) == result.docs.length){
-                                                console.log("getfriends finalizado /myfriends");
-                                                setLoaded(true);
-                                                setUsers(tempList);
-                                                setCardsLoaded(false);
-                                            }
+                            if (doc.get("emailUser") === emailUser) {   
+                                
+                                setFriends(doc.get("friends"));
+
+                                if((idCount+1) == result.docs.length){
+                                    console.log("getfriends finalizado /connectscreen");
+                                    setLoaded(true);
+                                    setUsers(tempList);
+                                    setCardsLoaded(false);
+                                }
+                            } 
+                            else {
+                                tempList.push({
+                                    id: idCount,
+                                    nome: doc.get("userName"),
+                                    course: doc.get("city"),
+                                    type: "aluno",
+                                    profilePhoto: doc.get("profilePhoto"),
+                                    email: doc.get("emailUser"),
+                                    profileId: doc.id
+                                });
+
+                                idCount = idCount + 1;
+
+                                if((idCount+1) == result.docs.length){
+                                    console.log("getfriends finalizado /connectscreen");
+                                    setLoaded(true);
+                                    setUsers(tempList);
+                                    setCardsLoaded(false);
+                                }
+                            }
                 })}
             );
         }
     }
 
     function mountFriendsCards(){
-        setCardList (
-           <span className='cards-display'>
-                {users.map(user => ( 
-                                    <FriendCard 
-                                        key={user.id}
-                                        nome={user.nome}
-                                        course={user.course}
-                                        type={user.type}
-                                        profilePhoto={user.profilePhoto}
-                                        email={user.email}
-                                        profileId={user.profileId}
-                                        isFriend={true} />
-                ))}
-            </span>
-        );
+        if (friends.length != 0){
+            setCardList (
+                <span className='cards-display'>
+                    {users.map(user => {
+                                    if (friends.includes(user.email)){
+                                        return (
+                                            <FriendCard 
+                                                key={user.id}
+                                                nome={user.nome}
+                                                course={user.course}
+                                                type={user.type}
+                                                profilePhoto={user.profilePhoto}
+                                                email={user.email}
+                                                profileId={user.profileId}
+                                                isFriend={true} />)}                                        
+                                    })}
+                </span>
+            );
+        }
     };
 
     function unmountFriendsCards(){
