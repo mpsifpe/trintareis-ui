@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
-import { BsThreeDots } from "react-icons/bs";
+import { BsThreeDots, BsFillArrowLeftCircleFill } from "react-icons/bs";
 import { BiLike } from "react-icons/bi";
 import { CgComment } from "react-icons/cg";
 import { FaShare } from "react-icons/fa";
 import './feedPost.css'
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
 import firebase from '../../config/firebase';
@@ -22,6 +22,7 @@ export default function (props) {
     const [compartilhou, setCompartilhou] = useState('');
     const [element, setElement] = useState('');
     const [todosComentarios, setTodosComentarios] = useState('');
+    const [botaoGostei, setBotaoGostei] = useState('');
 
     firebase.firestore().collection('profiles').get().then(async (result) => {
         await result.docs.forEach(doc => {
@@ -78,6 +79,7 @@ export default function (props) {
             } else {
                 lista = props.lista;
             }
+            var comentario = lista;
             var pos = posicao;
             var posicao = 0;
             listItems2 = lista.map(
@@ -96,6 +98,7 @@ export default function (props) {
                                         <div className='feed-comentario-metad-right'>
                                             <a onClick={() => atualizarComentario({ lista }, number.id, idEvento)} className="shadow-interpolacao-feed"><FaPencilAlt /></a>
                                             <Link to={`#`} onClick={() => { if (window.confirm('Deseja apagar o comentário?')) { apagarComentario(number.id, idEvento) }; }} className="shadow-interpolacao-feed"> <FaTrashAlt /></Link>
+                                            <a onClick={() => exibirComentario({ comentario }, number.id)} className="shadow-interpolacao-feed"><BsFillArrowLeftCircleFill /></a>
                                         </div>
                                     </div>
                                     <span>{number.content}</span>
@@ -130,13 +133,22 @@ export default function (props) {
     }
 
     useEffect(() => {
-        const abortController = new AbortController()
+
+        const abortController = new AbortController();
+        setBotaoGostei(<div>
+            <BiLike />
+            <span onClick={() => funcGostei({ id: props.id })} id={props.id + '_botao'} className="">Gostei</span>
+        </div>);
         firebase.storage().ref(`images/${props.img}`).getDownloadURL().then(url => setUrlImages(url));
         if (Array.isArray(props.like) && props.like.length > 0) {
             setCurti(props.like.length);
             props.like.forEach(function (like) {
                 if (like == emailUser) {
                     setCurtiu(1);
+                    setBotaoGostei(<div>
+                        <BiLike style={{ color: 'cornflowerblue' }} />
+                        <span onClick={() => funcDesgostei({ id: props.id })} id={props.id + '_botao'} className="feed-comentario-gostei">Gostei</span>
+                    </div>);
                 }
             })
         } else {
@@ -159,36 +171,8 @@ export default function (props) {
         }
     }, []);
 
-    function carregarEditar(obj, lista) {
-        console.log(lista);
-        alert('editar ');
-    }
-
-    function limparComentario(obj) {
-        let evento = firebase.firestore().collection('events');
-        alert('vc limpou o conteudo');
-        evento.doc(obj.id).update({
-            coments: null
-        })
-        return false;
-    }
-
     function salvarComentario(obj) {
-
-      
-
-
-
-
-     //   comentarios();
-alert("bbbbb");
-console.log('aaaaaaaaaa');
-     //   return "aaaaaa";
         obj.preventDefault();
-
-
-      
-
         let evento = firebase.firestore().collection('events');
         var comentarios = "";
         evento.get().then(async (result) => {
@@ -216,6 +200,7 @@ console.log('aaaaaaaaaa');
                                 coments: comentarios
                             })
                         }
+                        document.getElementById(obj.target[1].value + '_texto').value = '';
                     } catch (e) {
                         console.log('erro ao salvar comentario: ' + comentarios);
                     }
@@ -299,11 +284,10 @@ console.log('aaaaaaaaaa');
         }
         setElement(
             <form onSubmit={salvarComentario}>
-                <div> <span onClick={() => limparComentario({ id: obj.id })} className="">limpar</span>{props.id}</div>
                 <div>
                     <h5>Comentários</h5>
                     <div className='feedPost__util feed__coments'>
-                        <input type="textComent" className="form-control my-2" defaultValue="" placeholder="Comentário" />
+                        <input type="textComent" className="form-control my-2" defaultValue="" id={obj.id + '_texto'} placeholder="Comentário" />
                         <input type="hidden" value={obj.id} />
                         <input type="submit" value="Salvar" className="w-10 btn btn-coments fw-bold bor" />
                     </div>
@@ -312,13 +296,72 @@ console.log('aaaaaaaaaa');
         );
     }
 
+    function limparGostei(obj) {
+        alert('limpou curtidas.');
+
+        setCurti(curtir - 1);
+        let evento = firebase.firestore().collection('events');
+        evento.doc(obj.id).update({
+            like: 'dfasdf@adfasdf'
+        })
+        return false;
+    }
+
+    function funcDesgostei(obj) {
+        if (curtir == "") {
+            setCurti(1);
+        } else {
+            setCurti(parseInt(curtir) - 1);
+        }
+        setBotaoGostei(<div>
+            <BiLike />
+            <span onClick={() => funcGostei({ id: props.id })} id={props.id + '_botao'} className="">Gostei</span>
+        </div>);
+
+        let evento = firebase.firestore().collection('events');
+        var likes = [];
+        evento.get().then(async (result) => {
+            await result.docs.forEach(doc => {
+
+                if (doc.id == obj.id) {
+                    console.log(doc.data().like);
+                    doc.data().like.forEach(function (like) {
+                        if (like == emailUser) {
+                            //    alert('Você já curtiu');
+                            retorno = false;
+                        } else {
+                            likes.push(like)
+                        }
+                    })
+
+                    if (likes != "") {
+                        evento.doc(obj.id).update({
+                            like: likes
+                        })
+                    }
+
+                    console.log(likes);
+                    console.log('aaaaaaaaaaaa');
+
+                    var retorno = true;
+
+                }
+            })
+        })
+    }
 
     function funcGostei(obj) {
+        if (curtir == "") {
+            setCurti(2);
+        } else {
+            setCurti(parseInt(curtir) + 1);
+        }
+        setBotaoGostei(<div>
+            <BiLike style={{ color: 'cornflowerblue' }} />
+            <span onClick={() => funcDesgostei({ id: props.id })} id={props.id + '_botao'} className="feed-comentario-gostei">Gostei</span>
+        </div>);
+
         let evento = firebase.firestore().collection('events');
-        /*  evento.doc(obj.id).update({
-             like: 'dfasdf@adfasdf'
-         })
-         return false;*/
         var likes = [];
         evento.get().then(async (result) => {
             await result.docs.forEach(doc => {
@@ -329,13 +372,13 @@ console.log('aaaaaaaaaa');
                     if (Array.isArray(doc.data().like)) {
                         doc.data().like.forEach(function (like) {
                             if (like == emailUser) {
-                                alert('Você já curtiu');
+                                //    alert('Você já curtiu');
                                 retorno = false;
                             }
                         })
                     } else {
                         if (doc.data().like == emailUser) {
-                            alert('Você já curtiu.');
+                            //    alert('Você já curtiu.');
                             retorno = false;
                         }
                     }
@@ -345,42 +388,30 @@ console.log('aaaaaaaaaa');
                                 like: emailUser
                             })
                         } else if (doc.data().like != '' && !Array.isArray(doc.data().like)) {
-                            setCurti(doc.data().like.length + 1);
+                            // setCurti(curtir + 1 );
                             likes.push(doc.data().like);
                             likes.push(emailUser);
                             evento.doc(obj.id).update({
                                 like: likes
                             })
                         } else {
-                            setCurti(doc.data().like.length + 1);
+                            // setCurti(curtir + 1 );
                             likes = doc.data().like;
                             likes.push(emailUser);
                             evento.doc(obj.id).update({
                                 like: likes
                             })
                         }
-                        setCurti(doc.data().like.length);
+                        //setCurti(curtir + 1 );
+
                     }
+                    //  setCurti(curtir + 1 );
+
                 }
             })
         })
 
-        /*firebase.firestore().collection('events').doc(idPubl).set({
-            amountComment: 0,
-            data: "2022-04-11",
-            dataTime: 1650682444189,
-            details: "Evento agilista.",
-            emailUser: "marcos@email.com",
-            hour: "20:00",
-            like: 11,
-            photo: "Screenshot_3.png",
-            public: 1,
-            share: 0,
-            title: "Agile Trend",
-            type: "Presencial",
-            views: 0,
-        });
-        */
+
     }
 
 
@@ -457,11 +488,9 @@ console.log('aaaaaaaaaa');
                     </div>
                 </div>
                 <hr />
-
                 <div className="feedPost__util">
                     <div className="feedPost__reaction">
-                        <BiLike />
-                        <span onClick={() => funcGostei({ id: props.id })} className="">Gostei</span>
+                        {botaoGostei}
                     </div>
 
                     <div className="feedPost__reaction">
