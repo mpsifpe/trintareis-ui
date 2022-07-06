@@ -14,91 +14,105 @@ export default function ConnectScreen(props) {
     const [loadStarted, setLoadStarted] = useStateIfMounted(false);
     const [cardsLoaded, setCardsLoaded] = useStateIfMounted (false);
     const [cardList, setCardList] = useStateIfMounted(<span> </span>);
-    const [friends, setFriends] = useStateIfMounted([]);
 
     const emailUser = useSelector(state => state.emailUser);
+    
+    var friendsList = [];
+    let data = [];
+
+    async function fetch() {    
+        let friendsLoaded = false;
+
+        const profilesCollection = firebase.firestore().collection('profiles');
+        const friendsCollection = firebase.firestore().collection('friends');
+
+        //carrega a lista de amigos do usuário logado e coloca na friendsList junto com o email do mesmo, pra facilitar o get
+        if(friendsLoaded === false){ 
+            friendsCollection.get().then((friends) => {
+                
+                let friendsCount = friends.size;
+                friendsList.push(emailUser);
+
+                friends.forEach((frnd) => {
+                        if(friendsCount >=0 ){    
+                            friendsCount = friendsCount-1;
+                            if (frnd.data().friend1 === emailUser ){
+                                friendsList.push(frnd.data().friend2); }
+
+                            if (frnd.data().friend2 === emailUser){
+                                friendsList.push(frnd.data().friend1); }
+                        }
+                    });
+                    
+                    friendsLoaded = true;
+
+                    //carrega os dados dos profiles de todos os usuarios que não estejam na friendsList
+                    if (!loaded && !loadStarted && friendsLoaded){
+                        let idCount = 0;
+                        setLoadStarted(true);
+                        console.log("fetch em execução /contactsscreen");
+            
+                        profilesCollection.where('emailUser', 'not-in', friendsList).get().then((result) => {
+                            result.forEach((prfl) => {
+                                data.push({
+                                    id: idCount,
+                                    nome: prfl.data().userName,
+                                    course: prfl.data().city,
+                                    type: "aluno",
+                                    profilePhoto: prfl.data().profilePhoto,
+                                    email: prfl.data().emailUser,
+                                    profileId: prfl.data().id
+                                });
+                                idCount = idCount + 1;
+                                
+                                if((idCount+1) > result.docs.length){
+                                    console.log("fetch finalizado /contactsscreen");
+                                    setLoaded(true);
+                                    setUsers(data);
+                                    setCardsLoaded(false);
+                                }
+                            });
+                        });
+                    }
+                });
+            
+        }
+        
+        
+    };
+
 
     useEffect(()=>{
         let abortController = new AbortController();
 
-        getFriends();
-        if (!cardsLoaded){
-            mountFriendsCards();
-            setCardsLoaded(true);
-        }
+        fetch().then(() => {
+            if (!cardsLoaded){
+                mountFriendsCards();
+                setCardsLoaded(true);
+            }
+        });
 
         return function cleanup() {
             abortController.abort();
-        }
+        }  
     });
 
-    function getFriends(){
-        let tempList = [];
-        if (!loaded && !loadStarted){
-            setLoadStarted(true);
-            let idCount = 0; // valor para gerar os IDs dos componentes, necessário para a função map        
-            
-            console.log("getfriends em execução /connectscreen");
-            
-            firebase.firestore().collection('profiles').get().then(  
-                (result) => {      
-                    result.docs.forEach(doc => {
-                            if (doc.get("emailUser") === emailUser) {   
-                                
-                                setFriends(doc.get("friends"));
-
-                                if((idCount+1) == result.docs.length){
-                                    console.log("getfriends finalizado /connectscreen");
-                                    setLoaded(true);
-                                    setUsers(tempList);
-                                    setCardsLoaded(false);
-                                }
-                            } 
-                            else {
-                                tempList.push({
-                                    id: idCount,
-                                    nome: doc.get("userName"),
-                                    course: doc.get("city"),
-                                    type: "aluno",
-                                    profilePhoto: doc.get("profilePhoto"),
-                                    email: doc.get("emailUser"),
-                                    profileId: doc.id
-                                });
-
-                                idCount = idCount + 1;
-
-                                if((idCount+1) == result.docs.length){
-                                    console.log("getfriends finalizado /connectscreen");
-                                    setLoaded(true);
-                                    setUsers(tempList);
-                                    setCardsLoaded(false);
-                                }
-                            }
-                })}
-            );
-        }
-    }
-
     function mountFriendsCards(){
-        if (friends.length != 0){
-            setCardList (
-                <span className='cards-display'>
-                    {users.map(user => {
-                                    if (!friends.includes(user.email)){
-                                        return (
-                                            <FriendCard 
-                                                key={user.id}
-                                                nome={user.nome}
-                                                course={user.course}
-                                                type={user.type}
-                                                profilePhoto={user.profilePhoto}
-                                                email={user.email}
-                                                profileId={user.profileId}
-                                                isFriend={false} />)}                                        
-                                    })}
-                </span>
-            );
-        }
+        setCardList (
+           <span className='cards-display'>
+                {users.map(user => ( 
+                                    <FriendCard 
+                                        key={user.id}
+                                        nome={user.nome}
+                                        course={user.course}
+                                        type={user.type}
+                                        profilePhoto={user.profilePhoto}
+                                        email={user.email}
+                                        profileId={user.profileId}
+                                        isFriend={false} />
+                ))}
+            </span>
+        );
     };
 
     function unmountFriendsCards(){
@@ -121,22 +135,3 @@ export default function ConnectScreen(props) {
     )
 
 };
-
-/* métodos auxiliares pra debug
-      function printUsers(){
-        console.log('');
-        console.log(users.length);
-        for (var i = 0; i < users.length; i++){
-            console.log(users[i]);
-        }
-    }
-
-    <div>
-                        <button onClick={mountFriendsCards}> mount content </button>
-                    </div>
-
-    
-    const sleep = (milliseconds) => {
-        return new Promise(resolve => setTimeout(resolve, milliseconds))
-    }
-*/
