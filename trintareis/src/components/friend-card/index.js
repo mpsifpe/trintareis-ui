@@ -86,7 +86,8 @@ export default function FriendCard(props) {
         
         db.add({
             friend2: email,
-            friend1: emailUser
+            friend1: emailUser,
+            pending: true
         })
         .catch((error) => {
             console.error("Error adding document: ", error);
