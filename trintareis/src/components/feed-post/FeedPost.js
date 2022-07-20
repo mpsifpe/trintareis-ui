@@ -23,6 +23,7 @@ export default function (props) {
     const [element, setElement] = useState('');
     const [todosComentarios, setTodosComentarios] = useState('');
     const [botaoGostei, setBotaoGostei] = useState('');
+    const [clistaFotos, setListaFotos] = useState([]);
 
     firebase.firestore().collection('profiles').get().then(async (result) => {
         await result.docs.forEach(doc => {
@@ -32,7 +33,9 @@ export default function (props) {
         })
     })
 
-    function exibirComentario(props, idEvento) {
+
+
+    function exibirComentario(props, idEvento, listaFotos) {
         let listItems2 = [];
         var coment = "";
         if (props.comentario) {
@@ -51,18 +54,28 @@ export default function (props) {
             json = json.replace('[[', '[');
             json = json.replace(']]', ']');
             json = JSON.parse(json);
-            console.log(json);
-            var posicao = 0;
-            listItems2 = json.map(
+
+            let reordenar = [];
+            json.forEach(function (coment) {
+                reordenar.unshift(coment)
+            })
+
+            listItems2 = reordenar.map(
                 (number) =>
                     <div>
                         <div className='feed-comentario-top'>
-                            <div className='feed-comentario-metad-left'><h5>{number.autor}</h5></div>
-                            <div className='feed-comentario-metad-right'>
+                            <div className='div__foto feedPost__profile '>
+                                <img src="https://firebasestorage.googleapis.com/v0/b/trintareis-23e4c.appspot.com/o/profile_images%2Ftumblr_lq5hiexyPo1qmr4xc.bmp?alt=media&amp;token=d4bbdbd8-f761-4bba-8cab-9daa103aebbe" />
+                            </div>
+                            <div className='feed-comentario-texto'>
+                                <div className='feed-comentario-metad-left'><h5>{number.autor}</h5></div>
+                                <div>{number.content}</div>
+                            </div>
+
+                            <div className='feed-comentario-metad-right'> 20 MIN
                                 <a onClick={() => atualizarComentario({ json }, number.id, idEvento, 'true')} className="shadow-interpolacao-feed"><BsThreeDots /></a>
                             </div>
                         </div>
-                        <span>{number.content}</span>
                         <br />
                     </div>
             );
@@ -79,51 +92,101 @@ export default function (props) {
             } else {
                 lista = props.lista;
             }
+
+            let reordenar = [];
+            lista.forEach(function (coment) {
+                reordenar.unshift(coment)
+            })
+
             var comentario = lista;
             var pos = posicao;
-            var posicao = 0;
-            listItems2 = lista.map(
+            var posicao = reordenar.length + 1;
+            listItems2 = reordenar.map(
                 (number) =>
                     <div>
-                        <div className='dv-ocult'>{posicao = posicao + 1}
+                        <div className='dv-ocult'>{posicao = posicao - 1}
                             {console.log(posicao)} - {console.log(pos)}
                         </div>
                         {(posicao == pos) ?
 
                             (botao == 'true') ?
-
                                 <div>
+
+
                                     <div className='feed-comentario-top'>
-                                        <div className='feed-comentario-metad-left'><h5>{number.autor}</h5></div>
-                                        <div className='feed-comentario-metad-right'>
+                                        <div className='div__foto feedPost__profile '>
+                                            <img src="https://firebasestorage.googleapis.com/v0/b/trintareis-23e4c.appspot.com/o/profile_images%2Ftumblr_lq5hiexyPo1qmr4xc.bmp?alt=media&amp;token=d4bbdbd8-f761-4bba-8cab-9daa103aebbe" />
+                                        </div>
+                                        <div className='feed-comentario-texto'>
+                                            <div className='feed-comentario-metad-left'><h5>{number.autor}</h5></div>
+                                            <div>{number.content}</div>
+                                        </div>
+
+                                        <div className='feed-comentario-metad-right'> 20 MIN
                                             <a onClick={() => atualizarComentario({ lista }, number.id, idEvento)} className="shadow-interpolacao-feed"><FaPencilAlt /></a>
                                             <Link to={`#`} onClick={() => { if (window.confirm('Deseja apagar o comentário?')) { apagarComentario(number.id, idEvento) }; }} className="shadow-interpolacao-feed"> <FaTrashAlt /></Link>
                                             <a onClick={() => exibirComentario({ comentario }, number.id)} className="shadow-interpolacao-feed"><BsFillArrowLeftCircleFill /></a>
                                         </div>
                                     </div>
-                                    <span>{number.content}</span>
+                                    <br />
+
+
+
+
+
+
                                 </div>
                                 :
                                 <div>
-                                    <h5>{number.autor}</h5>
-                                    <form onSubmit={editarComentario}>
-                                        <div>
-                                            <div className='feedPost__util feed__coments'>
-                                                <input type="textComent" defaultValue={number.content} className="form-control my-2" placeholder="Comentário" />
-                                                <input type="hidden" defaultValue={pos} />
-                                                <input type="hidden" defaultValue={idEvento} />
-                                                <input type="submit" Value="Editar" className="w-10 btn btn-coments fw-bold bor" />
-                                            </div>
+
+
+                                    <div className='feed-comentario-top'>
+                                        <div className='div__foto feedPost__profile '>
+                                            <img src="https://firebasestorage.googleapis.com/v0/b/trintareis-23e4c.appspot.com/o/profile_images%2Ftumblr_lq5hiexyPo1qmr4xc.bmp?alt=media&amp;token=d4bbdbd8-f761-4bba-8cab-9daa103aebbe" />
                                         </div>
-                                    </form>
+                                        <div className='feed-comentario-texto'>
+                                            <div className='feed-comentario-metad-left'><h5>{number.autor}</h5></div>
+                                            <form onSubmit={editarComentario}>
+                                                <div>
+                                                    <div className='feedPost__util feed__coments'>
+                                                        <input type="textComent" defaultValue={number.content} className="form-control my-2" placeholder="Comentário" />
+                                                        <input type="hidden" defaultValue={pos} />
+                                                        <input type="hidden" defaultValue={idEvento} />
+                                                        <input type="submit" Value="Editar" className="w-10 btn btn-coments fw-bold bor" />
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+
+
+                                    </div>
+                                    <br />
+
+
+
+
                                 </div>
 
 
                             :
                             <div>
-                                <h5>{number.autor}</h5>
-                                <span>{number.content}</span>
-                                <a onClick={() => atualizarComentario({ lista }, number.id, idEvento, 'true')} className="shadow-interpolacao-feed"><BsThreeDots /></a>
+
+                                <div className='feed-comentario-top'>
+                                    <div className='div__foto feedPost__profile '>
+                                        <img src="https://firebasestorage.googleapis.com/v0/b/trintareis-23e4c.appspot.com/o/profile_images%2Ftumblr_lq5hiexyPo1qmr4xc.bmp?alt=media&amp;token=d4bbdbd8-f761-4bba-8cab-9daa103aebbe" />
+                                    </div>
+                                    <div className='feed-comentario-texto'>
+                                        <div className='feed-comentario-metad-left'><h5>{number.autor}</h5></div>
+                                        <div>{number.content}</div>
+                                    </div>
+
+                                    <div className='feed-comentario-metad-right'> 20 MIN
+                                        <a onClick={() => atualizarComentario({ lista }, number.id, idEvento, 'true')} className="shadow-interpolacao-feed"><BsThreeDots /></a>
+                                    </div>
+                                </div>
+                                <br />
+
+
                             </div>
                         }
                     </div>
@@ -180,7 +243,7 @@ export default function (props) {
                 if (doc.id == obj.target[1].value) {
                     try {
                         if (doc.data().coments == '' || doc.data().coments == null) {
-                            comentarios = { id: 1, data: date.getDate(), autor: userName, content: obj.target[0].value };
+                            comentarios = { id: 1, data: date.getDate(), autor: userName, email: emailUser, content: obj.target[0].value };
                             comentarios = JSON.stringify(comentarios);
                             evento.doc(obj.target[1].value).update({
                                 coments: comentarios
@@ -194,7 +257,7 @@ export default function (props) {
                             comentarios = comentarios.replace(']]', ']');
                             var quantidade = JSON.parse(comentarios);
                             comentarios = comentarios.replace(']', ',');
-                            comentarios += JSON.stringify({ id: quantidade.length + 1, data: date.getDate(), autor: userName, content: obj.target[0].value });
+                            comentarios += JSON.stringify({ id: quantidade.length + 1, data: date.getDate(), autor: userName, email: emailUser, content: obj.target[0].value });
                             comentarios += ']';
                             evento.doc(obj.target[1].value).update({
                                 coments: comentarios
@@ -251,7 +314,7 @@ export default function (props) {
                 if (doc.id == obj.target[2].value) {
                     try {
                         if (JSON.parse(doc.data().coments).length == 1) {
-                            comentarios = { id: 1, data: date.getTime(), autor: userName, content: obj.target[0].value };
+                            comentarios = { id: 1, data: date.getTime(), autor: userName, email: emailUser, content: obj.target[0].value };
                             comentarios = JSON.stringify(comentarios);
                             evento.doc(obj.target[1].value).update({
                                 coments: comentarios
@@ -260,7 +323,7 @@ export default function (props) {
                             let texto = JSON.parse(doc.data().coments);
                             texto.forEach(function (coment) {
                                 if (coment.id == obj.target[1].value) {
-                                    comentarios.push({ id: coment.id, data: coment.data, autor: coment.autor, content: obj.target[0].value });
+                                    comentarios.push({ id: coment.id, data: coment.data, autor: coment.autor, email: coment.email, content: obj.target[0].value });
                                 } else {
                                     comentarios.push(coment);
                                 }
@@ -279,6 +342,14 @@ export default function (props) {
     }
 
     function comentarios(obj, comentarios) {
+
+        let listaFoto = [];
+        firebase.firestore().collection('profiles').get().then(async (result) => {
+            await result.docs.forEach(doc => {
+                listaFoto.push({ email: doc.data().emailUser, foto: doc.data().profilePhoto });
+            })
+        })
+        setListaFotos(<div>listaFoto</div>);
         if (comentarios.comentario != null) {
             exibirComentario(comentarios, obj.id);
         }

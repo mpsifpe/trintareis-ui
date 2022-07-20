@@ -76,6 +76,8 @@
 
 .feed__coments{
     padding: 13px;
+    background-color: #f1f1f1;
+
 }
 
 .btn-coments{
@@ -99,9 +101,16 @@
 .feed-comentario-top{
     display: flex;
 }
+.feed-comentario-texto{
+    display: grid;
+    background-color: #f1f1f1;
+    width: 1200px;
+}
 .feed-comentario-metad-right{
     text-align: right;
     width: 50%;
+    background-color: #f1f1f1;
+
 }
 .feed-comentario-metad-left{
     width: 50%;
