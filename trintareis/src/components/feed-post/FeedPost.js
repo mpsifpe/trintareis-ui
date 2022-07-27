@@ -35,7 +35,7 @@ export default function (props) {
 
 
 
-    function exibirComentario(props, idEvento, listaFotos) {
+    function exibirComentario(props, idEvento) {
         let listItems2 = [];
         var coment = "";
         if (props.comentario) {
@@ -56,10 +56,15 @@ export default function (props) {
             json = JSON.parse(json);
 
             let reordenar = [];
+            var i = json.length;
             json.forEach(function (coment) {
+                coment.order = i--;
                 reordenar.unshift(coment)
             })
+            
+            console.log(reordenar);
 
+            let posicao = 0;
             listItems2 = reordenar.map(
                 (number) =>
                     <div>
@@ -72,8 +77,8 @@ export default function (props) {
                                 <div>{number.content}</div>
                             </div>
 
-                            <div className='feed-comentario-metad-right'> 20 MIN
-                                <a onClick={() => atualizarComentario({ json }, number.id, idEvento, 'true')} className="shadow-interpolacao-feed"><BsThreeDots /></a>
+                            <div className='feed-comentario-metad-right'> 20 minA {number.id} {number.order}
+                                <a onClick={() => atualizarComentario({ json }, number.order, idEvento, 'true')} className="shadow-interpolacao-feed"><BsThreeDots />{posicao}</a>
                             </div>
                         </div>
                         <br />
@@ -83,7 +88,8 @@ export default function (props) {
         }
     }
 
-    function atualizarComentario(props, posicao, idEvento, botao) {
+    function atualizarComentario(props, pos, idEvento, botao) {
+        console.log(pos);
         let listItems2 = [];
         let lista = [];
         if (props) {
@@ -94,24 +100,21 @@ export default function (props) {
             }
 
             let reordenar = [];
+            var i = lista.length;
             lista.forEach(function (coment) {
+                coment.order = i--;
                 reordenar.unshift(coment)
             })
 
             var comentario = lista;
-            var pos = posicao;
-            var posicao = reordenar.length + 1;
             listItems2 = reordenar.map(
                 (number) =>
                     <div>
-                        <div className='dv-ocult'>{posicao = posicao - 1}
-                            {console.log(posicao)} - {console.log(pos)}
-                        </div>
-                        {(posicao == pos) ?
-
+                        {(number.order == pos) ?
                             (botao == 'true') ?
-                                <div>
+                            <div>
 
+                            {console.log('number.order A: '+number.order +' botao:'+botao+' pos:'+pos)}
 
                                     <div className='feed-comentario-top'>
                                         <div className='div__foto feedPost__profile '>
@@ -122,24 +125,16 @@ export default function (props) {
                                             <div>{number.content}</div>
                                         </div>
 
-                                        <div className='feed-comentario-metad-right'> 20 MIN
-                                            <a onClick={() => atualizarComentario({ lista }, number.id, idEvento)} className="shadow-interpolacao-feed"><FaPencilAlt /></a>
-                                            <Link to={`#`} onClick={() => { if (window.confirm('Deseja apagar o comentário?')) { apagarComentario(number.id, idEvento) }; }} className="shadow-interpolacao-feed"> <FaTrashAlt /></Link>
-                                            <a onClick={() => exibirComentario({ comentario }, number.id)} className="shadow-interpolacao-feed"><BsFillArrowLeftCircleFill /></a>
+                                        <div className='feed-comentario-metad-right'> 20 min
+                                            <a onClick={() => atualizarComentario({ lista }, number.order, idEvento)} className="shadow-interpolacao-feed"><FaPencilAlt /></a>
+                                            <Link to={`#`} onClick={() => { if (window.confirm('Deseja apagar o comentário?')) { apagarComentario(number.order, idEvento) }; }} className="shadow-interpolacao-feed"> <FaTrashAlt /></Link>
+                                            <a onClick={() => exibirComentario({ comentario }, number.oder)} className="shadow-interpolacao-feed"><BsFillArrowLeftCircleFill /></a>
                                         </div>
                                     </div>
                                     <br />
-
-
-
-
-
-
                                 </div>
                                 :
                                 <div>
-
-
                                     <div className='feed-comentario-top'>
                                         <div className='div__foto feedPost__profile '>
                                             <img src="https://firebasestorage.googleapis.com/v0/b/trintareis-23e4c.appspot.com/o/profile_images%2Ftumblr_lq5hiexyPo1qmr4xc.bmp?alt=media&amp;token=d4bbdbd8-f761-4bba-8cab-9daa103aebbe" />
@@ -157,8 +152,6 @@ export default function (props) {
                                                 </div>
                                             </form>
                                         </div>
-
-
                                     </div>
                                     <br />
 
@@ -180,9 +173,7 @@ export default function (props) {
                                         <div>{number.content}</div>
                                     </div>
 
-                                    <div className='feed-comentario-metad-right'> 20 MIN
-                                        <a onClick={() => atualizarComentario({ lista }, number.id, idEvento, 'true')} className="shadow-interpolacao-feed"><BsThreeDots /></a>
-                                    </div>
+                                    <div className='feed-comentario-metad-right'> 20 min</div>
                                 </div>
                                 <br />
 
@@ -309,6 +300,11 @@ export default function (props) {
         obj.preventDefault();
         let evento = firebase.firestore().collection('events');
         var comentarios = [];
+
+
+
+console.log(obj);
+
         evento.get().then(async (result) => {
             await result.docs.forEach(doc => {
                 if (doc.id == obj.target[2].value) {
