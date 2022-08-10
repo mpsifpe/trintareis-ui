@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
-import { BsThreeDots, BsFillArrowLeftCircleFill } from "react-icons/bs";
+import { BsThreeDots, BsThreeDotsVertical, BsFillArrowLeftCircleFill } from "react-icons/bs";
 import { BiLike } from "react-icons/bi";
 import { CgComment } from "react-icons/cg";
 import { FaShare } from "react-icons/fa";
@@ -16,6 +16,7 @@ export default function (props) {
     const loggedUSer = useSelector(state => state.loggedUSer);
     const [curtir, setCurti] = useState('');
     const [curtiu, setCurtiu] = useState('');
+    const [totalComentario, setTotalComentario] = useState('');
     const [userName, setUserName] = useState('');
     const date = new Date();
     const [compartilhar, setCompartilhar] = useState('');
@@ -35,6 +36,37 @@ export default function (props) {
 
 
 
+    function calcularHoras(tempo, tipo) {
+        var date1 = new Date(tempo);
+        var date2 = new Date();
+        var diffDays = 0;
+        var timeDiff = Math.abs(date2.getTime() - date1.getTime());
+        var diffHour = Math.ceil(timeDiff / (1000 * 3600));
+        var texto = '';
+        if (tipo == 'c') {
+            texto = 'Há ';
+        } else if (tipo == 'e') {
+            texto = 'Modificado há ';
+        } else {
+            texto = 'Há ';
+        }
+        if (diffHour <= 1) {
+            var diffminutes = Math.ceil(timeDiff / (1000 * 60));
+            return diffminutes + " minuto(s)";
+        }
+        if (diffHour > 1 && diffHour < 24) {
+            return diffHour + " horas(s)";
+        }
+        if (diffHour > 24) {
+            diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+            return texto + diffDays + " dias(s)";
+        }
+
+        return diffDays + "horas";
+    }
+
+
+
     function exibirComentario(props, idEvento) {
         let listItems2 = [];
         var coment = "";
@@ -43,7 +75,7 @@ export default function (props) {
         } else {
             coment = props;
         }
-        if (coment) {
+        if (coment != "") {
             if (typeof coment === 'object') {
                 coment = JSON.stringify(coment);
             }
@@ -61,7 +93,7 @@ export default function (props) {
                 coment.order = i--;
                 reordenar.unshift(coment)
             })
-            
+
             console.log(reordenar);
 
             let posicao = 0;
@@ -75,10 +107,11 @@ export default function (props) {
                             <div className='feed-comentario-texto'>
                                 <div className='feed-comentario-metad-left'><h5>{number.autor}</h5></div>
                                 <div>{number.content}</div>
+                                <div className='feed-data-modificada'>{calcularHoras(number.data, number.tipo_comentario)}</div>
                             </div>
 
-                            <div className='feed-comentario-metad-right'> 20 minA {number.id} {number.order}
-                                <a onClick={() => atualizarComentario({ json }, number.order, idEvento, 'true')} className="shadow-interpolacao-feed"><BsThreeDots />{posicao}</a>
+                            <div className='feed-comentario-metad-right'>
+                                <a onClick={() => atualizarComentario({ json }, number.order, idEvento, 'true')} className="shadow-interpolacao-feed"><BsThreeDotsVertical /></a>
                             </div>
                         </div>
                         <br />
@@ -112,9 +145,9 @@ export default function (props) {
                     <div>
                         {(number.order == pos) ?
                             (botao == 'true') ?
-                            <div>
+                                <div>
 
-                            {console.log('number.order A: '+number.order +' botao:'+botao+' pos:'+pos)}
+                                    {console.log('number.order A: ' + number.order + ' botao:' + botao + ' pos:' + pos)}
 
                                     <div className='feed-comentario-top'>
                                         <div className='div__foto feedPost__profile '>
@@ -123,11 +156,12 @@ export default function (props) {
                                         <div className='feed-comentario-texto'>
                                             <div className='feed-comentario-metad-left'><h5>{number.autor}</h5></div>
                                             <div>{number.content}</div>
+                                            <div className='feed-data-modificada'>{calcularHoras(number.data, number.tipo_comentario)}</div>
                                         </div>
 
-                                        <div className='feed-comentario-metad-right'> 20 min
+                                        <div className='feed-comentario-metad-right'>
                                             <a onClick={() => atualizarComentario({ lista }, number.order, idEvento)} className="shadow-interpolacao-feed"><FaPencilAlt /></a>
-                                            <Link to={`#`} onClick={() => { if (window.confirm('Deseja apagar o comentário?')) { apagarComentario(number.order, idEvento) }; }} className="shadow-interpolacao-feed"> <FaTrashAlt /></Link>
+                                            <Link to={`#`} onClick={() => { if (window.confirm('Deseja apagar o comentário?')) { apagarComentario(lista, number.order, idEvento) }; }} className="shadow-interpolacao-feed"> <FaTrashAlt /></Link>
                                             <a onClick={() => exibirComentario({ comentario }, number.oder)} className="shadow-interpolacao-feed"><BsFillArrowLeftCircleFill /></a>
                                         </div>
                                     </div>
@@ -147,6 +181,7 @@ export default function (props) {
                                                         <input type="textComent" defaultValue={number.content} className="form-control my-2" placeholder="Comentário" />
                                                         <input type="hidden" defaultValue={pos} />
                                                         <input type="hidden" defaultValue={idEvento} />
+                                                        <input type="hidden" defaultValue={JSON.stringify(lista)} />
                                                         <input type="submit" Value="Editar" className="w-10 btn btn-coments fw-bold bor" />
                                                     </div>
                                                 </div>
@@ -154,16 +189,9 @@ export default function (props) {
                                         </div>
                                     </div>
                                     <br />
-
-
-
-
                                 </div>
-
-
                             :
                             <div>
-
                                 <div className='feed-comentario-top'>
                                     <div className='div__foto feedPost__profile '>
                                         <img src="https://firebasestorage.googleapis.com/v0/b/trintareis-23e4c.appspot.com/o/profile_images%2Ftumblr_lq5hiexyPo1qmr4xc.bmp?alt=media&amp;token=d4bbdbd8-f761-4bba-8cab-9daa103aebbe" />
@@ -171,13 +199,11 @@ export default function (props) {
                                     <div className='feed-comentario-texto'>
                                         <div className='feed-comentario-metad-left'><h5>{number.autor}</h5></div>
                                         <div>{number.content}</div>
+                                        <div className='feed-data-modificada'>{calcularHoras(number.data, number.tipo_comentario)}</div>
                                     </div>
-
-                                    <div className='feed-comentario-metad-right'> 20 min</div>
+                                    <div className='feed-comentario-metad-right'></div>
                                 </div>
                                 <br />
-
-
                             </div>
                         }
                     </div>
@@ -187,7 +213,6 @@ export default function (props) {
     }
 
     useEffect(() => {
-
         const abortController = new AbortController();
         setBotaoGostei(<div>
             <BiLike />
@@ -196,12 +221,14 @@ export default function (props) {
         firebase.storage().ref(`images/${props.img}`).getDownloadURL().then(url => setUrlImages(url));
         if (Array.isArray(props.like) && props.like.length > 0) {
             setCurti(props.like.length);
+            setTotalComentario(props.coments.length);
+            
             props.like.forEach(function (like) {
                 if (like == emailUser) {
                     setCurtiu(1);
                     setBotaoGostei(<div>
                         <BiLike style={{ color: 'cornflowerblue' }} />
-                        <span onClick={() => funcDesgostei({ id: props.id })} id={props.id + '_botao'} className="feed-comentario-gostei">Gostei</span>
+                        <div onClick={() => funcDesgostei({ id: props.id })} id={props.id + '_botao'} className="feed-comentario-gostei">Gostei</div>
                     </div>);
                 }
             })
@@ -228,33 +255,21 @@ export default function (props) {
     function salvarComentario(obj) {
         obj.preventDefault();
         let evento = firebase.firestore().collection('events');
-        var comentarios = "";
+        var comentarios = [];
         evento.get().then(async (result) => {
             await result.docs.forEach(doc => {
                 if (doc.id == obj.target[1].value) {
                     try {
-                        if (doc.data().coments == '' || doc.data().coments == null) {
-                            comentarios = { id: 1, data: date.getDate(), autor: userName, email: emailUser, content: obj.target[0].value };
-                            comentarios = JSON.stringify(comentarios);
-                            evento.doc(obj.target[1].value).update({
-                                coments: comentarios
-                            })
-                        } else {
+                        if (doc.data().coments != "") {
                             comentarios = doc.data().coments;
-                            comentarios = comentarios.replace('undefined,', '');
-                            comentarios = '[' + comentarios.replace('[object Object],', '') + ']';
-                            comentarios = comentarios.replace('[object Object]', '');
-                            comentarios = comentarios.replace('[[', '[');
-                            comentarios = comentarios.replace(']]', ']');
-                            var quantidade = JSON.parse(comentarios);
-                            comentarios = comentarios.replace(']', ',');
-                            comentarios += JSON.stringify({ id: quantidade.length + 1, data: date.getDate(), autor: userName, email: emailUser, content: obj.target[0].value });
-                            comentarios += ']';
-                            evento.doc(obj.target[1].value).update({
-                                coments: comentarios
-                            })
                         }
+                        comentarios.push({ data: date.getTime(), tipo_comentario: 'c', autor: userName, email: emailUser, content: obj.target[0].value });
+                        console.log('Comentario Criado: ' + obj.target[0].value);
+                        evento.doc(obj.target[1].value).update({
+                            coments: comentarios
+                        })
                         document.getElementById(obj.target[1].value + '_texto').value = '';
+                        setTotalComentario(totalComentario+1);
                     } catch (e) {
                         console.log('erro ao salvar comentario: ' + comentarios);
                     }
@@ -263,34 +278,35 @@ export default function (props) {
             });
         });
     }
-    function apagarComentario(posiaco, idEvento) {
+    function apagarComentario(lista, posiaco, idEvento) {
         let evento = firebase.firestore().collection('events');
         var comentarios = [];
+        console.log('lista 1: ' + lista)
+        let reordenar = [];
+        var i = lista.length;
+        lista.forEach(function (coment) {
+            if (posiaco != i) {
+                reordenar.unshift(coment);
+            }
+            coment.order = i--;
+        })
+
+        let ordenar = [];
+        reordenar.forEach(function (coment) {
+            ordenar.unshift(coment)
+        })
+
         evento.get().then(async (result) => {
             await result.docs.forEach(doc => {
                 if (doc.id == idEvento) {
                     try {
-                        if (JSON.parse(doc.data().coments).length == 1) {
-                            evento.doc(idEvento).update({
-                                coments: ''
-                            })
-                        } else {
-                            let texto = JSON.parse(doc.data().coments);
-                            texto.forEach(function (coment) {
-                                if (coment.id == posiaco) {
-
-                                } else {
-                                    comentarios.push(coment);
-                                }
-                            })
-                            evento.doc(idEvento).update({
-                                coments: JSON.stringify(comentarios)
-                            })
-                        }
+                        evento.doc(idEvento).update({
+                            coments: ordenar
+                        })
                     } catch (e) {
-                        console.log('erro ao salvar comentario: ' + comentarios);
+                        console.log('erro ao salvar comentario');
                     }
-                    exibirComentario(comentarios, doc.id);
+                    exibirComentario(ordenar, doc.id);
                 }
             });
         });
@@ -301,37 +317,43 @@ export default function (props) {
         let evento = firebase.firestore().collection('events');
         var comentarios = [];
 
+        let lista = obj.target[3].value;
+        lista = JSON.parse(lista);
+
+        let reordenar = [];
+        var i = lista.length;
+        lista.forEach(function (coment) {
+            if (i == obj.target[1].value) {
+                reordenar.unshift({ id: i, data: date.getTime(), tipo_comentario: 'e', autor: userName, email: emailUser, content: obj.target[0].value });
+                console.log('Comentario Editado: ' + obj.target[0].value);
+            } else {
+                reordenar.unshift(coment);
+            }
+            coment.order = i--;
+        })
+
+        let ordenar = [];
+        reordenar.forEach(function (coment) {
+            ordenar.unshift(coment)
+        })
 
 
-console.log(obj);
+        console.log('reordenar: ultimo comentario primeiro');
+        console.log(reordenar);
+        console.log(ordenar);
+
 
         evento.get().then(async (result) => {
             await result.docs.forEach(doc => {
                 if (doc.id == obj.target[2].value) {
                     try {
-                        if (JSON.parse(doc.data().coments).length == 1) {
-                            comentarios = { id: 1, data: date.getTime(), autor: userName, email: emailUser, content: obj.target[0].value };
-                            comentarios = JSON.stringify(comentarios);
-                            evento.doc(obj.target[1].value).update({
-                                coments: comentarios
-                            })
-                        } else {
-                            let texto = JSON.parse(doc.data().coments);
-                            texto.forEach(function (coment) {
-                                if (coment.id == obj.target[1].value) {
-                                    comentarios.push({ id: coment.id, data: coment.data, autor: coment.autor, email: coment.email, content: obj.target[0].value });
-                                } else {
-                                    comentarios.push(coment);
-                                }
-                            })
-                            evento.doc(obj.target[2].value).update({
-                                coments: JSON.stringify(comentarios)
-                            })
-                        }
+                        evento.doc(obj.target[2].value).update({
+                            coments: ordenar
+                        })
                     } catch (e) {
                         console.log('erro ao salvar comentario: ' + comentarios);
                     }
-                    exibirComentario(comentarios, doc.id);
+                    exibirComentario(ordenar, doc.id);
                 }
             });
         });
@@ -363,6 +385,17 @@ console.log(obj);
         );
     }
 
+    function limparComentario(obj) {
+        alert('limpou comentario.');
+
+
+        let evento = firebase.firestore().collection('events');
+        evento.doc(obj.id).update({
+            coments: ''
+        })
+        return false;
+    }
+
     function limparGostei(obj) {
         alert('limpou curtidas.');
 
@@ -382,7 +415,7 @@ console.log(obj);
         }
         setBotaoGostei(<div>
             <BiLike />
-            <span onClick={() => funcGostei({ id: props.id })} id={props.id + '_botao'} className="">Gostei</span>
+            <div onClick={() => funcGostei({ id: props.id })} id={props.id + '_botao'} className="">Gostei</div>
         </div>);
 
         let evento = firebase.firestore().collection('events');
@@ -550,19 +583,17 @@ console.log(obj);
                 </div>
                 <div className="div__info">
                     <div>
-                        <span>
-                            <BiLike />{curtir} curtidas</span>
                     </div>
                 </div>
                 <hr />
                 <div className="feedPost__util">
                     <div className="feedPost__reaction">
-                        {botaoGostei}
+                        {botaoGostei}({curtir})
                     </div>
 
                     <div className="feedPost__reaction">
                         <CgComment />
-                        <span onClick={() => comentarios({ id: props.id }, { comentario: props.coments })} className="">comentar</span>
+                        <span onClick={() => comentarios({ id: props.id }, { comentario: props.coments })} className="">comentar ({totalComentario})</span>
                     </div>
 
                     <div className="feedPost__reaction">

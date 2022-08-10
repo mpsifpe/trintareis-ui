@@ -119,3 +119,9 @@
 .feed-comentario-gostei{
     color:cornflowerblue;
 }
+.feed-data-modificada{
+    color: rgb(171 160 160);
+    padding: 5px;
+    font-size: 10px;
+    font-family: inherit;
+}
