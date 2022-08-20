@@ -52,10 +52,11 @@ export default function NotificationsScreen() {
                         seen: notif.data().seen,
                         text: notif.data().text,
                         type: notif.data().type,
-                        time: notif.data().timestamp.toDate()
+                        time: notif.data().timestamp.toDate(),
+                        inviter: notif.data().inviter
                     });
 
-                    if (count === result.size-1){
+                    if (result.size === 1 || count === result.size-1){
                         setNotifData(list);
                         setFinished(true);
                     }
@@ -70,9 +71,12 @@ export default function NotificationsScreen() {
             <span>
                 {notifData.map(notif => ( 
                                     <NotificationCard 
+                                        key={notif.id}
+                                        id={notif.id}
                                         type={notif.type}
                                         text={notif.text}
                                         time={notif.timestamp}
+                                        inviter={notif.inviter}
                                         />
                 ))}
             </span>

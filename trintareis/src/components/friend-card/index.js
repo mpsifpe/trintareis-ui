@@ -7,7 +7,6 @@ import loading from '../../resources/loading.gif';
 import firebase from '../../config/firebase';
 
 
-
 export default function FriendCard(props) {
 
     const [name, setName] = useStateIfMounted("empty");
@@ -18,6 +17,7 @@ export default function FriendCard(props) {
     const [cardEmail, setCardEmail] = useStateIfMounted("empty");
 
     const emailUser = useSelector(state => state.emailUser);
+    
 
     async function updateInfo(){ //método chamado na div principal ao montar componente
         setName( //<- carrega nome do usuário com link para o perfil
@@ -82,12 +82,27 @@ export default function FriendCard(props) {
     }
 
     function addFriend (email){
-        const db = firebase.firestore().collection('friends');
-        
-        db.add({
+        const friends = firebase.firestore().collection('friends');
+        const notifications = firebase.firestore().collection('notifications');
+        var time = new Date();
+
+
+        friends.add({
             friend2: email,
             friend1: emailUser,
             pending: true
+        })
+        .catch((error) => {
+            console.error("Error adding document: ", error);
+        });
+
+        notifications.add({
+            emailUser: email,
+            seen: false,
+            text: "Você recebeu um convite",
+            type: "friend_invite",
+            timestamp: time,
+            inviter: emailUser
         })
         .catch((error) => {
             console.error("Error adding document: ", error);

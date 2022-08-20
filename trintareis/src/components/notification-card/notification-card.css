@@ -4,8 +4,8 @@
     border-radius: 5px;
     border-color: #ddd !important;
     border: 1px solid;
-    display: flex;
-    flex-direction: column;
+    display: block;
+    flex-direction: row;
     padding-left: 10px;
     padding-right: 10px;
     padding-top: 10px;
@@ -47,15 +47,20 @@
   padding-left: 10px;
 }
 
+.notification-button-span{
+  display: flex;
+  flex-direction: row;
+}
+
 .notification-button{
     border: 1px solid;
-    display: flex;
+    display: block;
     justify-content: center;
     align-items: center;
     border-radius: 15px;
     color: #3d8a50;
     height: 35px;
-    width: 80%;
+    width: 25%;
     align-self: center;
     cursor: pointer;
     margin-bottom: 10px;
@@ -67,7 +72,7 @@
 }
 
 .notification-button span:hover{
-  color: #206130;
+  color: white;
 }
 
 .notification-button:hover {

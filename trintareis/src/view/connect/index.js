@@ -65,7 +65,7 @@ export default function ConnectScreen(props) {
                                 });
                                 idCount = idCount + 1;
                                 
-                                if((idCount+1) > result.docs.length){
+                                if((idCount+1) > result.docs.length || result.docs.length === 1){
                                     console.log("fetch finalizado /contactsscreen");
                                     setLoaded(true);
                                     setUsers(data);

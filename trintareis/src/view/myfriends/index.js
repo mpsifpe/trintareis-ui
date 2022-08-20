@@ -49,7 +49,7 @@ export default function MyFriends() {
                                     });
                                     idCount = idCount + 1;
                                     
-                                    if((idCount+1) > friends.docs.length){
+                                    if((idCount+1) > friends.docs.length || friends.docs.length === 1){
                                         console.log("fetch finalizado /friendsscreen");
                                         setLoaded(true);
                                         setUsers(data);
@@ -74,7 +74,7 @@ export default function MyFriends() {
                                     });
                                     idCount = idCount + 1;
                                     
-                                    if((idCount+1) > friends.docs.length){
+                                    if((idCount+1) > friends.docs.length || friends.docs.length === 1){
                                         console.log("fetch finalizado /friendsscreen");
                                         setLoaded(true);
                                         setUsers(data);
