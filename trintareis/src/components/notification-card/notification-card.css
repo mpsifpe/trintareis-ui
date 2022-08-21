@@ -1,0 +1,96 @@
+.notification-card-seen{
+    background-image: linear-gradient(360deg, #eeeeee, white, white, white);
+    width: inherit;
+    border-radius: 5px;
+    border-color: #ddd !important;
+    border: 1px solid;
+    display: block;
+    flex-direction: row;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 10px;
+    padding-bottom: 5px;
+    margin-bottom: 1px;
+}
+
+.notification-card-unseen{
+  background-image: linear-gradient(360deg, #eeeeee, white, white, white);
+  width: inherit;
+  border-radius: 5px;
+  border-color: green !important;
+  border: 3px solid;
+  display: block;
+  flex-direction: row;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 10px;
+  padding-bottom: 5px;
+  margin-bottom: 1px;
+}
+
+.notification-content{
+    padding: 0 10px 10px;
+    width: inherit;
+    height: inherit;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
+.notification-header{
+  display: block;
+  width: inherit;
+}
+
+.notification-name{
+  color: black;
+  font-weight: bold;
+  font-size: 17px;
+  position: relative;
+  left: auto;
+}
+
+.notification-timestamp{
+  color: black;
+  font-size: 12px;
+  float: right;
+}
+
+.notification-text{
+  color: black;
+  font-size: 15px;
+  padding-left: 10px;
+}
+
+.notification-button-span{
+  display: flex;
+  flex-direction: row;
+}
+
+.notification-button{
+    border: 1px solid;
+    display: block;
+    justify-content: center;
+    align-items: center;
+    border-radius: 15px;
+    color: #3d8a50;
+    height: 35px;
+    width: 25%;
+    align-self: center;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+.notification-button span{
+  color: #3d8a50;
+  font-size: 17px;
+}
+
+.notification-button span:hover{
+  color: white;
+}
+
+.notification-button:hover {
+    border: 2px solid;
+    color: #206130;
+}

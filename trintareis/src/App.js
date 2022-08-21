@@ -16,6 +16,7 @@ import MyFriends from './view/myfriends/';
 import Profile from './view/profile/';
 import EditProfile from './view/edit-profile/';
 import ConnectScreen from './view/connect';
+import NotificationsScreen from './view/notifications-screen';
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
         <Route exact path='/editProfile' component={EditProfile}/>
         <Route exact path='/editProfile/:id' component={EditProfile}/>
         <Route exact path='/connect' component={ConnectScreen}/>
+        <Route exact path='/notifications-screen' component={NotificationsScreen}/>
       </Router>
     </Provider>
   );

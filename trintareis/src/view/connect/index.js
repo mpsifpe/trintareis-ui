@@ -50,7 +50,7 @@ export default function ConnectScreen(props) {
                     if (!loaded && !loadStarted && friendsLoaded){
                         let idCount = 0;
                         setLoadStarted(true);
-                        console.log("fetch em execução /contactsscreen");
+                        console.log("fetch em execução /conectscreen");
             
                         profilesCollection.where('emailUser', 'not-in', friendsList).get().then((result) => {
                             result.forEach((prfl) => {
@@ -65,8 +65,8 @@ export default function ConnectScreen(props) {
                                 });
                                 idCount = idCount + 1;
                                 
-                                if((idCount+1) > result.docs.length){
-                                    console.log("fetch finalizado /contactsscreen");
+                                if((idCount+1) > result.docs.length || result.docs.length === 1){
+                                    console.log("fetch finalizado /conectscreen");
                                     setLoaded(true);
                                     setUsers(data);
                                     setCardsLoaded(false);
@@ -102,7 +102,7 @@ export default function ConnectScreen(props) {
            <span className='cards-display'>
                 {users.map(user => ( 
                                     <FriendCard 
-                                        key={user.id}
+                                        key={users.indexOf(user, 0)}
                                         nome={user.nome}
                                         course={user.course}
                                         type={user.type}
