@@ -77,6 +77,7 @@ export default function NotificationsScreen() {
                                         text={notif.text}
                                         time={notif.timestamp}
                                         inviter={notif.inviter}
+                                        seen={notif.seen}
                                         />
                 ))}
             </span>

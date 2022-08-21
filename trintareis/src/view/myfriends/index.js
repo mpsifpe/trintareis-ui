@@ -45,11 +45,12 @@ export default function MyFriends() {
                                         type: "aluno",
                                         profilePhoto: prfl.data().profilePhoto,
                                         email: prfl.data().emailUser,
-                                        profileId: prfl.data().id
+                                        profileId: prfl.data().id,
+                                        pending: frnd.data().pending
                                     });
                                     idCount = idCount + 1;
                                     
-                                    if((idCount+1) > friends.docs.length || friends.docs.length === 1){
+                                    if((idCount+1) > result.docs.length || friends.docs.length === 1){
                                         console.log("fetch finalizado /friendsscreen");
                                         setLoaded(true);
                                         setUsers(data);
@@ -70,11 +71,12 @@ export default function MyFriends() {
                                         type: "aluno",
                                         profilePhoto: prfl.data().profilePhoto,
                                         email: prfl.data().emailUser,
-                                        profileId: prfl.data().id
+                                        profileId: prfl.data().id,
+                                        pending: frnd.data().pending
                                     });
                                     idCount = idCount + 1;
                                     
-                                    if((idCount+1) > friends.docs.length || friends.docs.length === 1){
+                                    if((idCount+1) > result.docs.length || friends.docs.length === 1){
                                         console.log("fetch finalizado /friendsscreen");
                                         setLoaded(true);
                                         setUsers(data);
@@ -115,7 +117,9 @@ export default function MyFriends() {
                                          profilePhoto={u.profilePhoto}
                                          email={u.email}
                                          profileId={u.profileId}
-                                         isFriend={true} />
+                                         isFriend={true}
+                                         pending={u.pending}
+                                         /> 
                  ))}
              </span>
          );
