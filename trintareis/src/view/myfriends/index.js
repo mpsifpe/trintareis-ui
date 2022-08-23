@@ -14,6 +14,7 @@ export default function MyFriends() {
     const [loadStarted, setLoadStarted] = useStateIfMounted(false);
     const [cardsLoaded, setCardsLoaded] = useStateIfMounted (false);
     const [cardList, setCardList] = useStateIfMounted(<span> </span>);
+    const [friendsCount, setFriendsCount] = useStateIfMounted(0);
 
     const emailUser = useSelector(state => state.emailUser);
 
@@ -123,6 +124,7 @@ export default function MyFriends() {
                  ))}
              </span>
          );
+         setFriendsCount(users.length);
     };
 
     function unmountFriendsCards(){
@@ -135,6 +137,7 @@ export default function MyFriends() {
                 <div className="div__main_myfriends">
                     <div className="div__title_myfriends">
                         <span>Meus amigos</span>
+                        <span>({friendsCount})</span>
                     </div>
                     
                     <section className="section_friends_list" id="sec-bd5e">

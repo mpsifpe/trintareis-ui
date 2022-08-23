@@ -23,12 +23,12 @@ export default function ConnectScreen(props) {
     async function fetch() {    
         let friendsLoaded = false;
 
-        const profilesCollection = firebase.firestore().collection('profiles');
-        const friendsCollection = firebase.firestore().collection('friends');
+        const profiles = firebase.firestore().collection('profiles');
+        const friends = firebase.firestore().collection('friends');
 
         //carrega a lista de amigos do usuário logado e coloca na friendsList junto com o email do mesmo, pra facilitar o get
         if(friendsLoaded === false){ 
-            friendsCollection.get().then((friends) => {
+            friends.get().then((friends) => {
                 
                 let friendsCount = friends.size;
                 friendsList.push(emailUser);
@@ -52,7 +52,7 @@ export default function ConnectScreen(props) {
                         setLoadStarted(true);
                         console.log("fetch em execução /conectscreen");
             
-                        profilesCollection.where('emailUser', 'not-in', friendsList).get().then((result) => {
+                        profiles.where('emailUser', 'not-in', friendsList).get().then((result) => {
                             result.forEach((prfl) => {
                                 data.push({
                                     id: idCount,
