@@ -11,10 +11,11 @@ import NotificationCard from '../../components/notification-card';
 export default function NotificationsScreen() {
 
     const emailUser = useSelector(state => state.emailUser);
-    const usersNotifications = firebase.firestore().collection('notifications');
+    const notifications = firebase.firestore().collection('notifications');
 
     const [notifData, setNotifData] = useStateIfMounted([]);
     const [notifList, setNotifList] = useStateIfMounted(<div></div>);
+    const [newCount, setNewCount] = useStateIfMounted(0);
     
     const [finished, setFinished] = useStateIfMounted(false);
     const [cardsLoaded, setCardsLoaded] = useStateIfMounted(false);
@@ -22,9 +23,9 @@ export default function NotificationsScreen() {
     useEffect(()=>{
         let abortController = new AbortController();
 
-        if(!finished){
+        if(!finished && !cardsLoaded){
             console.log("fetch");
-            fetch();}
+            fetchNotifications();}
         
         if(finished){
             console.log("cards");
@@ -37,39 +38,39 @@ export default function NotificationsScreen() {
         }  
     },[finished]);
 
-    function fetch(){
+    function fetchNotifications(){
         let count = 0;
         let list = [];
+        setNewCount(0);
 
-        console.log(finished, cardsLoaded);
-        if(!finished && !cardsLoaded){
-
-            usersNotifications.where("emailUser", "==", emailUser).orderBy("timestamp", "desc").get().then((result) => {
-                result.forEach((notif) => {
-                    count = count + 1;
-                    list.push({
-                        id: notif.id,
-                        seen: notif.data().seen,
-                        text: notif.data().text,
-                        type: notif.data().type,
-                        time: notif.data().timestamp.toDate(),
-                        inviter: notif.data().inviter
-                    });
-
-                    if (result.size === 1 || count === result.size-1){
-                        setNotifData(list);
-                        setFinished(true);
-                    }
+        notifications.where("notifyUser", "==", emailUser).orderBy("timestamp", "desc").get().then((result) => {
+            result.forEach((notif) => {
+                count = count + 1;
+                list.push({
+                    id: notif.id,
+                    seen: notif.data().seen,
+                    text: notif.data().text,
+                    type: notif.data().type,
+                    time: notif.data().timestamp.toDate(),
+                    inviter: notif.data().inviter,
+                    response: notif.data().response
                 });
-            });
-        }
 
+                if (!notif.data().seen){ setNewCount(newCount + 1) }
+
+                if (result.size === 1 || count === result.size-1){
+                    setNotifData(list);
+                    setFinished(true);
+                }
+            });
+        });
     }
 
     function mountList(){
         setNotifList (
             <span>
                 {notifData.map(notif => ( 
+                                <div onClick={decreaseNewCount}>
                                     <NotificationCard 
                                         key={notif.id}
                                         id={notif.id}
@@ -78,10 +79,18 @@ export default function NotificationsScreen() {
                                         time={notif.timestamp}
                                         inviter={notif.inviter}
                                         seen={notif.seen}
+                                        response={notif.response}
                                         />
+                                </div>
                 ))}
             </span>
         );
+    }
+
+    function decreaseNewCount(){
+        if (newCount > 0){
+            setNewCount(newCount - 1)
+        }
     }
 
     return (
@@ -90,6 +99,7 @@ export default function NotificationsScreen() {
                 <div className="div__main_notifications">
                     <div className="div__title_notifications">
                         <span>Notificações</span>
+                        <span>({newCount})</span>
                     </div>
                     
                     <section className="section_notifications_list">
