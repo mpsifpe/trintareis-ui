@@ -5,21 +5,26 @@ import { useSelector } from 'react-redux';
 import { useStateIfMounted } from 'use-state-if-mounted';
 import loading from '../../resources/loading.gif';
 import firebase from '../../config/firebase';
-
+import { notifyFriendInvite, findAndUpdateInviteNotification, notifyAcceptInvite, deleteFriendInviteNotifications } from '../../helpers/notification-helper';
+import { inviteFriend, removeFriend, acceptInvite } from '../../helpers/friend-helper';
 
 
 export default function FriendCard(props) {
 
-    const [name, setName] = useStateIfMounted("empty");
-    const [course, setCourse] = useStateIfMounted("empty");
-    const [userType, setUserType] = useStateIfMounted("empty");
+    const [name, setName] = useStateIfMounted("loading");
+    const [course, setCourse] = useStateIfMounted("loading");
+    const [userType, setUserType] = useStateIfMounted("loading");
     const [cardButton, setCardButton] = useStateIfMounted(<button hidden={true}>button</button>);
     const [cardImage, setCardImage] = useStateIfMounted(loading);
-    const [cardEmail, setCardEmail] = useStateIfMounted("empty");
+    const [cardEmail, setCardEmail] = useStateIfMounted("loading");
+    const [inviter, setInviter] = useStateIfMounted("loading");
+    
 
-    const emailUser = useSelector(state => state.emailUser);
+    const emailUser = useSelector(state => state.emailUser);  
+    const friends = firebase.firestore().collection('friends');  
 
     async function updateInfo(){ //método chamado na div principal ao montar componente
+        
         setName( //<- carrega nome do usuário com link para o perfil
             <div>
                 <Link to={props.email === emailUser ? `/profile` : `/profile/${props.profileId}`}> 
@@ -29,26 +34,67 @@ export default function FriendCard(props) {
                 </Link>
             </div>     
         )    
-        
+
+        if (props.profilePhoto != null){ 
+            firebase.storage().ref(`profile_images/`+ props.profilePhoto).getDownloadURL().then(url => setCardImage(url));    }
+
         if (props.course != null){  setCourse(props.course)       }
         if (props.type != null){    setUserType(props.type)       }
         if (props.email != null){   setCardEmail(props.email)     }
-        if(props.isFriend){         setCardButton(<button className='card-button' onClick={clickAction}>Desconectar</button>) }
-        else {                      setCardButton(<button className='card-button' onClick={clickAction}>Conectar</button>)    }
         
-        if (props.profilePhoto != null){ 
-            firebase.storage().ref(`profile_images/`+ props.profilePhoto).getDownloadURL().then(url => setCardImage(url));    }
+        chooseButton();        
     };
 
 
     function clickAction(){
-        if(props.isFriend){
-            removeFriend(cardEmail);
-            setCardButton(<button className='card-button'>Desconectado</button>);
-        } else {
+        if(!props.isFriend){
             addFriend(cardEmail);
-            setCardButton(<button className='card-button'>Conectado</button>);
+            setCardButton(<button className='card-button' onClick={clickAction}>Convidado</button>);
+        } 
+        else {
+            if(props.pending == false){  
+                unfriend(cardEmail);
+                setCardButton(<button className='card-button' onClick={clickAction}>Conectar</button>)}
+            else{
+                if (inviter == emailUser){
+                    findAndUpdateInviteNotification(emailUser, props.email)}
+                else{
+                    findAndUpdateInviteNotification(props.email, emailUser)}
+
+                setCardButton(<button className='card-button' onClick={clickAction}>Desconectar</button>);
+                acceptInvite(props.email, emailUser);
+                notifyAcceptInvite(props.email, emailUser);
+            }
         }
+    }
+
+    function chooseButton(){
+        findInviter();
+        if (!props.isFriend){
+            setCardButton(<button className='card-button' onClick={clickAction}>Conectar</button>) }
+        else { 
+            if(props.pending == false){
+                setCardButton(<button className='card-button' onClick={clickAction}>Desconectar</button>) } 
+            else {
+                if(props.email !== inviter){
+                    setCardButton(<button className='card-button' onClick={clickAction}>Convidado</button>)}
+                else {
+                    setCardButton(<button className='card-button' onClick={clickAction}>Aceitar</button>)} }
+        }
+    }
+
+    function findInviter(){
+        friends.where("friend1", "==", emailUser).where("friend2", "==", props.email)
+                .get().then(
+                    (docs) => {
+                        docs.forEach((doc) => {
+                            setInviter(emailUser) })});
+        
+        friends.where("friend1", "==", props.email).where("friend2", "==", emailUser)
+                .get().then(
+                    (docs) => {
+                        docs.forEach((doc) => {
+                            setInviter(props.email)})});
     }
 
     return(
@@ -66,31 +112,15 @@ export default function FriendCard(props) {
     )
 
     //funções dos botões
-    function removeFriend (email){
-        const db = firebase.firestore().collection('friends');
-
-        db.get().then(  
-            (result) => {      
-                result.docs.forEach(doc => {
-                    if (doc.get("friend1") === emailUser && doc.get("friend2") === email || doc.get("friend2") === emailUser && doc.get("friend1") === email) {
-                            db.doc(doc.id).delete();
-                        }
-                    }
-                )
-            }
-        )
+    function unfriend (friend_email){
+        removeFriend(friend_email, emailUser);
+        setCardButton(<button className='card-button'>Desconectado</button>);
+        deleteFriendInviteNotifications(friend_email, emailUser);
     }
 
-    function addFriend (email){
-        const db = firebase.firestore().collection('friends');
-        
-        db.add({
-            friend2: email,
-            friend1: emailUser,
-            pending: true
-        })
-        .catch((error) => {
-            console.error("Error adding document: ", error);
-        });
+    function addFriend (friend_email){
+        inviteFriend(friend_email, emailUser);
+        notifyFriendInvite(friend_email,emailUser);
+        setCardButton(<button className='card-button'>Solicitado</button>);
     }
 }

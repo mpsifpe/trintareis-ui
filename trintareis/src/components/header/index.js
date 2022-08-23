@@ -80,10 +80,12 @@ function Header() {
                             <MdEventNote />
                             <span>Eventos</span>
                         </div>
-                        <div className="notification__fb">
-                            <IoIosNotifications />
-                            <span>Notificações</span>
-                        </div>
+                        <Link to="/notifications-screen">
+                            <div className="notification__fb">
+                                <IoIosNotifications />
+                                <span>Notificações</span>
+                            </div>
+                        </Link>
                         <div className="chat__fb">
                             <FaRocketchat />
                             <span>Chat</span>

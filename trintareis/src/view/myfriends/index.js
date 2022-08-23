@@ -14,6 +14,7 @@ export default function MyFriends() {
     const [loadStarted, setLoadStarted] = useStateIfMounted(false);
     const [cardsLoaded, setCardsLoaded] = useStateIfMounted (false);
     const [cardList, setCardList] = useStateIfMounted(<span> </span>);
+    const [friendsCount, setFriendsCount] = useStateIfMounted(0);
 
     const emailUser = useSelector(state => state.emailUser);
 
@@ -45,11 +46,12 @@ export default function MyFriends() {
                                         type: "aluno",
                                         profilePhoto: prfl.data().profilePhoto,
                                         email: prfl.data().emailUser,
-                                        profileId: prfl.data().id
+                                        profileId: prfl.data().id,
+                                        pending: frnd.data().pending
                                     });
                                     idCount = idCount + 1;
                                     
-                                    if((idCount+1) > friends.docs.length){
+                                    if((idCount+1) > result.docs.length || friends.docs.length === 1){
                                         console.log("fetch finalizado /friendsscreen");
                                         setLoaded(true);
                                         setUsers(data);
@@ -70,11 +72,12 @@ export default function MyFriends() {
                                         type: "aluno",
                                         profilePhoto: prfl.data().profilePhoto,
                                         email: prfl.data().emailUser,
-                                        profileId: prfl.data().id
+                                        profileId: prfl.data().id,
+                                        pending: frnd.data().pending
                                     });
                                     idCount = idCount + 1;
                                     
-                                    if((idCount+1) > friends.docs.length){
+                                    if((idCount+1) > result.docs.length || friends.docs.length === 1){
                                         console.log("fetch finalizado /friendsscreen");
                                         setLoaded(true);
                                         setUsers(data);
@@ -115,10 +118,13 @@ export default function MyFriends() {
                                          profilePhoto={u.profilePhoto}
                                          email={u.email}
                                          profileId={u.profileId}
-                                         isFriend={true} />
+                                         isFriend={true}
+                                         pending={u.pending}
+                                         /> 
                  ))}
              </span>
          );
+         setFriendsCount(users.length);
     };
 
     function unmountFriendsCards(){
@@ -131,6 +137,7 @@ export default function MyFriends() {
                 <div className="div__main_myfriends">
                     <div className="div__title_myfriends">
                         <span>Meus amigos</span>
+                        <span>({friendsCount})</span>
                     </div>
                     
                     <section className="section_friends_list" id="sec-bd5e">
