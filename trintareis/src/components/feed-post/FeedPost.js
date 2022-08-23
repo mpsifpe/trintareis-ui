@@ -34,8 +34,6 @@ export default function (props) {
         })
     })
 
-
-
     function calcularHoras(tempo, tipo) {
         var date1 = new Date(tempo);
         var date2 = new Date();
@@ -106,7 +104,7 @@ export default function (props) {
                             </div>
                             <div className='feed-comentario-texto'>
                                 <div className='feed-comentario-metad-left'><h5>{number.autor}</h5></div>
-                                <div>{number.content}</div>
+                                <div className='feed-content'>{number.content}</div>
                                 <div className='feed-data-modificada'>{calcularHoras(number.data, number.tipo_comentario)}</div>
                             </div>
 
@@ -155,7 +153,7 @@ export default function (props) {
                                         </div>
                                         <div className='feed-comentario-texto'>
                                             <div className='feed-comentario-metad-left'><h5>{number.autor}</h5></div>
-                                            <div>{number.content}</div>
+                                            <div className='feed-content'>{number.content}</div>
                                             <div className='feed-data-modificada'>{calcularHoras(number.data, number.tipo_comentario)}</div>
                                         </div>
 
@@ -198,7 +196,7 @@ export default function (props) {
                                     </div>
                                     <div className='feed-comentario-texto'>
                                         <div className='feed-comentario-metad-left'><h5>{number.autor}</h5></div>
-                                        <div>{number.content}</div>
+                                        <div className='feed-content'>{number.content}</div>
                                         <div className='feed-data-modificada'>{calcularHoras(number.data, number.tipo_comentario)}</div>
                                     </div>
                                     <div className='feed-comentario-metad-right'></div>
@@ -214,7 +212,7 @@ export default function (props) {
 
     useEffect(() => {
         const abortController = new AbortController();
-        setBotaoGostei(<div>
+        setBotaoGostei(<div className='feed-content-bt-gostei'>
             <BiLike />
             <span onClick={() => funcGostei({ id: props.id })} id={props.id + '_botao'} className="">Gostei</span>
         </div>);
@@ -226,7 +224,7 @@ export default function (props) {
             props.like.forEach(function (like) {
                 if (like == emailUser) {
                     setCurtiu(1);
-                    setBotaoGostei(<div>
+                    setBotaoGostei(<div className='feed-content-bt-gostei'>
                         <BiLike style={{ color: 'cornflowerblue' }} />
                         <div onClick={() => funcDesgostei({ id: props.id })} id={props.id + '_botao'} className="feed-comentario-gostei">Gostei</div>
                     </div>);
@@ -269,7 +267,7 @@ export default function (props) {
                             coments: comentarios
                         })
                         document.getElementById(obj.target[1].value + '_texto').value = '';
-                        setTotalComentario(totalComentario+1);
+                        setTotalComentario(comentarios.length);
                     } catch (e) {
                         console.log('erro ao salvar comentario: ' + comentarios);
                     }
@@ -295,7 +293,7 @@ export default function (props) {
         reordenar.forEach(function (coment) {
             ordenar.unshift(coment)
         })
-
+        setTotalComentario(reordenar.length);
         evento.get().then(async (result) => {
             await result.docs.forEach(doc => {
                 if (doc.id == idEvento) {
@@ -408,12 +406,7 @@ export default function (props) {
     }
 
     function funcDesgostei(obj) {
-        if (curtir == "") {
-            setCurti(1);
-        } else {
-            setCurti(parseInt(curtir) - 1);
-        }
-        setBotaoGostei(<div>
+        setBotaoGostei(<div className='feed-content-bt-gostei'>
             <BiLike />
             <div onClick={() => funcGostei({ id: props.id })} id={props.id + '_botao'} className="">Gostei</div>
         </div>);
@@ -427,13 +420,12 @@ export default function (props) {
                     console.log(doc.data().like);
                     doc.data().like.forEach(function (like) {
                         if (like == emailUser) {
-                            //    alert('Você já curtiu');
                             retorno = false;
                         } else {
                             likes.push(like)
                         }
                     })
-
+                    setCurti(parseInt(likes.length))
                     if (likes != "") {
                         evento.doc(obj.id).update({
                             like: likes
@@ -451,11 +443,6 @@ export default function (props) {
     }
 
     function funcGostei(obj) {
-        if (curtir == "") {
-            setCurti(2);
-        } else {
-            setCurti(parseInt(curtir) + 1);
-        }
         setBotaoGostei(<div>
             <BiLike style={{ color: 'cornflowerblue' }} />
             <span onClick={() => funcDesgostei({ id: props.id })} id={props.id + '_botao'} className="feed-comentario-gostei">Gostei</span>
@@ -465,20 +452,16 @@ export default function (props) {
         var likes = [];
         evento.get().then(async (result) => {
             await result.docs.forEach(doc => {
-
                 if (doc.id == obj.id) {
-
                     var retorno = true;
                     if (Array.isArray(doc.data().like)) {
                         doc.data().like.forEach(function (like) {
                             if (like == emailUser) {
-                                //    alert('Você já curtiu');
                                 retorno = false;
                             }
                         })
                     } else {
                         if (doc.data().like == emailUser) {
-                            //    alert('Você já curtiu.');
                             retorno = false;
                         }
                     }
@@ -488,25 +471,21 @@ export default function (props) {
                                 like: emailUser
                             })
                         } else if (doc.data().like != '' && !Array.isArray(doc.data().like)) {
-                            // setCurti(curtir + 1 );
                             likes.push(doc.data().like);
                             likes.push(emailUser);
                             evento.doc(obj.id).update({
                                 like: likes
                             })
                         } else {
-                            // setCurti(curtir + 1 );
                             likes = doc.data().like;
                             likes.push(emailUser);
                             evento.doc(obj.id).update({
                                 like: likes
                             })
                         }
-                        //setCurti(curtir + 1 );
+                        setCurti(parseInt(likes.length));
 
                     }
-                    //  setCurti(curtir + 1 );
-
                 }
             })
         })
