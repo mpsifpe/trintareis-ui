@@ -1,4 +1,4 @@
-import './connect.css';
+import './explore-screen.css';
 import React, {useEffect} from 'react';
 import { useStateIfMounted } from 'use-state-if-mounted';
 import Header from '../../components/header/index';
@@ -7,7 +7,7 @@ import firebase from '../../config/firebase';
 import { useSelector } from 'react-redux';
 
 
-export default function ConnectScreen(props) {
+export default function ExploreScreen(props) {
     
     const [users, setUsers] = useStateIfMounted([]);
     const [loaded, setLoaded] = useStateIfMounted(false);
@@ -50,7 +50,7 @@ export default function ConnectScreen(props) {
                     if (!loaded && !loadStarted && friendsLoaded){
                         let idCount = 0;
                         setLoadStarted(true);
-                        console.log("fetch em execução /conectscreen");
+                        console.log("fetch em execução /explorescreen");
             
                         profiles.where('emailUser', 'not-in', friendsList).get().then((result) => {
                             result.forEach((prfl) => {
@@ -58,7 +58,7 @@ export default function ConnectScreen(props) {
                                     id: idCount,
                                     nome: prfl.data().userName,
                                     course: prfl.data().city,
-                                    type: "aluno",
+                                    type: prfl.data().profileInformatio,
                                     profilePhoto: prfl.data().profilePhoto,
                                     email: prfl.data().emailUser,
                                     profileId: prfl.data().id
@@ -66,7 +66,7 @@ export default function ConnectScreen(props) {
                                 idCount = idCount + 1;
                                 
                                 if((idCount+1) > result.docs.length || result.docs.length === 1){
-                                    console.log("fetch finalizado /conectscreen");
+                                    console.log("fetch finalizado /explorescreen");
                                     setLoaded(true);
                                     setUsers(data);
                                     setCardsLoaded(false);
@@ -122,12 +122,12 @@ export default function ConnectScreen(props) {
     return (
         <div className="App">
             <div onClick={unmountFriendsCards} ><Header/></div>
-                <div className="div__main_myfriends">
-                    <div className="div__title_myfriends">
-                        <span>Conecte-se</span>
+                <div className="div__main_explore">
+                    <div className="div__title_explore">
+                        <span>Explorar</span>
                     </div>
                     
-                    <section className="section_friends_list" id="sec-bd5e">
+                    <section className="section_cards_list" id="sec-bd5e">
                         {cardList}
                     </section>
                 </div>
