@@ -14,23 +14,22 @@ export default function FriendCard(props) {
     const [name, setName] = useStateIfMounted("loading");
     const [course, setCourse] = useStateIfMounted("loading");
     const [userType, setUserType] = useStateIfMounted("loading");
-    const [cardButton, setCardButton] = useStateIfMounted(<button hidden={true}>button</button>);
+    const [cardButton, setCardButton] = useStateIfMounted(<div className='div__card-button'><button className='card-button'>Carregando</button></div>);
     const [cardImage, setCardImage] = useStateIfMounted(loading);
     const [cardEmail, setCardEmail] = useStateIfMounted("loading");
     const [inviter, setInviter] = useStateIfMounted("loading");
+    const [isFriend, setIsFriend] = useStateIfMounted(false);
+    const [pendingInvite, setPendingInvite] = useStateIfMounted(false);
     
 
     const emailUser = useSelector(state => state.emailUser);  
     const friends = firebase.firestore().collection('friends');  
 
     async function updateInfo(){ //método chamado na div principal ao montar componente
-        
-        setName( //<- carrega nome do usuário com link para o perfil
+        setName(
             <div>
-                <Link to={props.email === emailUser ? `/profile` : `/profile/${props.profileId}`}> 
-                    <div>
-                        <span>{props.nome}</span>
-                    </div>
+                <Link to={props.email === emailUser ? `/profile` : `/profile/${props.profileId}`} className='friendcardLinkStyle'> 
+                    <span >{props.nome}</span>
                 </Link>
             </div>     
         )    
@@ -42,44 +41,61 @@ export default function FriendCard(props) {
         if (props.type != null){    setUserType(props.type)       }
         if (props.email != null){   setCardEmail(props.email)     }
         
-        chooseButton();        
+        setIsFriend(props.isFriend);
+        setPendingInvite(props.pending);   
+
+        chooseButton();
     };
 
-
     function clickAction(){
-        if(!props.isFriend){
-            addFriend(cardEmail);
-            setCardButton(<button className='card-button' onClick={clickAction}>Convidado</button>);
+        if(isFriend === false){
+            addFriend();
+            setIsFriend(true);
+            setPendingInvite(true);
+            setCardButton(<div className='div__card-button'><button className='card-button'>Convidado</button></div>)
+            console.log("click> convidado")
         } 
         else {
-            if(props.pending == false){  
-                unfriend(cardEmail);
-                setCardButton(<button className='card-button' onClick={clickAction}>Conectar</button>)}
+            if(pendingInvite == false){  
+                unfriend();
+                setIsFriend(false);
+                setCardButton(<div className='div__card-button'><button className='card-button'>Conectar</button></div>) 
+                console.log("click> desconectado")
+            }
             else{
-                if (inviter == emailUser){
-                    findAndUpdateInviteNotification(emailUser, props.email)}
+                if (inviter === emailUser){
+                    unfriend();
+                    setIsFriend(false);
+                    setPendingInvite(false);
+                    setCardButton(<div className='div__card-button'><button className='card-button'>Convite cancelado</button></div>);
+                    console.log("click> desconectado")
+                }
                 else{
-                    findAndUpdateInviteNotification(props.email, emailUser)}
-
-                setCardButton(<button className='card-button' onClick={clickAction}>Desconectar</button>);
-                acceptInvite(props.email, emailUser);
-                notifyAcceptInvite(props.email, emailUser);
+                    findAndUpdateInviteNotification(cardEmail, emailUser);
+                    setIsFriend(true);
+                    setPendingInvite(false);
+                    acceptInvite(cardEmail, emailUser);
+                    notifyAcceptInvite(cardEmail, emailUser);
+                    setCardButton(<div className='div__card-button'><button className='card-button'>Desconectar</button></div>)
+                    console.log("click> aceito")
+                }                
             }
         }
     }
 
     function chooseButton(){
         findInviter();
-        if (!props.isFriend){
-            setCardButton(<button className='card-button' onClick={clickAction}>Conectar</button>) }
+        if (isFriend === false){
+            setCardButton(<div className='div__card-button'><button className='card-button' onClick={clickAction}>Conectar</button></div>) }
         else { 
-            if(props.pending == false){
-                setCardButton(<button className='card-button' onClick={clickAction}>Desconectar</button>) } 
+            if(pendingInvite === false){
+                setCardButton(<div className='div__card-button'><button className='card-button' onClick={clickAction}>Desconectar</button></div>) } 
             else {
-                if(props.email !== inviter){
-                    setCardButton(<button className='card-button' onClick={clickAction}>Convidado</button>)}
+                if(inviter === emailUser){
+                    setCardButton(<div className='div__card-button'><button className='card-button' onClick={clickAction}>Convidado</button></div>)}
                 else {
-                    setCardButton(<button className='card-button' onClick={clickAction}>Aceitar</button>)} }
+                    setCardButton(<div className='div__card-button'><button className='card-button' onClick={clickAction}>Aceitar</button></div>)} 
+            }
         }
     }
 
@@ -88,7 +104,7 @@ export default function FriendCard(props) {
                 .get().then(
                     (docs) => {
                         docs.forEach((doc) => {
-                            setInviter(emailUser) })});
+                            setInviter(emailUser)})});
         
         friends.where("friend1", "==", props.email).where("friend2", "==", emailUser)
                 .get().then(
@@ -101,9 +117,11 @@ export default function FriendCard(props) {
         <div onLoad={updateInfo}>
             <div className="friend-card">
                     <span className="friend-content">
-                        <img className="friend-img" src={cardImage} />
-                        <h4 className="friend-name">{name}</h4>
-                        <p className="friend-course"><b>{course}</b> </p>
+                        <Link to={cardEmail === emailUser ? `/profile` : `/profile/${props.profileId}`}> 
+                            <img className="friend-img" src={cardImage} />
+                        </Link>
+                        <div>{name}</div>
+                        <p className="friend-course">{course}</p>
                         <p className="friend-usertype">{userType}</p>
                     </span>
                     {cardButton}
@@ -112,15 +130,13 @@ export default function FriendCard(props) {
     )
 
     //funções dos botões
-    function unfriend (friend_email){
-        removeFriend(friend_email, emailUser);
-        setCardButton(<button className='card-button'>Desconectado</button>);
-        deleteFriendInviteNotifications(friend_email, emailUser);
+    function unfriend (){
+        removeFriend(cardEmail, emailUser);
+        deleteFriendInviteNotifications(cardEmail, emailUser);
     }
 
-    function addFriend (friend_email){
-        inviteFriend(friend_email, emailUser);
-        notifyFriendInvite(friend_email,emailUser);
-        setCardButton(<button className='card-button'>Solicitado</button>);
+    function addFriend (){
+        inviteFriend(cardEmail, emailUser);
+        notifyFriendInvite(cardEmail,emailUser);
     }
 }

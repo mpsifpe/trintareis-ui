@@ -15,7 +15,7 @@ import CreatePublication from './view/create-publication/';
 import MyFriends from './view/myfriends/';
 import Profile from './view/profile/';
 import EditProfile from './view/edit-profile/';
-import ConnectScreen from './view/connect';
+import ExploreScreen from './view/explore-screen';
 import NotificationsScreen from './view/notifications-screen';
 
 function App() {
@@ -35,7 +35,7 @@ function App() {
         <Route exact path='/profile/:id' component={Profile}/>
         <Route exact path='/editProfile' component={EditProfile}/>
         <Route exact path='/editProfile/:id' component={EditProfile}/>
-        <Route exact path='/connect' component={ConnectScreen}/>
+        <Route exact path='/explore' component={ExploreScreen}/>
         <Route exact path='/notifications-screen' component={NotificationsScreen}/>
       </Router>
     </Provider>
