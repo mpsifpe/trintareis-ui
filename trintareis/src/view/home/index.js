@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react';
 import './home.css';
+import React, { useState, useEffect } from 'react';
 import Header from '../../components/header/index'
 import FeedForm from '../../components/feed-form/index';
 import FeedPost from '../../components/feed-post/FeedPost';
 import firebase from '../../config/firebase';
-
+import loading from '../../resources/loading.gif';
 import { useSelector } from 'react-redux';
-const profileFoto = "https://firebasestorage.googleapis.com/v0/b/trintareis-23e4c.appspot.com/o/profile_foto_default%2Fperfil_second(1).png?alt=media&token=f815209f-00c0-4591-ad8b-43eda529d21b"
+
+const profileFoto = loading;
 
 function Home() {
     const [eventos, setEventos] = useState([]);

@@ -20,7 +20,7 @@ function ModalEditProfile(props) {
     const [city, setCity] = useState();
     const emailUser = useSelector(state => state.emailUser);
 
-    const storege = firebase.storage();
+    const storage = firebase.storage();
     const db = firebase.firestore();
 
     useEffect(() => {
@@ -51,10 +51,10 @@ function ModalEditProfile(props) {
         setLoad(1);
 
         if (profilePhotoNew)
-            storege.ref(`profile_images/${profilePhotoNew.name}`).put(profilePhotoNew);
+            storage.ref(`profile_images/${profilePhotoNew.name}`).put(profilePhotoNew);
 
         if (coverPhotoNew)
-            storege.ref(`profile_images/${coverPhotoNew.name}`).put(coverPhotoNew);
+            storage.ref(`profile_images/${coverPhotoNew.name}`).put(coverPhotoNew);
 
         db.collection('profiles').doc(props.match.params.id).update({
             details: details,
@@ -77,9 +77,9 @@ function ModalEditProfile(props) {
         setLoad(1);
         let save;
         if (!isEmpty(profilePhotoNew)) {
-            save = storege.ref(`profile_images/${profilePhotoNew.name}`).put(profilePhotoNew);
+            save = storage.ref(`profile_images/${profilePhotoNew.name}`).put(profilePhotoNew);
             if (!isEmpty(coverPhotoNew)) {
-                save = storege.ref(`profile_images/${coverPhotoNew.name}`).put(coverPhotoNew);
+                save = storage.ref(`profile_images/${coverPhotoNew.name}`).put(coverPhotoNew);
             }
         }
 
@@ -133,7 +133,7 @@ function ModalEditProfile(props) {
                                                 type="text" className="form-control" rows="3" placeholder="Ex.: Professor | Palestrante | etc."></input>
                                         </div>
                                         <div className="form-group">
-                                            <label>Descrevar quem é você</label>
+                                            <label>Descreva quem é você</label>
                                             <textarea onChange={(e) => setDetails(e.target.value)} value={details && details} className="form-control" rows="3" placeholder="Ex.: profissão, hobby, interesses, currículo acadêmico, etc."></textarea>
                                         </div>
                                         <div className="form-group">

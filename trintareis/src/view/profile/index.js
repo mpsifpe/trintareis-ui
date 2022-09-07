@@ -4,13 +4,13 @@ import { Link } from "react-router-dom";
 import Header from '../../components/header/index';
 import FeedForm from '../../components/feed-form/index';
 import TimeLine from '../../components/timeline_profile/index';
-
+import loading from '../../resources/loading.gif';
 import firebase from '../../config/firebase';
 import { useSelector } from 'react-redux';
 
 import { Perfil, Content, Details } from './styles';
 
-const profileFoto = "https://firebasestorage.googleapis.com/v0/b/trintareis-23e4c.appspot.com/o/profile_foto_default%2Fperfil_second(1).png?alt=media&token=f815209f-00c0-4591-ad8b-43eda529d21b"
+const profileFoto = loading;
 
 function Profile(props) {
     const [profileInfo, setProfileInfo] = useState([]);
@@ -103,7 +103,7 @@ function Profile(props) {
     return (
         <div className="App">
             <Header />
-            <div>
+            <div className="main">
                 <Perfil photo={urlImageCover}>
                     <div />
                 </Perfil>

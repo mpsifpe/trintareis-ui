@@ -6,7 +6,7 @@ import './homeScreen.css';
 import Header from '../../components/header-register/index';
 
 
-function HomeScreen() {
+function RegisterScreen() {
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
     const [carregando, setCarregando] = useState();
@@ -74,4 +74,4 @@ function HomeScreen() {
     )
 }
 
-export default HomeScreen;
+export default RegisterScreen;
