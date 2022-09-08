@@ -132,3 +132,9 @@
     font-size: 10px;
     font-family: inherit;
 }
+.feed-video{
+    padding: 25px;
+    width: 100% !important;
+    height: 100% !important;
+    font-family: inherit;
+}

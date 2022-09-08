@@ -7,7 +7,7 @@ import { FaShare } from "react-icons/fa";
 import './feedPost.css'
 import { Link, Redirect } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-
+import ReactPlayer from 'react-player'
 import firebase from '../../config/firebase';
 
 export default function (props) {
@@ -25,6 +25,7 @@ export default function (props) {
     const [todosComentarios, setTodosComentarios] = useState('');
     const [botaoGostei, setBotaoGostei] = useState('');
     const [clistaFotos, setListaFotos] = useState([]);
+
 
     firebase.firestore().collection('profiles').get().then(async (result) => {
         await result.docs.forEach(doc => {
@@ -220,7 +221,7 @@ export default function (props) {
         if (Array.isArray(props.like) && props.like.length > 0) {
             setCurti(props.like.length);
             setTotalComentario(props.coments.length);
-            
+
             props.like.forEach(function (like) {
                 if (like == emailUser) {
                     setCurtiu(1);
@@ -557,8 +558,15 @@ export default function (props) {
                     <p>
                         {props.conteudo}<br />
                     </p>
+                    {
+                        props.tipo == 'v' ?
+                            <ReactPlayer url={urlImages} controls="true" className="feed-video"/>
+                            :
+                            <img src={urlImages} />
+                    }
 
-                    <img src={urlImages} />
+
+
                 </div>
                 <div className="div__info">
                     <div>

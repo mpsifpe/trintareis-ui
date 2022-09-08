@@ -29,6 +29,7 @@ function ModalPostPhoto() {
                 share: 0,
                 amountComment: 0,
                 public: 1,
+                tipo: 'f',
                 dataTime: new Date()
             }).then((docRef) => {
                 setLoad(0);

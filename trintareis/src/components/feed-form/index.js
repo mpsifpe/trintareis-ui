@@ -35,14 +35,14 @@ export default function (props) {
                         </Link>
                     </div>
                     <div className="iconSingle feedForm__reaction">
-
+                        <Link to='postVideo' style={{ textDecoration: 'none' }}>
                         <button type="submit">
                             <AiFillVideoCamera />
                             <span>
                                 Vídeo
                             </span>
                         </button>
-
+                        </Link>
                     </div>
                     <div className="iconSingle evn feedForm__reaction">
                         <Link to='event' style={{ textDecoration: 'none' }}>
