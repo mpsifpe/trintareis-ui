@@ -1,21 +1,26 @@
-import React, { useState } from 'react';
 import './login.css';
-import firebase from '../../config/firebase';
 import 'firebase/auth';
+import React, { useState } from 'react';
 import { Link, Redirect } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import firebase from '../../config/firebase';
 import Header from '../../components/header-login/index';
-
-import { useSelector, useDispatch } from 'react-redux';
+import { hasProfile } from '../../helpers/profile-helper';
 
 function Login() {
     const [email, setEmail] = useState();
     const [senha, setSenha] = useState();
+    const [loginRedirect, setLoginRedirect] = useState(null);
 
     const dispatch = useDispatch();
 
     function singIn() {
         firebase.auth().signInWithEmailAndPassword(email, senha).then(result => {
             dispatch({ type: 'LOG_IN', emailUser: result.user.email });
+            
+            !hasProfile(result.user.email) ? 
+                setLoginRedirect(<Redirect to='/editProfile' />) : setLoginRedirect(<Redirect to='/home' />)
+
         }).catch(erro => {
             alert(erro)
         })
@@ -27,8 +32,8 @@ function Login() {
             <hr />
             <div className="div-container container-fluid d-flex justify-content-between align-items-center w-100">
                 <div className="form__signin mx-auto">
-                    {useSelector(state => state.loggedUSer) > 0 ? <Redirect to='/home' /> : null}
-
+                    
+                    {loginRedirect}
                     <form className="signin-container__form">
                         <h1 className="title">Bem-vindo de volta!</h1>
                         <p className="subtitle">Faça seu login e interaja com milhares de pessoas!</p>

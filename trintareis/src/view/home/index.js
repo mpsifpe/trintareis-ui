@@ -1,11 +1,11 @@
 import './home.css';
 import React, { useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import Header from '../../components/header/index'
 import FeedForm from '../../components/feed-form/index';
 import FeedPost from '../../components/feed-post/FeedPost';
 import firebase from '../../config/firebase';
 import loading from '../../resources/loading.gif';
-import { useSelector } from 'react-redux';
 
 const profileFoto = loading;
 
