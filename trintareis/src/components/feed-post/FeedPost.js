@@ -1,19 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
-import { BsThreeDots, BsThreeDotsVertical, BsFillArrowLeftCircleFill } from "react-icons/bs";
+import { BsThreeDotsVertical, BsFillArrowLeftCircleFill } from "react-icons/bs";
 import { BiLike } from "react-icons/bi";
 import { CgComment } from "react-icons/cg";
 import { FaShare } from "react-icons/fa";
 import './feedPost.css'
 import { Link, Redirect } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import ReactPlayer from 'react-player'
+
 import firebase from '../../config/firebase';
 
 export default function (props) {
     const [urlImages, setUrlImages] = useState('');
     const emailUser = useSelector(state => state.emailUser);
-    const loggedUSer = useSelector(state => state.loggedUSer);
     const [curtir, setCurti] = useState('');
     const [curtiu, setCurtiu] = useState('');
     const [totalComentario, setTotalComentario] = useState('');

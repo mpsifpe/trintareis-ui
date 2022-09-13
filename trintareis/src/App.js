@@ -4,28 +4,25 @@ import store from '../src/store/';
 import { Provider } from 'react-redux';
 
 /*Pages*/
-import Login from './view/login-2/';
-import NewUser from './view/new-user/';
+import Login from './view/login-screen/';
 import Home from './view/home/';
 import RecoveryPassword from './view/recovery-password/';
 import Event from './view/event/';
 import PostPhoto from './view/post-photo/';
-import PostVideo from './view/post-video/';
 import HomeScreen from './view/home-screen/';
 import CreatePublication from './view/create-publication/';
 import MyFriends from './view/myfriends/';
 import Profile from './view/profile/';
 import EditProfile from './view/edit-profile/';
-import ConnectScreen from './view/connect';
+import ExploreScreen from './view/explore-screen';
 import NotificationsScreen from './view/notifications-screen';
 
 function App() {
   return (
     <Provider store={store}>
       <Router>
-        <Route exact path='/' component={HomeScreen}/>
+        <Route exact path='/' component={RegisterScreen}/>
         <Route exact path='/login' component={Login}/>
-        <Route exact path='/novousuario' component={NewUser}/>
         <Route exact path='/home' component={Home}/>
         <Route exact path='/recoveryPassword' component={RecoveryPassword}/>
         <Route exact path='/event' component={Event}/>
@@ -37,7 +34,7 @@ function App() {
         <Route exact path='/profile/:id' component={Profile}/>
         <Route exact path='/editProfile' component={EditProfile}/>
         <Route exact path='/editProfile/:id' component={EditProfile}/>
-        <Route exact path='/connect' component={ConnectScreen}/>
+        <Route exact path='/explore' component={ExploreScreen}/>
         <Route exact path='/notifications-screen' component={NotificationsScreen}/>
       </Router>
     </Provider>
@@ -45,3 +42,6 @@ function App() {
 }
 
 export default App;
+
+/*
+*/

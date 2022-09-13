@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { FaHome, FaRocketchat, FaUserFriends, FaUniversity } from "react-icons/fa";
-import { IoIosNotifications, IoIosSchool } from "react-icons/io";
-import { MdOutlineGroups } from "react-icons/md";
+import { FaHome, FaRocketchat} from "react-icons/fa";
+import { IoIosNotifications } from "react-icons/io";
+import { MdOutlineGroups, MdExplore } from "react-icons/md";
 import { GiHummingbird } from "react-icons/gi";
 import { MdEventNote } from "react-icons/md";
 import { useSelector, useDispatch } from 'react-redux';
@@ -9,10 +9,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import './header.css';
 import '../stories/stories.css'
 import { Link, Redirect } from 'react-router-dom';
-
+import loading from '../../resources/loading.gif';
 import firebase from '../../config/firebase';
 
-const profileFoto = "https://firebasestorage.googleapis.com/v0/b/trintareis-23e4c.appspot.com/o/profile_foto_default%2Fperfil_second(1).png?alt=media&token=f815209f-00c0-4591-ad8b-43eda529d21b"
+const profileFoto = loading;
 
 function Header() {
     const dispatch = useDispatch();
@@ -49,47 +49,42 @@ function Header() {
                         </div>
                     </div>
                     <div className="div__content_header">
-                        <Link to="/home">
-                            <div className="home__fb">
+                        <Link to="/home" className='headerLinkStyle'>
+                            <div className="header_button">
                                 <FaHome />
                                 <span>Início</span>
                             </div>
                         </Link >
-                        <Link to="/connect">
-                            <div className="friend__fb">
-                                <FaUserFriends />
-                                <span>Conectar</span>
+                        <Link to="/explore" className='headerLinkStyle'>
+                            <div className="header_button">
+                                <MdExplore />
+                                <span>Explorar</span>
                             </div>
                         </Link>
-                        <Link to="/myfriends">
-                            <div className="group__fb link_preto">
+                        <Link to="/myfriends" className='headerLinkStyle'>
+                            <div className="header_button">
                                 <MdOutlineGroups />
                                 <span>Amigos</span>
                             </div>
                         </Link>
-                        {/* TODO - ESSAS DUAS ABAS VAI FICAR OFF, NÃO DELETAR ESSE CÓDIGO
-                        <div className="university__fb">
-                            <FaUniversity />
-                            <span>Instituições</span>
-                        </div>
-                        <div className="school__fb">
-                            <IoIosSchool />
-                            <span>Cursos</span>
-                        </div> */}
-                        <div className="event__fb">
-                            <MdEventNote />
-                            <span>Eventos</span>
-                        </div>
-                        <Link to="/notifications-screen">
-                            <div className="notification__fb">
+                        <Link to="" className='headerLinkStyle'>
+                            <div className="header_button" >
+                                <MdEventNote />
+                                <span>Eventos</span>
+                            </div>
+                        </Link>
+                        <Link to="/notifications-screen" className='headerLinkStyle'>
+                            <div className="header_button">
                                 <IoIosNotifications />
                                 <span>Notificações</span>
                             </div>
                         </Link>
-                        <div className="chat__fb">
-                            <FaRocketchat />
-                            <span>Chat</span>
-                        </div>
+                        <Link to="" className='headerLinkStyle'>
+                            <div className="header_button" >
+                                <FaRocketchat />
+                                <span>Chat</span>
+                            </div>
+                        </Link>
                     </div>
                 </div>
                 <div className="header__right">

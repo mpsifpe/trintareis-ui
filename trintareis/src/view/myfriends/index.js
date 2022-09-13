@@ -69,7 +69,7 @@ export default function MyFriends() {
                                         id: idCount,
                                         nome: prfl.data().userName,
                                         course: prfl.data().city,
-                                        type: "aluno",
+                                        type: prfl.data().profileInformatio,
                                         profilePhoto: prfl.data().profilePhoto,
                                         email: prfl.data().emailUser,
                                         profileId: prfl.data().id,
