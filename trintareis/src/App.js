@@ -16,27 +16,28 @@ import Profile from './view/profile/';
 import EditProfile from './view/edit-profile/';
 import ExploreScreen from './view/explore-screen';
 import NotificationsScreen from './view/notifications-screen';
+import EditProfileScreen from './view/edit-profile-screen';
 
 function App() {
   return (
-    <Provider store={store}>
-      <Router>
-        <Route exact path='/' component={RegisterScreen}/>
-        <Route exact path='/login' component={Login}/>
-        <Route exact path='/home' component={Home}/>
-        <Route exact path='/recoveryPassword' component={RecoveryPassword}/>
-        <Route exact path='/event' component={Event}/>
-        <Route exact path='/postPhoto' component={PostPhoto}/>
-        <Route exact path='/createPublication' component={CreatePublication}/>
-        <Route exact path='/myFriends' component={MyFriends}/>
-        <Route exact path='/profile' component={Profile}/>
-        <Route exact path='/profile/:id' component={Profile}/>
-        <Route exact path='/editProfile' component={EditProfile}/>
-        <Route exact path='/editProfile/:id' component={EditProfile}/>
-        <Route exact path='/explore' component={ExploreScreen}/>
-        <Route exact path='/notifications-screen' component={NotificationsScreen}/>
-      </Router>
-    </Provider>
+      <Provider store={store}>
+        <Router>
+          <Route exact path='/' component={RegisterScreen}/>
+          <Route exact path='/login' component={Login}/>
+          <Route exact path='/home' component={Home}/>
+          <Route exact path='/recoveryPassword' component={RecoveryPassword}/>
+          <Route exact path='/event' component={Event}/>
+          <Route exact path='/postPhoto' component={PostPhoto}/>
+          <Route exact path='/createPublication' component={CreatePublication}/>
+          <Route exact path='/myFriends' component={MyFriends}/>
+          <Route exact path='/profile' component={Profile}/>
+          <Route exact path='/profile/:id' component={Profile}/>
+          <Route exact path='/editProfile' component={EditProfileScreen}/>
+          <Route exact path='/editProfile/:id' component={EditProfileScreen}/>
+          <Route exact path='/explore' component={ExploreScreen}/>
+          <Route exact path='/notifications-screen' component={NotificationsScreen}/>
+        </Router>
+      </Provider>
   );
 }
 

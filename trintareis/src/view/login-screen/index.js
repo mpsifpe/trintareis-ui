@@ -17,12 +17,14 @@ function Login() {
     function singIn() {
         firebase.auth().signInWithEmailAndPassword(email, senha).then(result => {
             dispatch({ type: 'LOG_IN', emailUser: result.user.email });
-            
-            !hasProfile(result.user.email) ? 
-                setLoginRedirect(<Redirect to='/editProfile' />) : setLoginRedirect(<Redirect to='/home' />)
-
-        }).catch(erro => {
+            setEmail(result.user.email)
+        })
+        .catch(erro => {
             alert(erro)
+        })
+        .finally(function () {
+            hasProfile(email) ? 
+                setLoginRedirect(<Redirect to='/editProfile'/>) : setLoginRedirect(<Redirect to='/home' />)
         })
     }
 

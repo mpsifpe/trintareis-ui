@@ -1,0 +1,64 @@
+.div_main_editprofile{
+    margin: 1%;
+    background-color: white;
+    padding: 1%;
+}
+
+.btn-salvar{
+    background-color: #9ACD32;
+    color: #fff;
+    width: 235px;
+    border-width: 1px;
+    padding: 5px;
+    display: inline;
+}
+
+.btn-salvar:hover{
+    background-color: #89b82b;
+    color: #fff;
+}
+
+.btn-cancelar{
+    background-color: red;
+    color: #fff;
+    width: 235px;
+    border-width: 1px;
+    padding: 5px;
+    display: inline;
+}
+
+.btn-cancelar:hover{
+    background-color: #89b82b;
+    color: #fff;
+}
+
+.field_title_label{
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-decoration: none;
+    font-weight: bold;
+    margin-top: 2px;
+    margin-bottom: 1px;
+}
+
+.field_title_label_red{
+    font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-decoration: none;
+    font-weight: bolder;
+    margin-top: 2px;
+    margin-bottom: 1px;
+    color: red;
+}
+
+.div_buttons_row{
+    padding: 5px;
+    display: inline-block;
+    width: inherit;
+    position: relative;
+    align-self: center;
+    align-content: center;
+}
+
+.form{
+    width: 100%;
+    
+}

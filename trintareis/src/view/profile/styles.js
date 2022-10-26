@@ -56,7 +56,7 @@ export const Content = styled.div`
         background-size: cover;
         background-position: 50% 50%;
         border-color: #aaa !important;
-        border: 2px solid;
+        border: 0px;
         margin-top: -100px;
     }
 
