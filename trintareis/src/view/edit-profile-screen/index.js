@@ -1,70 +1,88 @@
 import './edit_profile_screen.css';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useSelector } from 'react-redux';
 import { useStateIfMounted } from 'use-state-if-mounted';
 
 import firebase from '../../config/firebase';
-import { hasProfile, getProfileDataByEmail } from '../../helpers/profile-helper';
-import api from '../../config/api';
+import { hasProfile, getProfileData } from '../../helpers/profile-helper';
+import { isEmpty } from '../../helpers/helper';
+import NotyfContext from '../../components/notyf-toast/NotyfContext';
 
 
 export default function EditProfileScreen(props){
     
-    const [load, setLoad] = useStateIfMounted();
-    const [details, setDetails] = useStateIfMounted();
-    const [profileInformation, setProfileInformation] = useStateIfMounted();
-    const [userName, setUserName] = useStateIfMounted();
-    const [profilePhoto, setProfilePhoto] = useStateIfMounted();
-    const [profilePhotoNew, setProfilePhotoNew] = useStateIfMounted();
-    const [coverPhoto, setCoverPhoto] = useStateIfMounted();
-    const [coverPhotoNew, setCoverPhotoNew] = useStateIfMounted();
-    const [region, setRegion] = useStateIfMounted();
-    const [city, setCity] = useStateIfMounted();
-    const [firstLogin, setFirstLogin] = useStateIfMounted();
+    const notyf = useContext(NotyfContext);
+
+    const [loaded, setLoaded] = useState(false)
+    //const [data, setData] = useState([]);
+    const [details, setDetails] = useState("");
+    const [profileInformation, setProfileInformation] = useState("");
+    const [userName, setUserName] = useState("");
+    const [profilePhoto, setProfilePhoto] = useState(null);
+    const [profilePhotoNew, setProfilePhotoNew] = useState(null);
+    const [coverPhoto, setCoverPhoto] = useState(null);
+    const [coverPhotoNew, setCoverPhotoNew] = useState(null);
+    const [region, setRegion] = useState("");
+    const [city, setCity] = useState("");
+    const [firstLogin, setFirstLogin] = useState();
+    
     const [cancelButton, setCancelButton] = useStateIfMounted(<button onClick={cancelBtnClick} type="button" className="btn-cancelar">Cancelar</button>);
     const [saveButton, setSaveButton] = useStateIfMounted(<button onClick={saveBtnClick} type="button" className="btn-salvar">Salvar</button>);
+    const [titleText, setTitleText] = useState(
+            <div>
+                <h3>Carregando</h3>
+            </div>
+    );
     
     const emailUser = useSelector(state => state.emailUser);
     const storage = firebase.storage();
     const profiles = firebase.firestore().collection('profiles');
-    const [test, setTest] = useStateIfMounted(<></>);
+    let data;
 
     useEffect(() => {
         let abortController = new AbortController();
-
-        if(hasProfile(emailUser)){
-            setFirstLogin(true)
-        }else{
+        
+        if (!hasProfile(emailUser)){
             setFirstLogin(false)
-            let profileData = getProfileDataByEmail(emailUser);
-            console.log(getProfileDataByEmail(emailUser))
-            /*setCity();
-            setDetails();
-            setProfileInformation();
-            setRegion();
-            setUserName();*/
-            
+            setTitleText(
+                <div>
+                    <h3>Editar perfil</h3>
+                </div>
+            )
+        }
+        else{
+            setFirstLogin(true)
+            setTitleText(
+                <div>
+                    <h3>Seja bem-vindo! Por favor nos informe alguns dados para prosseguir</h3>
+                </div>
+            );
         }
 
+        data = getProfileData(emailUser, data);
+            
+        if(!loaded && !isEmpty(data)){
+            console.log(data)
+            setCity(data.data.city);
+            setDetails(data.data.details);
+            setProfileInformation(data.data.profileInformation);
+            setRegion(data.data.region);
+            setUserName(data.data.userName);
+            setLoaded(true); 
 
-        if(props.match.params.id){
-            profiles.doc(props.match.params.id).get().then(async (result) => {
-                setProfilePhoto(result.data().profilePhoto);
-                setCoverPhoto(result.data().coverPhoto);
-                setDetails(result.data().details);
-                setProfileInformation(result.data().profileInformatio);
-                setUserName(result.data().userName);
-                setRegion(result.data().region);
-                setCity(result.data().city);
-            })
+
+            if(props.match.params.id){
+                profiles.doc(props.match.params.id).get().then(async (result) => {
+                    setProfilePhoto(result.data().profilePhoto);
+                    setCoverPhoto(result.data().coverPhoto);
+                })
+            }
         }
 
         return function cleanup() {
             abortController.abort()
         }
-    }, []);
-
-
+    },[]);
 
     function saveBtnClick(){
         if(isEmpty(userName) || isEmpty(profileInformation) || isEmpty(region)){
@@ -84,16 +102,14 @@ export default function EditProfileScreen(props){
             console.error("name " + userName);
             console.error("infor " + profileInformation);
             console.error("region " + region);
-            console.error("error");
+            notyf.error("error");
         } else {
-            console.log("cancelei");
+            notyf.error("cancelei");
         }
     }
     
 
     function update() {
-        setLoad(1);
-
         if (profilePhotoNew)
             storage.ref(`profile_images/${profilePhotoNew.name}`).put(profilePhotoNew);
 
@@ -109,16 +125,15 @@ export default function EditProfileScreen(props){
             profilePhoto: profilePhotoNew ? profilePhotoNew.name : profilePhoto,
             coverPhoto: coverPhotoNew ? coverPhotoNew.name : coverPhoto
         }).then(() => {
-            setLoad(0);
+            
             console.log("Sucess");
         }).catch((error) => {
-            setLoad(0);
+            
             console.error("error");
         });
     }
 
     function enroll() {
-        setLoad(1);
         let save;
         if (!isEmpty(profilePhotoNew)) {
             save = storage.ref(`profile_images/${profilePhotoNew.name}`).put(profilePhotoNew);        }
@@ -138,10 +153,10 @@ export default function EditProfileScreen(props){
                 public: 1,
                 dataTime: new Date()
             }).then((docRef) => {
-                setLoad(0);
+                
                 console.log("Document written with ID: ", docRef.id);
             }).catch((error) => {
-                setLoad(0);
+                
                 console.error("Error adding document: ", error);
             });
         });
@@ -150,9 +165,7 @@ export default function EditProfileScreen(props){
     return(
         <div>
             <div className="div_main_editprofile">
-                <div>
-                    <h3>Editar Perfil</h3>
-                </div>
+                {titleText}
                 <hr />
                 <div>
                     <form className="form">
@@ -164,9 +177,9 @@ export default function EditProfileScreen(props){
                         <div className="row">
                             <div className="form-group">
                                 <div className="form-group">
-                                    <label className="field_title_label">Informações de perfil*</label>
+                                    <label className="field_title_label">Informações de carreira*</label>
                                     <input onChange={(e) => setProfileInformation(e.target.value)} value={profileInformation && profileInformation}
-                                        type="text" className="form-control" rows="3" placeholder="Ex.: Professor | Palestrante | etc."></input>
+                                        type="text" className="form-control" rows="3" placeholder="Ex.: Estudante, Professor, Palestrante, etc."></input>
                                 </div>
                                 <div className="form-group">
                                     <label className="field_title_label">Descreva quem é você</label>
@@ -194,16 +207,9 @@ export default function EditProfileScreen(props){
                             {cancelButton}
                             {saveButton}
                         </div>
-                        {test}
                     </form>
                 </div>
             </div>
         </div>
     )
-}
-
-
-//auxiliares
-function isEmpty(value) {
-    return (value == null || value.length === 0);
 }

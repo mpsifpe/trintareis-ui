@@ -90,11 +90,19 @@
     letter-spacing: -.5px;
     font-size: 2em;
     color: black;
+    position: relative;
+    justify-content: center;
+    display: table;
+    margin: 0 auto;
+    padding-bottom: 10px;
 }
 .subtitle{
-    font-weight: 1.2em;
+    font-weight: 600;
     letter-spacing: -.3px;
     margin-bottom: 1em;
+    display: table;
+    margin: 0 auto;
+    padding-top: 10px;
 }
 .select, .textfield{
     position: relative;
@@ -129,6 +137,16 @@
 }
 .btn-lg:hover{
     background-color: #89b82b;
+    color: #fff;
+}
+.btn-rg{
+    background-color: #4682B4;
+    color: #fff;
+    margin-top: 10px;
+    height: max-content;
+}
+.btn-rg:hover{
+    background-color: #4683b4c7;
     color: #fff;
 }
 .btn-create{

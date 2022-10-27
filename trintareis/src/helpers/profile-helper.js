@@ -2,12 +2,13 @@ import api from "../config/api"
 
 //----------------- functions auxiliares
 export function hasProfile(email){
+
     api.get('/profile/' + email)
     .then((response) => {
         if (response.status === 200){
             return true }
         else {
-            console.log("response status = " + response.status)
+            console.log("API error " + response.status)
             return false }        
     })
     .catch((error) => {
@@ -17,29 +18,35 @@ export function hasProfile(email){
 }
 
 //------------------ gets posts puts
-export function getProfileDataByEmail(email){
-    let profileData = []
+export function getProfileData(email){
+    //let profileData = []
 
     api.get('/profile/' + email)
     .then(function (response) {
-        profileData.push(
+        return response;
+        /*profileData.push(
             response.data.city,
             response.data.details,
             response.data.profileInformation,
             response.data.emailUser,
             response.data.region,
             response.data.userName)
+            */
     })
     .catch(function (error) {
-        console.log(error)
-    }).finally(()=>{
+        console.log(error);
+        return []
+    })/*
+    .finally(()=>{
+        //console.log(profileData)
         return profileData
-    })
+    })*/
     
 }
 
 
 export function postCreateProfile({data}){
+
     api.post('/profile', {
         city: data.city,
         coverPhoto: data.coverPhoto,
@@ -51,7 +58,7 @@ export function postCreateProfile({data}){
         userName: "string"
       })
       .then(function (response) {
-        console.log(response);
+        console.log(response.status);
       })
       .catch(function (error) {
         console.log(error);
