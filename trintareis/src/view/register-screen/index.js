@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import firebase from '../../config/firebase';
 import 'firebase/auth';
-import './homeScreen.css';
+import './registerScreen.css';
 
 import Header from '../../components/header-register/index';
 

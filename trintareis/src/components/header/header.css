@@ -10,7 +10,7 @@ body{
 
 .header{
     background-color: white;
-    height: 70px;
+    height: 60px;
     padding: 7px 0;
     display: flex;
 }
@@ -389,7 +389,7 @@ border-radius: 15px;
 }
 
 .feedPost__profile{
-    padding: 10px;
+    padding: 5px;
 }
 
 .feedPost__profile h3{

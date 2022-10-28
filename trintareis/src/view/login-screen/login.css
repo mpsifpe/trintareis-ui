@@ -2,21 +2,24 @@
 
 .div-root{
     background-color: rgb(245, 245, 241);
-    height: 105vh;
+    height: 100vh;
+    width: 100%;
+    
 }
 .div-container{
-    max-width: 900px;
+    width: 100%;
     margin: 0.5rem auto;
     background-color: #fff;
-    height: 450px;
+    height: 100%;
     border-radius: 1vw;
 }
 
 .div__main{
     display: block;
     background-color: white;
-    width: 100%;
     height: 100%;
+    width: 100%;
+    
 }
 
 .div__main hr{
@@ -72,7 +75,7 @@
 .signin-container__form{
     position: relative;
     justify-content: center;
-    height: 100%;
+    height: 90vh;
     padding: 0 5rem;
 
     min-width: 480px;

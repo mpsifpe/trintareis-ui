@@ -67,24 +67,28 @@ function Header() {
                                 <span>Amigos</span>
                             </div>
                         </Link>
+                        {/*
                         <Link to="" className='headerLinkStyle'>
                             <div className="header_button" >
                                 <MdEventNote />
                                 <span>Eventos</span>
                             </div>
                         </Link>
+                        */}
                         <Link to="/notifications-screen" className='headerLinkStyle'>
                             <div className="header_button">
                                 <IoIosNotifications />
                                 <span>Notificações</span>
                             </div>
                         </Link>
+                        {/*
                         <Link to="" className='headerLinkStyle'>
                             <div className="header_button" >
                                 <FaRocketchat />
                                 <span>Chat</span>
                             </div>
                         </Link>
+                        */}
                     </div>
                 </div>
                 <div className="header__right">
