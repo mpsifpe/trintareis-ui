@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
-import { BsThreeDotsVertical, BsFillArrowLeftCircleFill } from "react-icons/bs";
+import { BsThreeDotsVertical, BsFillArrowLeftCircleFill, BsTrash } from "react-icons/bs";
 import { BiLike } from "react-icons/bi";
 import { CgComment } from "react-icons/cg";
 import { FaShare } from "react-icons/fa";
 import './feedPost.css'
 import { Link, Redirect } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
+import ReactPlayer from 'react-player'
 
 import firebase from '../../config/firebase';
 
@@ -276,6 +277,15 @@ export default function (props) {
             });
         });
     }
+
+    function apagarPublicacao(id_publicacao) {
+        if (window.confirm('Você quer apagar esta publicação?')) {
+            console.log(id_publicacao.id);
+            let evento = firebase.firestore().collection('events');
+            evento.doc(id_publicacao.id).delete();
+        }
+    }
+
     function apagarComentario(lista, posiaco, idEvento) {
         let evento = firebase.firestore().collection('events');
         var comentarios = [];
@@ -385,8 +395,6 @@ export default function (props) {
 
     function limparComentario(obj) {
         alert('limpou comentario.');
-
-
         let evento = firebase.firestore().collection('events');
         evento.doc(obj.id).update({
             coments: ''
@@ -433,8 +441,6 @@ export default function (props) {
                     }
 
                     console.log(likes);
-                    console.log('aaaaaaaaaaaa');
-
                     var retorno = true;
 
                 }
@@ -532,6 +538,7 @@ export default function (props) {
         <div className="feedPost">
             <div className="feedPostSingle">
                 <div className="feedPost__profile">
+
                     <div>
 
                         <Link to={props.emailUser === emailUser ? `/profile` : `/profile/${props.profileId}`}>
@@ -551,6 +558,9 @@ export default function (props) {
                             <span>{props.horario}</span>
                         </div>
                     </div>
+                    <div className="feed-public">
+                        <a onClick={() => apagarPublicacao({ id: props.id })} className="shadow-interpolacao-feed"><BsTrash /></a>
+                    </div>
                 </div>
                 <div className="feedPost__content">
                     <h2 className='p-3'>{props.title}</h2>
@@ -559,7 +569,7 @@ export default function (props) {
                     </p>
                     {
                         props.tipo == 'v' ?
-                            <ReactPlayer url={urlImages} controls="true" className="feed-video"/>
+                            <ReactPlayer url={urlImages} controls="true" className="feed-video" />
                             :
                             <img src={urlImages} />
                     }
@@ -579,7 +589,7 @@ export default function (props) {
 
                     <div className="feedPost__reaction">
                         <CgComment />
-                        <span onClick={() => comentarios({ id: props.id }, { comentario: props.coments })} className="">comentar ({totalComentario})</span>
+                        <span onClick={() => comentarios({ id: props.id }, { comentario: props.coments })} className="">comentar ({totalComentario == '' ? 0 : totalComentario})</span>
                     </div>
 
                     <div className="feedPost__reaction">
