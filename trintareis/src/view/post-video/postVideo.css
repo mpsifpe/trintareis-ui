@@ -10,3 +10,7 @@
     background-color: #89b82b;
     color: #fff;
 }
+.msg-concluido{
+    color: forestgreen;
+    -webkit-text-stroke: medium;
+}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
-import { BsThreeDotsVertical, BsFillArrowLeftCircleFill, BsTrash } from "react-icons/bs";
+import { BsThreeDotsVertical, BsFillArrowLeftCircleFill, BsTrash, BsXLg } from "react-icons/bs";
 import { BiLike } from "react-icons/bi";
 import { CgComment } from "react-icons/cg";
 import { FaShare } from "react-icons/fa";
@@ -281,6 +281,8 @@ export default function (props) {
     function apagarPublicacao(id_publicacao) {
         if (window.confirm('Você quer apagar esta publicação?')) {
             console.log(id_publicacao.id);
+            let publicacao = document.getElementById(id_publicacao.id);
+            publicacao.style.display = 'none';
             let evento = firebase.firestore().collection('events');
             evento.doc(id_publicacao.id).delete();
         }
@@ -535,7 +537,7 @@ export default function (props) {
 
 
     return (
-        <div className="feedPost">
+        <div className="feedPost" id={props.id} >
             <div className="feedPostSingle">
                 <div className="feedPost__profile">
 
@@ -559,7 +561,7 @@ export default function (props) {
                         </div>
                     </div>
                     <div className="feed-public">
-                        <a onClick={() => apagarPublicacao({ id: props.id })} className="shadow-interpolacao-feed"><BsTrash /></a>
+                        <a onClick={() => apagarPublicacao({ id: props.id })} className="shadow-interpolacao-feed"><BsXLg /></a>
                     </div>
                 </div>
                 <div className="feedPost__content">

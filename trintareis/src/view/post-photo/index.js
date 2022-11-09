@@ -18,6 +18,15 @@ function ModalPostPhoto() {
     const time = firebase.firestore.Timestamp;
 
     function enroll() {
+        var descricaoFoto = document.getElementById('descricaoFoto').value;
+        var botaoConcluido = document.getElementById('botaoConcluido');
+        var textoMsg = document.getElementById('textoMsg');
+
+        if (descricaoFoto == "") {
+            alert('Escreva uma descrição.');
+            return false;
+        }
+
         setLoad(1);
         storege.ref(`images/${photo.name}`).put(photo).then(() => {
             db.collection('events').add({
@@ -35,6 +44,8 @@ function ModalPostPhoto() {
             }).then((docRef) => {
                 setLoad(0);
                 console.log("Document written with ID: ", docRef.id);
+                botaoConcluido.disabled = true;
+                textoMsg.textContent = 'O vídeo subiu com sucesso!';
             }).catch((error) => {
                 setLoad(0);
                 console.error("Error adding document: ", error);
@@ -62,7 +73,7 @@ function ModalPostPhoto() {
                                     <div>
                                         <div className="form-group">
                                             <label>Descrição</label>
-                                            <textarea onChange={(e) => setDetails(e.target.value)} className="form-control" rows="3" placeholder="Ex.: tópicos, programa, etc."></textarea>
+                                            <textarea onChange={(e) => setDetails(e.target.value)} id = "descricaoFoto" className="form-control" rows="3" placeholder="Ex.: tópicos, programa, etc."></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -71,11 +82,12 @@ function ModalPostPhoto() {
                                     <input onChange={(e) => setPhoto(e.target.files[0])} type="file" className="form-control" />
                                 </div>
                                 <div>
+                                <div id="textoMsg" className='msg-concluido'></div>
                                     {
                                         load ? <button className="form-control btn btn-lg btn-block mt-3 mb-5 btn-cadastro" type="button" disabled>
                                             <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                                         </button> :
-                                            <button onClick={enroll} type="button" className="form-control btn btn-lg btn-block mt-3 mb-5 btn-cadastro">Concluído</button>
+                                            <button onClick={enroll} type="button" id="botaoConcluido"  className="form-control btn btn-lg btn-block mt-3 mb-5 btn-cadastro">Concluído</button>
                                     }
                                 </div>
                             </form>

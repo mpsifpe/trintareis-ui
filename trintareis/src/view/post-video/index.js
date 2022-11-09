@@ -1,23 +1,34 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal';
 import './postVideo.css';
-
 import firebase from '../../config/firebase';
 import { useSelector } from 'react-redux';
 import ButtonBackhome from '../../components/button-backhome';
 
 function ModalPostVideo() {
-
     const [load, setLoad] = useState();
     const [details, setDetails] = useState();
     const [photo, setPhoto] = useState();
     const emailUser = useSelector(state => state.emailUser);
-
     const storege = firebase.storage();
     const db = firebase.firestore();
     const time = firebase.firestore.Timestamp;
 
     function enroll() {
+        var botaoConcluido = document.getElementById('botaoConcluido');
+        var arquivoVideo = document.getElementById('arquivoVideo');
+        var descricaoVideo = document.getElementById('descricaoVideo');
+        var textoMsg = document.getElementById('textoMsg');
+        
+        if (descricaoVideo.value == "") {
+            alert('Escreva uma descrição.');
+            return false;
+        }
+        if (arquivoVideo.files[0].size > 2000000) {
+            console.log('Tamanho do arquivo de video: '+arquivoVideo.files[0].size);
+            alert('O arquivo de vídeo precisa ser menor a 2mb.');
+            return false;
+        }
         setLoad(1);
         storege.ref(`images/${photo.name}`).put(photo).then(() => {
             db.collection('events').add({
@@ -34,6 +45,8 @@ function ModalPostVideo() {
             }).then((docRef) => {
                 setLoad(0);
                 console.log("Document written with ID: ", docRef.id);
+                botaoConcluido.disabled = true;
+                textoMsg.textContent = 'O vídeo subiu com sucesso!';
             }).catch((error) => {
                 setLoad(0);
                 console.error("Error adding document: ", error);
@@ -54,27 +67,28 @@ function ModalPostVideo() {
                                 <ButtonBackhome />
                             </div>
                         </div>
-                        <hr/>
+                        <hr />
                         <div>
                             <form className="form">
                                 <div className="row">
                                     <div>
                                         <div className="form-group">
                                             <label>Descrição</label>
-                                            <textarea onChange={(e) => setDetails(e.target.value)} className="form-control" rows="3" placeholder="Ex.: tópicos, programa, etc."></textarea>
+                                            <textarea onChange={(e) => setDetails(e.target.value)} className="form-control" id="descricaoVideo" rows="3" placeholder="Ex.: tópicos, programa, etc."></textarea>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="form">
                                     <label>Carregar imagem:</label>
-                                    <input onChange={(e) => setPhoto(e.target.files[0])} type="file" className="form-control" />
+                                    <input onChange={(e) => setPhoto(e.target.files[0])} id="arquivoVideo" type="file" className="form-control" />
                                 </div>
                                 <div>
+                                    <div id="textoMsg" className='msg-concluido'></div>
                                     {
                                         load ? <button className="form-control btn btn-lg btn-block mt-3 mb-5 btn-cadastro" type="button" disabled>
                                             <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                                         </button> :
-                                            <button onClick={enroll} type="button" className="form-control btn btn-lg btn-block mt-3 mb-5 btn-cadastro">Concluído</button>
+                                            <button onClick={enroll} type="button" id="botaoConcluido" className="form-control btn btn-lg btn-block mt-3 mb-5 btn-cadastro">Concluído</button>
                                     }
                                 </div>
                             </form>
