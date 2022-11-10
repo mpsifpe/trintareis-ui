@@ -24,6 +24,7 @@ export default React.createContext(
       {
         type: 'success',
         icon: false,
+        background: '#007900',
         dismissible: true
       }
     ]

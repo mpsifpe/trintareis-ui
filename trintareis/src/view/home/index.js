@@ -1,5 +1,6 @@
 import './home.css';
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import Header from '../../components/header/index'
 import FeedForm from '../../components/feed-form/index';
@@ -9,7 +10,7 @@ import loading from '../../resources/loading.gif';
 
 const profileFoto = loading;
 
-function Home() {
+function Home(props) {
     const [eventos, setEventos] = useState([]);
     const [urlImageProfile, setUrlImageProfile] = useState(profileFoto);
 
@@ -17,6 +18,7 @@ function Home() {
     let listProfiles = [];
 
     const emailUser = useSelector(state => state.emailUser);
+    let location = useLocation();
 
     useEffect(() => {
         const abortController = new AbortController()
@@ -70,7 +72,7 @@ function Home() {
 
     return (
         <div className="App">
-            <Header />
+            <Header firstLogin={location.state.firstLogin}/>
             <div className="feed_content">
                 <FeedForm profilePhoto={urlImageProfile} />
                 {eventos.map(item => <FeedPost key={item.id} id={item.id} img={item.photo} profilePhoto={item.profilePhoto} profileInformation={item.profileInformation} title={item.title} nome={item.userName} horario={item.hour} conteudo={item.details} emailUser={item.emailUser} profileId={item.profileId} like={item.like}  share={item.share} coments={item.coments} />)}

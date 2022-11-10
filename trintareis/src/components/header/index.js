@@ -14,7 +14,7 @@ import firebase from '../../config/firebase';
 
 const profileFoto = loading;
 
-function Header() {
+function Header(props) {
     const dispatch = useDispatch();
     const [urlImageProfile, setUrlImageProfile] = useState(profileFoto);
 
@@ -22,6 +22,8 @@ function Header() {
 
     useEffect(() => {
         const abortController = new AbortController()
+
+        alert("header " + props.firstLogin)
 
         firebase.firestore().collection('profiles').get().then(async (result) => {
             await result.docs.forEach(doc => {
@@ -49,19 +51,19 @@ function Header() {
                         </div>
                     </div>
                     <div className="div__content_header">
-                        <Link to="/home" className='headerLinkStyle'>
+                        <Link to={{pathname: "/home", state: { firstLogin: props.firstLogin }}} className='headerLinkStyle'>
                             <div className="header_button">
                                 <FaHome />
                                 <span>Início</span>
                             </div>
                         </Link >
-                        <Link to="/explore" className='headerLinkStyle'>
+                        <Link to={{pathname: "/explore", state: { firstLogin: props.firstLogin }}} className='headerLinkStyle'>
                             <div className="header_button">
                                 <MdExplore />
                                 <span>Explorar</span>
                             </div>
                         </Link>
-                        <Link to="/myfriends" className='headerLinkStyle'>
+                        <Link to={{pathname: "/myfriends", state: { firstLogin: props.firstLogin }}} className='headerLinkStyle'>
                             <div className="header_button">
                                 <MdOutlineGroups />
                                 <span>Amigos</span>
@@ -75,7 +77,7 @@ function Header() {
                             </div>
                         </Link>
                         */}
-                        <Link to="/notifications-screen" className='headerLinkStyle'>
+                        <Link to={{pathname: "/notifications-screen", state: { firstLogin: props.firstLogin }}} className='headerLinkStyle'>
                             <div className="header_button">
                                 <IoIosNotifications />
                                 <span>Notificações</span>
@@ -92,8 +94,8 @@ function Header() {
                     </div>
                 </div>
                 <div className="header__right">
-                    {useSelector(state => state.loggedUSer) == 0 ? <Redirect to='/' /> : null}
-                    <Link to="/profile">
+                    {useSelector(state => state.loggedUSer) == 0 ? <Redirect to='/'/> : null}
+                    <Link to={{pathname: "/profile", state: { firstLogin: props.firstLogin }}}>
                         <div className="feedPost__profile">
                             <img src={urlImageProfile} />
                         </div>

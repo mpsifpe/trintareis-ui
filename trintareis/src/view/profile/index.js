@@ -1,29 +1,31 @@
-import React, { useState, useEffect } from 'react';
 import './profile.css';
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { Link, useLocation } from "react-router-dom";
+import { useSelector } from 'react-redux';
 import Header from '../../components/header/index';
 import FeedForm from '../../components/feed-form/index';
 import TimeLine from '../../components/timeline_profile/index';
 import loading from '../../resources/loading.gif';
 import firebase from '../../config/firebase';
-import { useSelector } from 'react-redux';
+import { isEmpty } from '../../helpers/helper';
+
 
 import { Perfil, Content, Details } from './styles';
 
-const profileFoto = loading;
+const loadingGif = loading;
 
 function Profile(props) {
+    
+    const emailUser = useSelector(state => state.emailUser);
+    let location = useLocation();
+
     const [profileInfo, setProfileInfo] = useState([]);
     const [userName, setUserName] = useState([]);
     const [eventos, setEventos] = useState([]);
-    const [idDoc, setIdDoc] = useState();
-    let listEventos = [];
-
-    const emailUser = useSelector(state => state.emailUser);
-
-    const [urlImageProfile, setUrlImageProfile] = useState(profileFoto);
+    const [urlImageProfile, setUrlImageProfile] = useState(loadingGif);
     const [urlImageCover, seturlImageCover] = useState();
 
+    let listEventos = [];
 
     useEffect(() => {
         const abortController = new AbortController()
@@ -39,7 +41,6 @@ function Profile(props) {
                 const urlCover = await firebase.storage().ref(`profile_images/${profile.data().coverPhoto}`).getDownloadURL();
 
                 seturlImageCover(urlCover);
-                setIdDoc(profile.data().id);
                 setUserName(profile.data().userName);
                 setProfileInfo(profile.data());
 
@@ -75,11 +76,10 @@ function Profile(props) {
                             setUrlImageProfile(url);
                         }
                         const urlCover = await firebase.storage().ref(`profile_images/${doc.data().coverPhoto}`).getDownloadURL().catch(() => {
-                            return profileFoto;
+                            return loadingGif;
                         });
 
                         seturlImageCover(urlCover);
-                        setIdDoc(doc.id);
                         setUserName(doc.data().userName);
                         setProfileInfo(doc.data());
                     }
@@ -96,13 +96,10 @@ function Profile(props) {
         }
     }, []);
 
-    function isEmpty(value) {
-        return (value == null || value.length === 0);
-    }
 
     return (
         <div className="App">
-            <Header />
+            <Header firstLogin={location.state.firstLogin}/>
             <div className="main">
                 <Perfil photo={urlImageCover}>
                     <div />
@@ -116,7 +113,9 @@ function Profile(props) {
                                     <span>{profileInfo.userName}</span>
                                     {props.match.params.id ? null
                                         :
-                                        <Link to={idDoc ? `/editProfile/${idDoc}` : `/editProfile`} style={{ textDecoration: 'none' }}>
+                                        <Link to={{pathname: '/editProfile',
+                                                   state: { firstLogin: location.state.firstLogin }
+                                                }} style={{ textDecoration: 'none' }}>
                                             <label>Editar</label>
                                         </Link>
                                     }

@@ -1,52 +1,37 @@
 import api from "../config/api"
 
-//----------------- functions auxiliares
+/*
+Essas funções são modelos: o corpo precisa ser copiado e colado dentro de cada tela,
+porque se apenas chamadas a demora na resposta faz a tela seguir com resultado undefined
+*/
 export function hasProfile(email){
+    let aux = []
 
     api.get('/profile/' + email)
     .then((response) => {
-        if (response.status === 200){
-            return true }
-        else {
-            console.log("API error " + response.status)
-            return false }        
-    })
+        (response.status === 200) ? aux.push(true) : aux.push(false)   })
     .catch((error) => {
-        console.log(error);
-        return false;
-    })
+        console.log(error)
+        aux.push(false)   })
+    .finally(() => {
+        console.log("hasProfile return " + aux[0])
+        return aux[0]   })
 }
 
-//------------------ gets posts puts
 export function getProfileData(email){
-    //let profileData = []
-
+    
     api.get('/profile/' + email)
     .then(function (response) {
         return response;
-        /*profileData.push(
-            response.data.city,
-            response.data.details,
-            response.data.profileInformation,
-            response.data.emailUser,
-            response.data.region,
-            response.data.userName)
-            */
     })
     .catch(function (error) {
         console.log(error);
         return []
-    })/*
-    .finally(()=>{
-        //console.log(profileData)
-        return profileData
-    })*/
-    
+    })
 }
 
 
 export function postCreateProfile({data}){
-
     api.post('/profile', {
         city: data.city,
         coverPhoto: data.coverPhoto,
@@ -64,4 +49,3 @@ export function postCreateProfile({data}){
         console.log(error);
       });
 }
-

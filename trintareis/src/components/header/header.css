@@ -383,9 +383,9 @@ body{
 }
 
 .feedPostSingle{
-margin: 20px 100px;
-background-color: white;
-border-radius: 15px;
+    margin: 20px 100px;
+    background-color: white;
+    border-radius: 15px;
 }
 
 .feedPost__profile{
@@ -411,7 +411,6 @@ border-radius: 15px;
     border-radius: 20px;
     border: 2px solid black;
     cursor: pointer;
-    
 }
 
 .feedPost__content p{
@@ -449,7 +448,7 @@ border-radius: 15px;
     text-decoration: none;
 }
 
-/* .div__perfil_btn span{
+.div__perfil_btn span{
     justify-content: center;
     display: flex;
     font-size: 15px;
@@ -458,8 +457,7 @@ border-radius: 15px;
 .div__perfil_btn:hover{
     text-decoration: underline;
     color: #45bd62;
-} */
-
-/* .div__perfil_btn{
+}
+.div__perfil_btn{
     border: 1px solid ;
-} */
+}
