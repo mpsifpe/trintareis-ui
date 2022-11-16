@@ -10,7 +10,7 @@ import loading from '../../resources/loading.gif';
 
 const profileFoto = loading;
 
-function Home(props) {
+function Home() {
     const [eventos, setEventos] = useState([]);
     const [urlImageProfile, setUrlImageProfile] = useState(profileFoto);
 
@@ -23,7 +23,8 @@ function Home(props) {
     useEffect(() => {
         const abortController = new AbortController()
 
-        async function fetch() {
+        async function fetch() {            
+
             const profiles = await firebase.firestore().collection('profiles').get();
             for (const doc of profiles.docs) {
                 if (doc.data().emailUser === emailUser) {
@@ -72,7 +73,7 @@ function Home(props) {
 
     return (
         <div className="App">
-            <Header firstLogin={location.state.firstLogin}/>
+            <Header firstLogin={location.state.firstLogin} profilePhoto={location.state.profilePhoto} coverPhoto={location.state.coverPhoto} userData={location.state.userData}/>
             <div className="feed_content">
                 <FeedForm profilePhoto={urlImageProfile} />
                 {eventos.map(item => <FeedPost key={item.id} id={item.id} img={item.photo} profilePhoto={item.profilePhoto} profileInformation={item.profileInformation} title={item.title} nome={item.userName} horario={item.hour} conteudo={item.details} emailUser={item.emailUser} profileId={item.profileId} like={item.like}  share={item.share} coments={item.coments} />)}

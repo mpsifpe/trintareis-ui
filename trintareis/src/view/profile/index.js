@@ -1,95 +1,85 @@
 import './profile.css';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link, useLocation } from "react-router-dom";
 import { useSelector } from 'react-redux';
+
+import { Perfil, Content, Details } from './styles';
+import { isEmpty } from '../../helpers/helper';
 import Header from '../../components/header/index';
 import FeedForm from '../../components/feed-form/index';
 import TimeLine from '../../components/timeline_profile/index';
+import NotyfContext from '../../components/notyf-toast/NotyfContext';
 import loading from '../../resources/loading.gif';
+import user from '../../resources/user.jpg';
 import firebase from '../../config/firebase';
-import { isEmpty } from '../../helpers/helper';
+import api from '../../config/api';
 
-
-import { Perfil, Content, Details } from './styles';
-
-const loadingGif = loading;
 
 function Profile(props) {
-    
-    const emailUser = useSelector(state => state.emailUser);
-    let location = useLocation();
 
+    const notyf = useContext(NotyfContext);
+    const emailUser = useSelector(state => state.emailUser);
+    const storage = firebase.storage();
+    const events = firebase.firestore().collection('events')
+    const loadingGif = loading;
+
+    const [mainState, setMainState] = useState();
     const [profileInfo, setProfileInfo] = useState([]);
     const [userName, setUserName] = useState([]);
     const [eventos, setEventos] = useState([]);
     const [urlImageProfile, setUrlImageProfile] = useState(loadingGif);
-    const [urlImageCover, seturlImageCover] = useState();
-
+    const [urlImageCover, seturlImageCover] = useState(loadingGif);
+    const [userData, setUserData]=useState({
+        userName: "",
+        profileInformation: "",
+        details: "",
+        region: "",
+        city:"",
+        coverPhoto: "",
+        profilePhoto: ""   });
+    
+    let location = useLocation();
     let listEventos = [];
 
     useEffect(() => {
         const abortController = new AbortController()
 
-        async function fetch() {
-            if (props.match.params.id) {
-                const profile = await firebase.firestore().collection('profiles').doc(props.match.params.id).get();
+        setMainState({
+            firstLogin: location.state.firstLogin, 
+            profilePhoto: location.state.profilePhoto, 
+            coverPhoto: location.state.coverPhoto, 
+            userData: location.state.userData })
 
-                if (!isEmpty(profile.data().profilePhoto)) {
-                    const url = await firebase.storage().ref(`profile_images/${profile.data().profilePhoto}`).getDownloadURL();
-                    setUrlImageProfile(url);
-                }
-                const urlCover = await firebase.storage().ref(`profile_images/${profile.data().coverPhoto}`).getDownloadURL();
+        async function fetch() { 
+            setUserData({
+                userName: location.state.userData.userName,
+                profileInformation: location.state.userData.profileInformation,
+                details: location.state.userData.details,
+                region: location.state.userData.region,
+                city: location.state.userData.city            })
 
-                seturlImageCover(urlCover);
-                setUserName(profile.data().userName);
-                setProfileInfo(profile.data());
-
-                const events = await firebase.firestore().collection('events').orderBy("dataTime", "desc").get();
-                for (const doc of events.docs) {
-                    if (doc.data().emailUser === profile.data().emailUser) {
-                        const date = new Date(doc.data().dataTime);
-                        listEventos.push({
-                            id: doc.id,
-                            timePublication: date.getHours() + ':' + date.getMinutes(),
-                            ...doc.data()
-                        })
-                    }
-                }
-            } else {
-                const events = await firebase.firestore().collection('events').orderBy("dataTime", "desc").get();
-                for (const doc of events.docs) {
-                    if (doc.data().emailUser === emailUser) {
-                        const date = new Date(doc.data().dataTime);
-                        listEventos.push({
-                            id: doc.id,
-                            timePublication: date.getHours() + ':' + date.getMinutes(),
-                            ...doc.data()
-                        })
-                    }
-                }
-
-                const profiles = await firebase.firestore().collection('profiles').get();
-                for (const doc of profiles.docs) {
-                    if (doc.data().emailUser === emailUser) {
-                        if (!isEmpty(doc.data().profilePhoto)) {
-                            const url = await firebase.storage().ref(`profile_images/${doc.data().profilePhoto}`).getDownloadURL();
-                            setUrlImageProfile(url);
-                        }
-                        const urlCover = await firebase.storage().ref(`profile_images/${doc.data().coverPhoto}`).getDownloadURL().catch(() => {
-                            return loadingGif;
-                        });
-
-                        seturlImageCover(urlCover);
-                        setUserName(doc.data().userName);
-                        setProfileInfo(doc.data());
-                    }
-                }
-            }
+            if(!isEmpty(location.state.profilePhoto)) { storage.ref(`profile_images/${location.state.profilePhoto}`).getDownloadURL().then(url => setUrlImageProfile(url))}
+            else {setUrlImageProfile(user)}
+            
+            if(!isEmpty(location.state.coverPhoto)) {  storage.ref(`profile_images/${location.state.coverPhoto}`).getDownloadURL().then(url => seturlImageCover(url))}
+            else {seturlImageCover(user)}
+            
+    
+            events.where('emailUser', '==', emailUser).orderBy("dataTime", "desc").get().then((events) => {
+                events.forEach((event) => {       
+                    const date = new Date(event.data().dataTime);
+                    listEventos.push({
+                        id: event.id,
+                        timePublication: date.getHours() + ':' + date.getMinutes(),
+                        ...event.data()
+                    })  
+                })
+            });
         }
 
         fetch().then(() => {
             setEventos(listEventos);
-        })
+            })
 
         return function cleanup() {
             abortController.abort()
@@ -97,9 +87,10 @@ function Profile(props) {
     }, []);
 
 
+
     return (
         <div className="App">
-            <Header firstLogin={location.state.firstLogin}/>
+            <Header firstLogin={location.state.firstLogin} profilePhoto={location.state.profilePhoto} coverPhoto={location.state.coverPhoto} userData={location.state.userData}/>
             <div className="main">
                 <Perfil photo={urlImageCover}>
                     <div />
@@ -109,20 +100,16 @@ function Profile(props) {
                         <form className="form">
                             <div className="div__main_form">
                                 <div className="div__foto" />
-                                <div>
-                                    <span>{profileInfo.userName}</span>
+                                    <span>{userData.userName}</span>
                                     {props.match.params.id ? null
                                         :
-                                        <Link to={{pathname: '/editProfile',
-                                                   state: { firstLogin: location.state.firstLogin }
-                                                }} style={{ textDecoration: 'none' }}>
-                                            <label>Editar</label>
+                                        <Link to={{pathname: '/editProfile', state: mainState}} style={{ textDecoration: 'none' }}>
+                                            <label style={{margin: "0"}}>Editar</label>
                                         </Link>
                                     }
-                                </div>
                                 <div>
-                                    <p className="p__profileInformation">{profileInfo.profileInformatio}</p>
-                                    <p className="p__region">{profileInfo.city}, {profileInfo.region}</p>
+                                    <p className="p__profileInformation">{userData.profileInformation}</p>
+                                    <p className="p__region">{userData.city}, {userData.region}</p>
                                 </div>
                             </div>
                         </form>
@@ -134,7 +121,7 @@ function Profile(props) {
                             <span>Sobre</span>
                         </div>
                         <div className="div__p">
-                            <p>{profileInfo.details}</p>
+                            <p>{userData.details}</p>
                         </div>
                     </div>
                 </Details>
@@ -145,7 +132,7 @@ function Profile(props) {
                     </div>
                 }
                 <div className="div__timeline">
-                    {eventos.map(item => <TimeLine key={item.id} id={item.id} userName={userName} profileInf={profileInfo.profileInformatio} profilePhoto={urlImageProfile} img={item.photo} title={item.title} nome={item.userName} horario={item.timePublication} conteudo={item.details} />)}
+                    {eventos.map(item => <TimeLine key={item.id} id={item.id} userName={item.userName} profileInf={item.profileInformatio} profilePhoto={urlImageProfile} img={item.photo} title={item.title} nome={item.userName} horario={item.timePublication} conteudo={item.details} />)}
                 </div>
             </div>
         </div>

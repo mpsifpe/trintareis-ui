@@ -10,6 +10,8 @@ import api from '../../config/api';
 import loading from '../../resources/loading.gif';
 import Header from '../../components/header-login/index';
 import NotyfContext from '../../components/notyf-toast/NotyfContext';
+import { isEmpty } from '../../helpers/helper';
+import { GiConsoleController } from 'react-icons/gi';
 
 function Login() {
     const [email, setEmail] = useState();
@@ -17,31 +19,37 @@ function Login() {
     const [enterBtn, setEnterBtn] = useState("Entrar");
     const [loginSuccess, setLoginSuccess] = useState(false);
     const [firstLogin, setFirstLogin] = useState(undefined);
-    const [loginRedirect, setLoginRedirect] = useState(null);
+    const [loginRedirect, setLoginRedirect] = useState(<></>);
+    const [profilePhoto, setProfilePhoto] = useState(undefined);
+    const [coverPhoto, setCoverPhoto] = useState(undefined);
+    const [userData, setUserData] = useState({});
 
     const dispatch = useDispatch();
     const notyf = useContext(NotyfContext);
 
     useEffect(() => {
-        if(loginSuccess && (firstLogin !== undefined)){        
+        if(loginSuccess && (firstLogin != undefined)){ 
+            let mainState = mountState();
+
             if(firstLogin){
                 notyf.success('Bem-vindo!')
-                setLoginRedirect(<Redirect to={{ pathname: '/editProfile', state: { firstLogin: true }}}/>)
+                setLoginRedirect(<Redirect to={{ pathname: '/editProfile', state: mainState }}/>)
             } else {
                 notyf.success('Bem-vindo de volta!')
-                setLoginRedirect(<Redirect to={{ pathname: '/home', state: { firstLogin: false }}}/>)
+                setLoginRedirect(<Redirect to={{ pathname: '/home', state: { firstLogin: false, profilePhoto: profilePhoto, coverPhoto: coverPhoto, userData: userData } }}/>)
+                //console.log("state -> ", mainState)
             }
         }
-
-      },[firstLogin]);
+    },[firstLogin]);
 
     function singIn() {
-        setEnterBtn(<img src={loading} style={{height: '25px', alignSelf: 'center'}}/>);
+        
+        setEnterBtn(<img src={loading} style={{height: '25px', alignSelf: 'center', opacity: '0.75'}}/>);
 
         firebase.auth().signInWithEmailAndPassword(email, senha)
         .then(result => {
             dispatch({ type: 'LOG_IN', emailUser: result.user.email });
-            setLoginSuccess(true)
+            setLoginSuccess(true);
         })
         .catch((error) => {
             setLoginRedirect(<Redirect to='/login'/>);
@@ -63,18 +71,54 @@ function Login() {
             }
         })
         .finally(()=>{
-            let aux = []
+            let loginExists = []
 
             api.get('/profile/' + email)
             .then((response) => {
-                (response.status === 200) ? aux.push(true) : aux.push(false)           })
+                if(response.status === 200){
+                    setUserData({ 
+                        userName: response.data.userName,
+                        profileInformation: response.data.profileInformation,
+                        details: response.data.details,
+                        region: response.data.region,
+                        city: response.data.city })
+    
+                    if(!isEmpty(response.data.profilePhoto)) {  setProfilePhoto(response.data.profilePhoto)
+                    } else {  setProfilePhoto("") };
+                    
+                    if(!isEmpty(response.data.coverPhoto)) {  setCoverPhoto(response.data.coverPhoto)
+                    } else {  setCoverPhoto("") };
+    
+                    
+                    loginExists.push(true);
+
+                } else {
+                    loginExists.push(false)}
+            })
             .catch((error) => {
                 console.log(error)
-                aux.push(false)           })
+                loginExists.push(false)
+                
+                setUserData({ 
+                    userName: "",
+                    profileInformation: "",
+                    details: "",
+                    region: "",
+                    city: "" })
+
+                setProfilePhoto("");
+                setCoverPhoto("");
+            })
             .finally(() => {
-                console.log("hasProfile return " + aux[0])
-                setFirstLogin(!aux[0])           })
+                console.log("hasProfile return " + loginExists[0]);
+                setFirstLogin(!loginExists[0]);
+            })
+           
         })
+    }
+
+    function mountState(){
+        return { firstLogin: firstLogin, profilePhoto: profilePhoto, coverPhoto: coverPhoto, userData: userData }
     }
     
 
@@ -84,8 +128,6 @@ function Login() {
             <hr />
             <div className="div-container container-fluid d-flex justify-content-between align-items-center w-100">
                 <div className="form__signin mx-auto">
-                    
-                    
                     <form className="signin-container__form">
                         <h1 className="title">Bem-vindo de volta!</h1>
                         <p className="subtitle">Faça seu login e interaja com milhares de pessoas!</p>

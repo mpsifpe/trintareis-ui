@@ -1,5 +1,5 @@
 export function isEmpty(value) {
-    return (value == null || value.length === 0);
+    return (value == null || value.length === 0 || value === "string");
 }
 
 /*
