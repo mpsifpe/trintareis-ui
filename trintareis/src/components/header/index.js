@@ -10,31 +10,28 @@ import './header.css';
 import '../stories/stories.css'
 import { Link, Redirect } from 'react-router-dom';
 import loading from '../../resources/loading.gif';
+import user from '../../resources/user.png';
 import firebase from '../../config/firebase';
+import { delay, isEmpty } from '../../helpers/helper';
 
-const profileFoto = loading;
-
-function Header() {
+function Header(props) {
     const dispatch = useDispatch();
-    const [urlImageProfile, setUrlImageProfile] = useState(profileFoto);
-
-    const emailUser = useSelector(state => state.emailUser);
+    const [urlImageProfile, setUrlImageProfile] = useState(<img src={loading} style={{opacity: '0.75'}}/>);
 
     useEffect(() => {
         const abortController = new AbortController()
-
-        firebase.firestore().collection('profiles').get().then(async (result) => {
-            await result.docs.forEach(doc => {
-                if (doc.data().emailUser === emailUser) {
-                    firebase.storage().ref(`profile_images/${doc.data().profilePhoto}`).getDownloadURL().then(url => setUrlImageProfile(url));
-                }
-            })
-        })
+        
+        if(!isEmpty(props.profilePhoto)){
+            delay(2000)
+            firebase.storage().ref(`profile_images/${props.profilePhoto}`).getDownloadURL().then(url => setUrlImageProfile(<img src={url} style={{opacity: '1'}}/>));
+        } else {
+            setUrlImageProfile(<img src={user} style={{opacity: '1.0'}}/>)
+        }
 
         return function cleanup() {
             abortController.abort()
         }
-    }, []);
+    },[]);
 
     return (
         <div className="App">
@@ -49,49 +46,73 @@ function Header() {
                         </div>
                     </div>
                     <div className="div__content_header">
-                        <Link to="/home" className='headerLinkStyle'>
+                        <Link to={{pathname: "/home", state: {
+                                                        firstLogin: props.firstLogin, 
+                                                        profilePhoto: props.profilePhoto, 
+                                                        coverPhoto: props.coverPhoto, 
+                                                        userData: props.userData }}} className='headerLinkStyle'>
                             <div className="header_button">
                                 <FaHome />
                                 <span>Início</span>
                             </div>
                         </Link >
-                        <Link to="/explore" className='headerLinkStyle'>
+                        <Link to={{pathname: "/explore", state: {
+                                                            firstLogin: props.firstLogin, 
+                                                            profilePhoto: props.profilePhoto, 
+                                                            coverPhoto: props.coverPhoto, 
+                                                            userData: props.userData }}} className='headerLinkStyle'>
                             <div className="header_button">
                                 <MdExplore />
                                 <span>Explorar</span>
                             </div>
                         </Link>
-                        <Link to="/myfriends" className='headerLinkStyle'>
+                        <Link to={{pathname: "/myfriends", state: {
+                                                            firstLogin: props.firstLogin, 
+                                                            profilePhoto: props.profilePhoto, 
+                                                            coverPhoto: props.coverPhoto, 
+                                                            userData: props.userData }}} className='headerLinkStyle'>
                             <div className="header_button">
                                 <MdOutlineGroups />
                                 <span>Amigos</span>
                             </div>
                         </Link>
+                        {/*
                         <Link to="" className='headerLinkStyle'>
                             <div className="header_button" >
                                 <MdEventNote />
                                 <span>Eventos</span>
                             </div>
                         </Link>
-                        <Link to="/notifications-screen" className='headerLinkStyle'>
+                        */}
+                        <Link to={{pathname: "/notifications-screen", state: {
+                                                                        firstLogin: props.firstLogin, 
+                                                                        profilePhoto: props.profilePhoto, 
+                                                                        coverPhoto: props.coverPhoto, 
+                                                                        userData: props.userData }}} className='headerLinkStyle'>
                             <div className="header_button">
                                 <IoIosNotifications />
                                 <span>Notificações</span>
                             </div>
                         </Link>
+                        {/*
                         <Link to="" className='headerLinkStyle'>
                             <div className="header_button" >
                                 <FaRocketchat />
                                 <span>Chat</span>
                             </div>
                         </Link>
+                        */}
                     </div>
                 </div>
                 <div className="header__right">
-                    {useSelector(state => state.loggedUSer) == 0 ? <Redirect to='/' /> : null}
-                    <Link to="/profile">
+                    {useSelector(state => state.loggedUSer) == 0 ? <Redirect to='/'/> : null}
+                    <Link to={{pathname: "/profile", state: {
+                                                        firstLogin: props.firstLogin, 
+                                                        profilePhoto: props.profilePhoto, 
+                                                        coverPhoto: props.coverPhoto, 
+                                                        userData: props.userData }}}>
                         <div className="feedPost__profile">
-                            <img src={urlImageProfile} />
+                            {urlImageProfile}
                         </div>
                     </Link>
                     <div className="div__plus_btn">

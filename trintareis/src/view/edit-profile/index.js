@@ -5,6 +5,8 @@ import './editProfile.css';
 import firebase from '../../config/firebase';
 import { useSelector } from 'react-redux';
 import ButtonBackhome from '../../components/button-backEditProfile';
+import loading from '../../resources/loading.gif';
+import { hasProfile } from '../../helpers/profile-helper';
 
 function ModalEditProfile(props) {
 
@@ -18,6 +20,7 @@ function ModalEditProfile(props) {
     const [coverPhotoNew, setCoverPhotoNew] = useState();
     const [region, setRegion] = useState();
     const [city, setCity] = useState();
+    const [firstLogin, setFirstLogin] = useState(true);
     const emailUser = useSelector(state => state.emailUser);
 
     const storage = firebase.storage();
@@ -25,6 +28,8 @@ function ModalEditProfile(props) {
 
     useEffect(() => {
         let abortController = new AbortController();
+
+        hasProfile(emailUser) ? setFirstLogin(false) :  setFirstLogin(true);
 
         if(props.match.params.id){
             firebase.firestore().collection('profiles').doc(props.match.params.id).get().then(async (result) => {
@@ -109,7 +114,7 @@ function ModalEditProfile(props) {
         <>
             <div className="col-12">
                 <Modal isOpen={true}>
-                    <div className="div__main">
+                    <div className="div_main_editprofile">
                         <div className="div__header">
                             <div className="w-100">
                                 <h3 className="mx-auto font-weight-bold">Editar Perfil</h3>
@@ -122,44 +127,50 @@ function ModalEditProfile(props) {
                         <div>
                             <form className="form">
                                 <div className="form-title">
-                                    <label>Nome do perfil*</label>
+                                    <label className="field_title_label">Nome do perfil*</label>
                                     <input onChange={(e) => setUserName(e.target.value)} value={userName && userName} type="text" className="form-control" placeholder="Adicione um nome ao perfil" />
                                 </div>
                                 <div className="row">
                                     <div className="form-group">
                                         <div className="form-group">
-                                            <label>Informações de perfil*</label>
+                                            <label className="field_title_label">Informações de perfil*</label>
                                             <input onChange={(e) => setProfileInformatio(e.target.value)} value={profileInformatio && profileInformatio}
                                                 type="text" className="form-control" rows="3" placeholder="Ex.: Professor | Palestrante | etc."></input>
                                         </div>
                                         <div className="form-group">
-                                            <label>Descreva quem é você</label>
+                                            <label className="field_title_label">Descreva quem é você</label>
                                             <textarea onChange={(e) => setDetails(e.target.value)} value={details && details} className="form-control" rows="3" placeholder="Ex.: profissão, hobby, interesses, currículo acadêmico, etc."></textarea>
                                         </div>
                                         <div className="form-group">
-                                            <label>País/Região*</label>
+                                            <label className="field_title_label">País/Região*</label>
                                             <input onChange={(e) => setRegion(e.target.value)} value={region && region} type="text" className="form-control" rows="3" placeholder="Ex.: Brasil"></input>
                                         </div>
                                         <div className="form-group">
-                                            <label>Cidade</label>
+                                            <label className="field_title_label">Cidade</label>
                                             <input onChange={(e) => setCity(e.target.value)} value={city && city} type="text" className="form-control" rows="3"></input>
                                         </div>
                                     </div>
                                 </div>
                                 <div className="form">
-                                    <label>Carregar foto do perfil {props.match.params.id ? '(Caso queira manter a mesma foto, não precisa escolher uma nova imagem)' : null}</label>
+                                    <label className="field_title_label">Carregar/alterar foto do perfil</label>
                                     <input onChange={(e) => setProfilePhotoNew(e.target.files[0])} type="file" className="form-control" />
                                 </div>
                                 <div className="form">
-                                    <label>Carregar imagem da capa  {props.match.params.id ? '(Caso queira manter a mesma foto, não precisa escolher uma nova imagem)' : null}</label>
+                                    <label className="field_title_label">Carregar/alterar imagem de capa</label>
                                     <input onChange={(e) => setCoverPhotoNew(e.target.files[0])} type="file" className="form-control" />
                                 </div>
                                 <div className="row">
                                     {
-                                        load ? <button className="form-control btn btn-lg btn-block mt-3 mb-5 btn-cadastro" type="button" disabled>
+                                        firstLogin ? <button className="btn-cancel" type="button" disabled>
                                             <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                                         </button> :
-                                            <button onClick={props.match.params.id ? update : enroll} type="button" className="form-control btn btn-lg btn-block mt-3 mb-5 btn-cadastro">Salvar alterações</button>
+                                            <button onClick={props.match.params.id ? update : enroll} type="button" className="btn-cancel">Cancelar</button>
+                                    }
+                                    {
+                                        load ? <button className="btn-cadastro" type="button" disabled>
+                                            <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                        </button> :
+                                            <button onClick={props.match.params.id ? update : enroll} type="button" className="btn-cadastro">Salvar alterações</button>
                                     }
                                 </div>
                             </form>
@@ -172,3 +183,4 @@ function ModalEditProfile(props) {
 }
 
 export default ModalEditProfile;
+//<Modal isOpen={true}>

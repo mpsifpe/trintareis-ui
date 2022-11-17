@@ -4,10 +4,10 @@ import './buttonEditProfile.css'
 
 export default function () {
     return (
-        <Link to='/profile' style={{ textDecoration: 'none' }}>
+       // <Link to='/profile' style={{ textDecoration: 'none' }}>
             <button className="btn_icon">
                 <AiOutlineClose />
             </button>
-        </Link>
+       // </Link>
     )
 }
