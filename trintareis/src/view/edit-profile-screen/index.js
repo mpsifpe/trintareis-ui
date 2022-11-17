@@ -5,7 +5,7 @@ import { Redirect, useLocation } from 'react-router-dom';
 
 import api from '../../config/api';
 import firebase from '../../config/firebase';
-import { isEmpty } from '../../helpers/helper';
+import { delay, isEmpty } from '../../helpers/helper';
 import CountrySelector from '../../components/country-selector/countrySelector';
 import loading from '../../resources/loading.gif';
 import NotyfContext from '../../components/notyf-toast/NotyfContext';
@@ -35,22 +35,26 @@ export default function EditProfileScreen(){
 
     const emailUser = useSelector(state => state.emailUser);
     const storage = firebase.storage();
+    let profileImageName, coverImageName = ""
 
     useEffect(() => {
         let abortController = new AbortController();
 
         if(!location.state.firstLogin){
             setTitleText("Editar perfil")
-            setCancelButton(<button  type="button" className="w-100 btn btn-cancelar fw-bold bor" 
-                                    onClick={() => setLoginRedirect(
-                                                    <Redirect to={{ 
-                                                        pathname: '/profile', 
-                                                        state: {
-                                                            firstLogin: location.state.firstLogin, 
-                                                            profilePhoto: location.state.profilePhoto, 
-                                                            coverPhoto: location.state.coverPhoto, 
-                                                            userData: location.state.userData 
-                                                        }}}/>)}>Cancelar</button>);
+            setCancelButton(
+                <button  type="button" className="w-100 btn btn-cancelar fw-bold bor" 
+                        onClick={() => 
+                            setLoginRedirect(
+                                    <Redirect to={{ 
+                                        pathname: '/profile', 
+                                        state: {
+                                            firstLogin: location.state.firstLogin, 
+                                            profilePhoto: location.state.profilePhoto, 
+                                            coverPhoto: location.state.coverPhoto, 
+                                            userData: location.state.userData 
+                                        }}}/>)}>Cancelar
+                </button>);
             
             api.get('/profile/' + emailUser)
             .then(function (response) {
@@ -65,9 +69,7 @@ export default function EditProfileScreen(){
                     profilePhoto: response.data.profilePhoto            })
             })
             .catch(function (error) {
-                console.log(error.response.data);
-                console.log(error.response.status);
-                console.log(error.response.headers);
+                console.log(error)
                 notyf.error("Desculpe, ocorreu um erro. Favor tentar novamente mais tarde")
                 setLoginRedirect(
                     <Redirect to={{ 
@@ -77,8 +79,8 @@ export default function EditProfileScreen(){
                             profilePhoto: location.state.profilePhoto, 
                             coverPhoto: location.state.coverPhoto, 
                             userData: location.state.userData 
-                        }
-                    }}/>)
+                        }}}
+                    />)
             })
         
         } else {
@@ -107,9 +109,9 @@ export default function EditProfileScreen(){
             "id": userData.id,
             "city": userData.city,
             "details": userData.details,
-            "coverPhoto": userData.coverPhoto,
+            "coverPhoto": coverImageName,
             "profileInformation": userData.profileInformation,
-            "profilePhoto": userData.profilePhoto,
+            "profilePhoto": profileImageName,
             "emailUser": emailUser,
             "region": userData.region,
             "userName": userData.userName
@@ -118,25 +120,26 @@ export default function EditProfileScreen(){
             console.log(response)
             if (response.status === 201){
                 notyf.success("Perfil editado com sucesso!")
+                delay(2000)
             }
         })
         .catch(function (error) {
-            console.log(error.response.data);
-            console.log(error.response.status);
-            console.log(error.response.headers);
+            console.log(error)
             notyf.error("Ocorreu um erro, favor tente novamente")
             setSaveButton("Salvar");  
         })
-        .then(
+        .finally(()=>{
             setLoginRedirect(
                 <Redirect to={{ 
                     pathname: '/home', 
                     state: {
                         firstLogin: location.state.firstLogin, 
-                        profilePhoto: userData.profilePhoto, 
-                        coverPhoto: userData.coverPhoto, 
+                        profilePhoto: profileImageName, 
+                        coverPhoto: coverImageName, 
                         userData: userData 
-                    }}}/>)
+                    }}}
+                />
+            )}
         )
     }
 
@@ -146,105 +149,151 @@ export default function EditProfileScreen(){
         api.post('/profile/create', {
             "city": userData.city,
             "details": userData.details,
+            "coverPhoto": coverImageName,
             "profileInformation": userData.profileInformation,
+            "profilePhoto": profileImageName,
             "emailUser": emailUser,
             "region": userData.region,
-            "userName": userData.userName,
-            "coverPhoto": userData.coverPhoto,
-            "profilePhoto": userData.profilePhoto
+            "userName": userData.userName
         })
         .then(function (response) {  
             console.log(response)  
             if (response.status === 201){
-                setLoginRedirect(<Redirect to={{ 
-                                    pathname: '/home', 
-                                    state: {
-                                        firstLogin: location.state.firstLogin, 
-                                        profilePhoto: userData.profilePhoto, 
-                                        coverPhoto: userData.coverPhoto, 
-                                        userData: userData 
-                                    }}}
-                                />)
                 notyf.success("Perfil criado com sucesso!")
+                delay(2000)
             }
         })
         .catch(function (error) {
-            console.log(error.response.data);
-            console.log(error.response.status);
-            console.log(error.response.headers);
+            console.log(error)
             notyf.error("Ocorreu um erro, favor tente novamente");
             setSaveButton("Salvar");
         })
+        .finally(()=>{
+            setLoginRedirect(
+                <Redirect to={{ 
+                    pathname: '/home', 
+                    state: {
+                        firstLogin: location.state.firstLogin, 
+                        profilePhoto: profileImageName, 
+                        coverPhoto: coverImageName, 
+                        userData: userData 
+                    }}}
+                />
+            )}
+        )
     }
 
     function saveBtnClick(){
-        
         if(isEmpty(userData.userName) || isEmpty(userData.profileInformation) || isEmpty(userData.region)){
             notyf.error("Favor preencher os campos obrigatórios"); }
         else {
-            setSaveButton(<img src={loading} style={{height: '25px', alignSelf: 'center', opacity: '0.75'}}/>)
-            handlePhotoChange()
-            if(location.state.firstLogin){ postCreateProfile() } else { putUpdateProfile() }
+            setSaveButton(<img src={loading} style={{height: '25px', alignSelf: 'center', opacity: '0.75'}}/>);
+
+            handleProfilePhotoChange();
+            handleCoverPhotoChange();
+          
+            if(location.state.firstLogin){ 
+                postCreateProfile() } 
+            else { 
+                putUpdateProfile() }
+            
         }  
     }
    
 
-    function handlePhotoChange(){      
-        let profileImageName, coverImageName = ""
+    function handleProfilePhotoChange(){ 
         
         if(location.state.firstLogin){  
         //----esse bloco insere as fotos na criação do perfil----
             if (!isEmpty(profilePhotoNew)){
+
                 profileImageName = (emailUser + "_profile." + profilePhotoNew.name.split(".").pop())
+                
                 setUserData({ ...userData, profilePhoto: profileImageName })
-                storage.ref(`profile_images/${profileImageName}`).put(profilePhotoNew)
+                
+                storage.ref("profile_images/" + profileImageName).put(profilePhotoNew)
+            
             } else { 
                 setUserData({ ...userData, profilePhoto: "" })  }
-            
-            if (!isEmpty(coverPhotoNew)){
-                coverImageName = (emailUser + "_cover." + coverPhotoNew.name.split(".").pop())
-                setUserData({ ...userData, coverPhoto: coverImageName })
-                storage.ref(`profile_images/${coverImageName}`).put(coverPhotoNew)
-            } else { 
-                setUserData({ ...userData, coverPhoto: "" })  }
-        //---------------------------------------------------------
 
         } else {
         //----esse bloco insere as fotos na edição do perfil----
             //----se já existe foto de profile, exclui a antiga primeiro---
             if (!isEmpty(userData.profilePhoto)){
+
                 if (!isEmpty(profilePhotoNew)){
+
                     profileImageName = (emailUser + "_profile." + profilePhotoNew.name.split(".").pop())
-                    storage.ref(`profile_images/${userData.profilePhoto}`).delete().then(()=>{
-                        setUserData({ ...userData, profilePhoto: profileImageName })
-                        storage.ref(`profile_images/${profileImageName}`).put(profilePhotoNew)
+
+                    storage.ref("profile_images/" + userData.profilePhoto).delete().then(()=>{
+                        setUserData({ ...userData, profilePhoto: profileImageName });
+                        storage.ref("profile_images/" + profileImageName).put(profilePhotoNew)
                     })
+                    .catch(function (error) {
+                        console.log(error);
+                        setUserData({ ...userData, profilePhoto: "" });
+                        profileImageName = ""
+                    })
+                } else {
+                    profileImageName = userData.profilePhoto
                 }   
+
             } else {
                 if (!isEmpty(profilePhotoNew)){
+
                     profileImageName = (emailUser + "_profile." + profilePhotoNew.name.split(".").pop())
+                    
                     setUserData({ ...userData, profilePhoto: profileImageName })
-                    storage.ref(`profile_images/${profileImageName}`).put(profilePhotoNew)
+
+                    storage.ref("profile_images/" + profileImageName).put(profilePhotoNew)
                 }
             }
-            //----------------------------------------------------------------|
+            
+        }
+        
+    }
+
+    function handleCoverPhotoChange(){      
+        
+        if(location.state.firstLogin){  
+        //----esse bloco insere as fotos na criação do perfil----
+            if (!isEmpty(coverPhotoNew)){
+
+                coverImageName = (emailUser + "_cover." + coverPhotoNew.name.split(".").pop())
+
+                setUserData({ ...userData, coverPhoto: coverImageName })
+
+                storage.ref("profile_images/" + coverImageName).put(coverPhotoNew)
+
+            } else { 
+                setUserData({ ...userData, coverPhoto: "" })  }
+
+        } else {
+        //----esse bloco insere as fotos na edição do perfil----
             //----se já existe foto de cover, exclui a antiga primeiro---
             if (!isEmpty(userData.coverPhoto)){
                 if (!isEmpty(coverPhotoNew)){
+
                     coverImageName = (emailUser + "_cover." + coverPhotoNew.name.split(".").pop())
-                    storage.ref(`profile_images/${userData.coverPhoto}`).delete().then(()=>{
-                        setUserData({ ...userData, coverPhoto: coverImageName })
-                        storage.ref(`profile_images/${coverImageName}`).put(coverPhotoNew)
+
+                    storage.ref("profile_images/" + userData.coverPhoto).delete().then(()=>{
+                        setUserData({ ...userData, coverPhoto: coverImageName });
+                        storage.ref("profile_images/" + coverImageName).put(coverPhotoNew)         
+                    }).catch(function (error) {
+                        console.log(error);
+                        setUserData({ ...userData, coverPhoto: "" });
+                        coverImageName=""
                     })
+                } else {
+                    coverImageName = userData.coverPhoto
                 }   
             } else {
                 if (!isEmpty(coverPhotoNew)){
                     coverImageName = (emailUser + "_cover." + coverPhotoNew.name.split(".").pop())
                     setUserData({ ...userData, coverPhoto: coverImageName })
-                    storage.ref(`profile_images/${coverImageName}`).put(coverPhotoNew)
+                    storage.ref("profile_images/" + coverImageName).put(coverPhotoNew)
                 }
             }
-            //----------------------------------------------------------------|
         }
         
     }

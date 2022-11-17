@@ -1,37 +1,43 @@
 import './home.css';
 import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 import Header from '../../components/header/index'
 import FeedForm from '../../components/feed-form/index';
 import FeedPost from '../../components/feed-post/FeedPost';
 import firebase from '../../config/firebase';
 import loading from '../../resources/loading.gif';
+import user from '../../resources/user.png';
 
-const profileFoto = loading;
+const loadingGif = loading;
 
 function Home() {
+    let location = useLocation();
     const [eventos, setEventos] = useState([]);
-    const [urlImageProfile, setUrlImageProfile] = useState(profileFoto);
+    const [urlImageProfile, setUrlImageProfile] = useState(loadingGif);
 
     let listEventos = [];
     let listProfiles = [];
 
-    const emailUser = useSelector(state => state.emailUser);
-    let location = useLocation();
 
     useEffect(() => {
         const abortController = new AbortController()
 
         async function fetch() {            
+            
+            if(!isEmpty(location.state.profilePhoto)){
+                
+                await firebase.storage().ref("profile_images/" + location.state.profilePhoto).getDownloadURL()
+                .then(url => setUrlImageProfile(url))
+                .catch((error)=>{
+                    console.log(error)
+                    setUrlImageProfile(user)
+                })
+            } else {
+                setUrlImageProfile(user)
+            }
 
             const profiles = await firebase.firestore().collection('profiles').get();
             for (const doc of profiles.docs) {
-                if (doc.data().emailUser === emailUser) {
-                    const url = await firebase.storage().ref(`profile_images/${doc.data().profilePhoto}`).getDownloadURL();
-                    setUrlImageProfile(url);
-                }
-
                 listProfiles.push({
                     id: doc.id,
                     ...doc.data()

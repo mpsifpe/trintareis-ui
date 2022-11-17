@@ -1,5 +1,5 @@
 import './profile.css';
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from "react-router-dom";
 import { useSelector } from 'react-redux';
 
@@ -8,35 +8,21 @@ import { isEmpty } from '../../helpers/helper';
 import Header from '../../components/header/index';
 import FeedForm from '../../components/feed-form/index';
 import TimeLine from '../../components/timeline_profile/index';
-import NotyfContext from '../../components/notyf-toast/NotyfContext';
 import loading from '../../resources/loading.gif';
-import user from '../../resources/user.jpg';
+import user from '../../resources/user.png';
+import cover from '../../resources/cover.png';
 import firebase from '../../config/firebase';
-import api from '../../config/api';
 
 
 function Profile(props) {
 
-    const notyf = useContext(NotyfContext);
     const emailUser = useSelector(state => state.emailUser);
     const storage = firebase.storage();
-    const events = firebase.firestore().collection('events')
-    const loadingGif = loading;
+    const events = firebase.firestore().collection('events');
 
-    const [mainState, setMainState] = useState();
-    const [profileInfo, setProfileInfo] = useState([]);
-    const [userName, setUserName] = useState([]);
     const [eventos, setEventos] = useState([]);
-    const [urlImageProfile, setUrlImageProfile] = useState(loadingGif);
-    const [urlImageCover, seturlImageCover] = useState(loadingGif);
-    const [userData, setUserData]=useState({
-        userName: "",
-        profileInformation: "",
-        details: "",
-        region: "",
-        city:"",
-        coverPhoto: "",
-        profilePhoto: ""   });
+    const [urlImageProfile, setUrlImageProfile] = useState(loading);
+    const [urlImageCover, seturlImageCover] = useState(cover);
     
     let location = useLocation();
     let listEventos = [];
@@ -44,25 +30,18 @@ function Profile(props) {
     useEffect(() => {
         const abortController = new AbortController()
 
-        setMainState({
-            firstLogin: location.state.firstLogin, 
-            profilePhoto: location.state.profilePhoto, 
-            coverPhoto: location.state.coverPhoto, 
-            userData: location.state.userData })
-
         async function fetch() { 
-            setUserData({
-                userName: location.state.userData.userName,
-                profileInformation: location.state.userData.profileInformation,
-                details: location.state.userData.details,
-                region: location.state.userData.region,
-                city: location.state.userData.city            })
 
-            if(!isEmpty(location.state.profilePhoto)) { storage.ref(`profile_images/${location.state.profilePhoto}`).getDownloadURL().then(url => setUrlImageProfile(url))}
+            //load profile photo
+            if(!isEmpty(location.state.profilePhoto)) { 
+                storage.ref("profile_images/" + location.state.profilePhoto).getDownloadURL()
+                .then(url => setUrlImageProfile(url))}
             else {setUrlImageProfile(user)}
             
-            if(!isEmpty(location.state.coverPhoto)) {  storage.ref(`profile_images/${location.state.coverPhoto}`).getDownloadURL().then(url => seturlImageCover(url))}
-            else {seturlImageCover(user)}
+            //load cover photo
+            if(!isEmpty(location.state.coverPhoto)) {  
+                storage.ref("profile_images/" + location.state.coverPhoto).getDownloadURL()
+                .then(url => seturlImageCover(url))}
             
     
             events.where('emailUser', '==', emailUser).orderBy("dataTime", "desc").get().then((events) => {
@@ -100,16 +79,16 @@ function Profile(props) {
                         <form className="form">
                             <div className="div__main_form">
                                 <div className="div__foto" />
-                                    <span>{userData.userName}</span>
+                                    <span>{location.state.userData.userName}</span>
                                     {props.match.params.id ? null
                                         :
-                                        <Link to={{pathname: '/editProfile', state: mainState}} style={{ textDecoration: 'none' }}>
+                                        <Link to={{pathname: '/editProfile', state: location.state}} style={{ textDecoration: 'none' }}>
                                             <label style={{margin: "0"}}>Editar</label>
                                         </Link>
                                     }
                                 <div>
-                                    <p className="p__profileInformation">{userData.profileInformation}</p>
-                                    <p className="p__region">{userData.city}, {userData.region}</p>
+                                    <p className="p__profileInformation">{location.state.userData.profileInformation}</p>
+                                    <p className="p__region">{location.state.userData.city}, {location.state.userData.region}</p>
                                 </div>
                             </div>
                         </form>
@@ -121,7 +100,7 @@ function Profile(props) {
                             <span>Sobre</span>
                         </div>
                         <div className="div__p">
-                            <p>{userData.details}</p>
+                            <p>{location.state.userData.details}</p>
                         </div>
                     </div>
                 </Details>
