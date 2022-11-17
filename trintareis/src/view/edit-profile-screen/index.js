@@ -173,7 +173,7 @@ export default function EditProfileScreen(){
                 <Redirect to={{ 
                     pathname: '/home', 
                     state: {
-                        firstLogin: location.state.firstLogin, 
+                        firstLogin: false, 
                         profilePhoto: profileImageName, 
                         coverPhoto: coverImageName, 
                         userData: userData 
