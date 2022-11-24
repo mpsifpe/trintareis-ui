@@ -12,7 +12,7 @@ import { Link, Redirect } from 'react-router-dom';
 import loading from '../../resources/loading.gif';
 import user from '../../resources/user.png';
 import firebase from '../../config/firebase';
-import { delay, isEmpty } from '../../helpers/helper';
+import { isEmpty } from '../../helpers/helper';
 
 function Header(props) {
     const dispatch = useDispatch();
@@ -22,8 +22,7 @@ function Header(props) {
         const abortController = new AbortController()
         
         if(!isEmpty(props.profilePhoto)){
-            delay(2000)
-            firebase.storage().ref(`profile_images/${props.profilePhoto}`).getDownloadURL().then(url => setUrlImageProfile(<img src={url} style={{opacity: '1'}}/>));
+            firebase.storage().ref("profile_images/" + props.profilePhoto).getDownloadURL().then(url => setUrlImageProfile(<img src={url} style={{opacity: '1'}}/>));
         } else {
             setUrlImageProfile(<img src={user} style={{opacity: '1.0'}}/>)
         }
@@ -106,11 +105,12 @@ function Header(props) {
                 </div>
                 <div className="header__right">
                     {useSelector(state => state.loggedUSer) == 0 ? <Redirect to='/'/> : null}
-                    <Link to={{pathname: "/profile", state: {
-                                                        firstLogin: props.firstLogin, 
-                                                        profilePhoto: props.profilePhoto, 
-                                                        coverPhoto: props.coverPhoto, 
-                                                        userData: props.userData }}}>
+                    <Link to={{ pathname: "/profile/" + props.userData.id, 
+                                state: {
+                                    firstLogin: props.firstLogin, 
+                                    profilePhoto: props.profilePhoto, 
+                                    coverPhoto: props.coverPhoto, 
+                                    userData: props.userData }}}>
                         <div className="feedPost__profile">
                             {urlImageProfile}
                         </div>

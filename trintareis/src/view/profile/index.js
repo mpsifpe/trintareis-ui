@@ -1,6 +1,6 @@
 import './profile.css';
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { useSelector } from 'react-redux';
 
 import { Perfil, Content, Details } from './styles';
@@ -23,26 +23,44 @@ function Profile(props) {
     const [eventos, setEventos] = useState([]);
     const [urlImageProfile, setUrlImageProfile] = useState(loading);
     const [urlImageCover, seturlImageCover] = useState(cover);
+    const [userName, setUserName] = useState("");
+    const [profileInformation, setProfileInformation] = useState("");
+    const [city, setCity] = useState("");
+    const [region, setRegion] = useState("");
+    const [details, setDetails] = useState("");
+    const [editButton, setEditButton] = useState(<></>);
     
     let location = useLocation();
     let listEventos = [];
+    let params = useParams();
 
     useEffect(() => {
         const abortController = new AbortController()
 
         async function fetch() { 
 
-            //load profile photo
-            if(!isEmpty(location.state.profilePhoto)) { 
-                storage.ref("profile_images/" + location.state.profilePhoto).getDownloadURL()
-                .then(url => setUrlImageProfile(url))}
-            else {setUrlImageProfile(user)}
-            
-            //load cover photo
-            if(!isEmpty(location.state.coverPhoto)) {  
-                storage.ref("profile_images/" + location.state.coverPhoto).getDownloadURL()
-                .then(url => seturlImageCover(url))}
-            
+            if(params.id === location.state.userData.id){
+
+                setUserName(location.state.userData.userName)   
+                setProfileInformation(location.state.userData.profileInformation)
+                setCity(location.state.userData.city)
+                setRegion(location.state.userData.region)
+                setDetails(location.state.userData.details)
+                
+                if(!isEmpty(location.state.profilePhoto)) { 
+                    storage.ref("profile_images/" + location.state.profilePhoto).getDownloadURL()
+                    .then(url => setUrlImageProfile(url))}
+                else {setUrlImageProfile(user)}
+                
+                
+                if(!isEmpty(location.state.coverPhoto)) {  
+                    storage.ref("profile_images/" + location.state.coverPhoto).getDownloadURL()
+                    .then(url => seturlImageCover(url))}
+                
+                setEditButton(  <Link to={{pathname: '/editProfile', state: location.state}} style={{ textDecoration: 'none' }}>
+                                    <label style={{margin: "0", alignContent:"flex-start"}}>Editar</label>
+                                </Link>)
+            }
     
             events.where('emailUser', '==', emailUser).orderBy("dataTime", "desc").get().then((events) => {
                 events.forEach((event) => {       
@@ -79,16 +97,11 @@ function Profile(props) {
                         <form className="form">
                             <div className="div__main_form">
                                 <div className="div__foto" />
-                                    <span>{location.state.userData.userName}</span>
-                                    {props.match.params.id ? null
-                                        :
-                                        <Link to={{pathname: '/editProfile', state: location.state}} style={{ textDecoration: 'none' }}>
-                                            <label style={{margin: "0"}}>Editar</label>
-                                        </Link>
-                                    }
+                                    <span>{userName}</span>
+                                    {editButton}
                                 <div>
-                                    <p className="p__profileInformation">{location.state.userData.profileInformation}</p>
-                                    <p className="p__region">{location.state.userData.city}, {location.state.userData.region}</p>
+                                    <p className="p__profileInformation">{profileInformation}</p>
+                                    <p className="p__region">{city}, {region}</p>
                                 </div>
                             </div>
                         </form>
@@ -100,7 +113,7 @@ function Profile(props) {
                             <span>Sobre</span>
                         </div>
                         <div className="div__p">
-                            <p>{location.state.userData.details}</p>
+                            <p>{details}</p>
                         </div>
                     </div>
                 </Details>

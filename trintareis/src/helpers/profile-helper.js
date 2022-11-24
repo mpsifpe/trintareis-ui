@@ -30,11 +30,31 @@ export function getProfileData(email){
     })
 }
 
-
-export function postCreateProfile({data}){
+export function postCreateProfile(){
     api.post('/profile', {
-        city: data.city,
-        coverPhoto: data.coverPhoto,
+        city: "string",
+        coverPhoto: "string",
+        details: "string",
+        profileInformation: "string",
+        profilePhoto: "string",
+        emailUser: "string",
+        region: "string",
+        userName: "string"
+      })
+      .then(function (response) {
+        console.log(response.status);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+}
+
+//se o ID não for informado, será feito um post e criado um novo ID 
+export function putUpdateProfile(){
+    api.post('/profile', {
+        id: "string",
+        city: "string",
+        coverPhoto: "string",
         details: "string",
         profileInformation: "string",
         profilePhoto: "string",

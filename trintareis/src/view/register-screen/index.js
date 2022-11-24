@@ -4,6 +4,7 @@ import 'firebase/auth';
 import './registerScreen.css';
 
 import Header from '../../components/header-register/index';
+import welcome from '../../resources/welcome.png';
 
 
 function RegisterScreen() {
@@ -67,7 +68,7 @@ function RegisterScreen() {
                     </form>
                 </div>
                 <div className="div__img">
-                    <img src="https://firebasestorage.googleapis.com/v0/b/trintareis-23e4c.appspot.com/o/trintareis_img%2Fredes-comunidades-carreira.jpg?alt=media&token=bfd53475-b5fd-438c-bc08-e1c939d5ae46" />
+                    <img src={welcome} />
                 </div>
             </div>
         </div>

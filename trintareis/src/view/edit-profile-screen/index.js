@@ -47,7 +47,7 @@ export default function EditProfileScreen(){
                         onClick={() => 
                             setLoginRedirect(
                                     <Redirect to={{ 
-                                        pathname: '/profile', 
+                                        pathname: '/profile/' + location.state.userData.id, 
                                         state: {
                                             firstLogin: location.state.firstLogin, 
                                             profilePhoto: location.state.profilePhoto, 
@@ -58,6 +58,7 @@ export default function EditProfileScreen(){
             
             api.get('/profile/' + emailUser)
             .then(function (response) {
+                console.log(response)
                 setUserData({
                     id: response.data.id,
                     userName: response.data.userName,
@@ -73,7 +74,7 @@ export default function EditProfileScreen(){
                 notyf.error("Desculpe, ocorreu um erro. Favor tentar novamente mais tarde")
                 setLoginRedirect(
                     <Redirect to={{ 
-                        pathname: '/profile', 
+                        pathname: '/profile/' + location.state.userData.id, 
                         state: {
                             firstLogin: location.state.firstLogin, 
                             profilePhoto: location.state.profilePhoto, 
@@ -187,7 +188,7 @@ export default function EditProfileScreen(){
         if(isEmpty(userData.userName) || isEmpty(userData.profileInformation) || isEmpty(userData.region)){
             notyf.error("Favor preencher os campos obrigatórios"); }
         else {
-            setSaveButton(<img src={loading} style={{height: '25px', alignSelf: 'center', opacity: '0.75'}}/>);
+            setSaveButton(<img src={loading} style={{height: '25px', alignSelf: 'center', opacity: '0.75'}} alt="loading"/>);
 
             handleProfilePhotoChange();
             handleCoverPhotoChange();

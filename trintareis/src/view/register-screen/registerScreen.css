@@ -49,9 +49,8 @@
 .div__primary_content{
     margin-right: 8rem;
     margin-left: 15%;
-    margin-top: 10px;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
     align-items: center;
 }
 
@@ -67,11 +66,8 @@
 }
 
 .div__img{
-    max-width: 50%;
-    margin: 0%;
-    height: 450px;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    background-color: #9ACD32;
+    width: 500px;
 }
 
 .div__img img{
