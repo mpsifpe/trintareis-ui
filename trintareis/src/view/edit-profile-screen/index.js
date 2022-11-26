@@ -28,7 +28,7 @@ export default function EditProfileScreen(){
     const [profilePhotoNew, setProfilePhotoNew] = useState("");
     const [coverPhotoNew, setCoverPhotoNew] = useState("");
 
-    const [loginRedirect, setLoginRedirect] = useState(null);
+    const [redirect, setRedirect] = useState(null);
     const [saveButton, setSaveButton] = useState("Salvar");    
     const [cancelButton, setCancelButton] = useState(<button type="button" className="w-100 btn btn-cancelar fw-bold bor"/>);
     const [titleText, setTitleText] = useState( <div><h3>Carregando...</h3></div> );
@@ -45,7 +45,7 @@ export default function EditProfileScreen(){
             setCancelButton(
                 <button  type="button" className="w-100 btn btn-cancelar fw-bold bor" 
                         onClick={() => 
-                            setLoginRedirect(
+                            setRedirect(
                                     <Redirect to={{ 
                                         pathname: '/profile/' + location.state.userData.id, 
                                         state: {
@@ -72,7 +72,7 @@ export default function EditProfileScreen(){
             .catch(function (error) {
                 console.log(error)
                 notyf.error("Desculpe, ocorreu um erro. Favor tentar novamente mais tarde")
-                setLoginRedirect(
+                setRedirect(
                     <Redirect to={{ 
                         pathname: '/profile/' + location.state.userData.id, 
                         state: {
@@ -130,7 +130,7 @@ export default function EditProfileScreen(){
             setSaveButton("Salvar");  
         })
         .finally(()=>{
-            setLoginRedirect(
+            setRedirect(
                 <Redirect to={{ 
                     pathname: '/home', 
                     state: {
@@ -170,7 +170,7 @@ export default function EditProfileScreen(){
             setSaveButton("Salvar");
         })
         .finally(()=>{
-            setLoginRedirect(
+            setRedirect(
                 <Redirect to={{ 
                     pathname: '/home', 
                     state: {
@@ -303,7 +303,7 @@ export default function EditProfileScreen(){
         
     function logoutBtnClick(){
         dispatch({ type: 'LOG_OUT' })
-        setLoginRedirect(<Redirect to='/login'/>)    }
+        setRedirect(<Redirect to='/login'/>)    }
 
     return(
         <div className='background'>
@@ -351,7 +351,7 @@ export default function EditProfileScreen(){
                             </div>
                         </div>
                     </form>
-                    {loginRedirect}
+                    {redirect}
                 </div>
             </div>
         </div>

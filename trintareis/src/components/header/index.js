@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { FaHome, FaRocketchat} from "react-icons/fa";
+import React, { useState, useEffect, useContext } from 'react';
+import { FaHome/*, FaRocketchat*/} from "react-icons/fa";
 import { IoIosNotifications } from "react-icons/io";
 import { MdOutlineGroups, MdExplore } from "react-icons/md";
 import { GiHummingbird } from "react-icons/gi";
-import { MdEventNote } from "react-icons/md";
+//import { MdEventNote } from "react-icons/md";
 import { useSelector, useDispatch } from 'react-redux';
 
 import './header.css';
@@ -13,16 +13,18 @@ import loading from '../../resources/loading.gif';
 import user from '../../resources/user.png';
 import firebase from '../../config/firebase';
 import { isEmpty } from '../../helpers/helper';
+import NotyfContext from '../notyf-toast/NotyfContext';
 
 function Header(props) {
     const dispatch = useDispatch();
-    const [urlImageProfile, setUrlImageProfile] = useState(<img src={loading} style={{opacity: '0.75'}}/>);
+    const [urlImageProfile, setUrlImageProfile] = useState(<img src={loading} style={{opacity: '0.75'}} alt="loading"/>);
+    const notyf = useContext(NotyfContext);
 
     useEffect(() => {
         const abortController = new AbortController()
         
         if(!isEmpty(props.profilePhoto)){
-            firebase.storage().ref("profile_images/" + props.profilePhoto).getDownloadURL().then(url => setUrlImageProfile(<img src={url} style={{opacity: '1'}}/>));
+            firebase.storage().ref("profile_images/" + props.profilePhoto).getDownloadURL().then(url => setUrlImageProfile(<img src={url} style={{opacity: '1'}} alt="profile image"/>));
         } else {
             setUrlImageProfile(<img src={user} style={{opacity: '1.0'}}/>)
         }
@@ -31,6 +33,10 @@ function Header(props) {
             abortController.abort()
         }
     },[]);
+
+    function notifyBuilding(){
+        notyf.error("Em desenvolvimento")
+    }
 
     return (
         <div className="App">
@@ -82,17 +88,18 @@ function Header(props) {
                                 <span>Eventos</span>
                             </div>
                         </Link>
-                        */}
+                        
                         <Link to={{pathname: "/notifications-screen", state: {
                                                                         firstLogin: props.firstLogin, 
                                                                         profilePhoto: props.profilePhoto, 
                                                                         coverPhoto: props.coverPhoto, 
-                                                                        userData: props.userData }}} className='headerLinkStyle'>
-                            <div className="header_button">
+                                                                        userData: props.userData }}} className='headerLinkStyle'>*/}
+                            <div className="header_button" onClick={notifyBuilding}>
                                 <IoIosNotifications />
                                 <span>Notificações</span>
                             </div>
-                        </Link>
+                        {//</Link>
+                                }
                         {/*
                         <Link to="" className='headerLinkStyle'>
                             <div className="header_button" >
@@ -104,7 +111,7 @@ function Header(props) {
                     </div>
                 </div>
                 <div className="header__right">
-                    {useSelector(state => state.loggedUSer) == 0 ? <Redirect to='/'/> : null}
+                    {useSelector(state => state.loggedUSer) === 0 ? <Redirect to='/'/> : null}
                     <Link to={{ pathname: "/profile/" + props.userData.id, 
                                 state: {
                                     firstLogin: props.firstLogin, 

@@ -14,7 +14,6 @@ import RegisterScreen from './view/register-screen';
 import CreatePublication from './view/create-publication/';
 import MyFriends from './view/myfriends/';
 import Profile from './view/profile/';
-import EditProfile from './view/edit-profile/';
 import ExploreScreen from './view/explore-screen';
 import NotificationsScreen from './view/notifications-screen';
 import EditProfileScreen from './view/edit-profile-screen';

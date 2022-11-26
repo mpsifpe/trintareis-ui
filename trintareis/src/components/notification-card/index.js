@@ -3,7 +3,7 @@ import React, {useEffect} from 'react';
 import { useStateIfMounted } from 'use-state-if-mounted';
 import { useSelector } from 'react-redux';
 import { notifyAcceptInvite, updateNotificationSeen, deleteNotification, updateNotificationText } from '../../helpers/notification-helper';
-import { acceptInvite, removeFriend } from '../../helpers/friend-helper';
+//import { acceptInvite, removeFriend } from '../../helpers/friend-helper';
 
 
 export default function NotificationCard(props) {
@@ -40,17 +40,17 @@ export default function NotificationCard(props) {
     },[]);
 
     function acceptFriendButtonClick(){
-        acceptInvite(props.inviter, emailUser);
+        //acceptInvite(props.inviter, emailUser);
         setFriendInviteShow(<span>Solicitação de amizade aceita</span>)
         notifyAcceptInvite(props.inviter, emailUser);
         updateNotificationSeen(props.id, true);
         let newtext = ("Você e " + props.inviter + " agora são amigos");
         setText(newtext);
-        updateNotificationText(props.id, newtext);
+        //updateNotificationText(props.id, newtext);
     }
 
     function denyFriendButtonClick(){
-        removeFriend(props.inviter, emailUser);
+        //removeFriend(props.inviter, emailUser);
         deleteNotification(props.id);
         setFriendInviteShow(<span>Solicitação de amizade recusada</span>);
     }

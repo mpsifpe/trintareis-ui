@@ -5,10 +5,10 @@ import FriendCard from '../../components/friend-card';
 import { useSelector } from 'react-redux';
 import api from '../../config/api';
 import NotyfContext from '../../components/notyf-toast/NotyfContext';
-import { useLocation, Redirect, Link } from 'react-router-dom';
+import { useLocation, Redirect } from 'react-router-dom';
 
 
-export default function MyFriends(props) {
+export default function MyFriends() {
     
     const [cardList, setCardList] = useState(<span> </span>);
     const [friendsCount, setFriendsCount] = useState(0);
@@ -16,8 +16,8 @@ export default function MyFriends(props) {
 
     const emailUser = useSelector(state => state.emailUser);
     const notyf = useContext(NotyfContext);
-    let location = useLocation();
 
+    let location = useLocation();
 
     useEffect(()=>{
         let abortController = new AbortController();
@@ -30,6 +30,7 @@ export default function MyFriends(props) {
             }
         })
         .then(function (response) {
+
             setFriendsCount(response.data.content.length);
             setCardList (   <span className='cards-display'>
                                 {response.data.content.map((u, i) => (
@@ -38,7 +39,7 @@ export default function MyFriends(props) {
                                                     idConnection={u.idConnection}
                                                     nome={u.name}
                                                     profilePhoto={u.profilePhoto}
-                                                    email={u.emailUser}
+                                                    email={u.userEmail}
                                                     profileId={u.id}
                                                     isFriend={true}
                                                     pending={u.pending}
@@ -48,7 +49,7 @@ export default function MyFriends(props) {
                                 ))}
                             </span>
             );
-            console.log( response.data.content);
+            //console.log( response.data.content);
         })
         .catch(function (error) {
             console.log(error);

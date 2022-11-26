@@ -18,9 +18,8 @@ function RegisterScreen() {
             return;
         }
 
-        var saveSucess = false;
         setCarregando(1);
-        firebase.auth().createUserWithEmailAndPassword(email, senha).then(resultado => {
+        firebase.auth().createUserWithEmailAndPassword(email, senha).then(() => {
             setCarregando(0);
             alert('Usuário cadastrado com sucesso!');
             setEmail('');
@@ -58,12 +57,7 @@ function RegisterScreen() {
                             do Trinta Reis.
                         </span>
                         <div>
-                        {
-                            carregando ? <button className="form-control btn btn-lg btn-block mt-1 mb-5 btn-cadastro" type="button" disabled>
-                                <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                            </button> :
-                                <button id="homescreen_accept_btn" onClick={cadastrar} type="button" className="form-control btn btn-lg btn-block mt-3 mb-5 btn-cadastro">Aceite e cadastre-se</button>
-                        }
+                            <button id="homescreen_accept_btn" onClick={cadastrar} type="button" className="form-control btn btn-lg btn-block mt-3 mb-5 btn-cadastro w-50">Aceitar e cadastrar</button>
                         </div>
                     </form>
                 </div>

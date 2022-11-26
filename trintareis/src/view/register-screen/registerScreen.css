@@ -18,7 +18,7 @@
     height: 30px;
     margin-top: 10px;
     margin-bottom: 10px;
-    color: rgb(108, 119, 99);
+    color: #007900;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 15px;
 }
@@ -37,7 +37,7 @@
     margin-top: 10px;
     margin-bottom: 10px;
     border: 1px solid;
-    color: rgb(75, 126, 86);
+    color: #007900;
     font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -52,6 +52,7 @@
     display: flex;
     justify-content: space-evenly;
     align-items: center;
+    
 }
 
 .div__information{
@@ -62,12 +63,13 @@
 .div__information p {
     font-size: 30px;
     font-family: Arial, Helvetica, sans-serif;
-    color: rgb(160, 132, 9);
+    color: #007900;
 }
 
 .div__img{
-    background-color: #9ACD32;
-    width: 500px;
+    padding-left: 10px;
+    background-color: white;
+    width: 60%;
 }
 
 .div__img img{
@@ -104,6 +106,7 @@
 .form-login{
     display: flex;
     max-width: 450px;
+    
 }
 .form-login h1{
     font-weight: 500;
@@ -118,11 +121,11 @@
 }
 .btn-cadastro{
     border-radius: 30px;
-    background-color: #9ACD32;
+    background-color: #007900;
     color: #fff;
 }
 .btn-cadastro:hover{
-    background-color: #89b82b;
+    background-color: #007900;
     color: #fff;
 }
 .select, .textfield{

@@ -8,7 +8,7 @@ import NotyfContext from '../../components/notyf-toast/NotyfContext';
 import { useLocation, Redirect } from 'react-router-dom';
 
 
-export default function ExploreScreen(props) {
+export default function ExploreScreen() {
     
     const [cardList, setCardList] = useState(<span> </span>);
     const [redirect, setRedirect] = useState(<></>);
@@ -28,7 +28,7 @@ export default function ExploreScreen(props) {
             }
         })
         .then(function (response) {
-            console.log(response)
+            //console.log(response)
             setCardList (   
                 <span className='cards-display'>
                     {response.data.content.map((u, i) => (
@@ -37,7 +37,7 @@ export default function ExploreScreen(props) {
                                         idConnection={""}
                                         nome={u.userName}
                                         profilePhoto={u.profilePhoto}
-                                        email={u.emailUser}
+                                        email={u.userEmail}
                                         profileId={u.id}
                                         isFriend={false}
                                         city={u.city}
