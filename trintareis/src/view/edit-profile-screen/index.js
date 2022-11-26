@@ -28,7 +28,7 @@ export default function EditProfileScreen(){
     const [profilePhotoNew, setProfilePhotoNew] = useState("");
     const [coverPhotoNew, setCoverPhotoNew] = useState("");
 
-    const [loginRedirect, setLoginRedirect] = useState(null);
+    const [redirect, setRedirect] = useState(null);
     const [saveButton, setSaveButton] = useState("Salvar");    
     const [cancelButton, setCancelButton] = useState(<button type="button" className="w-100 btn btn-cancelar fw-bold bor"/>);
     const [titleText, setTitleText] = useState( <div><h3>Carregando...</h3></div> );
@@ -45,9 +45,9 @@ export default function EditProfileScreen(){
             setCancelButton(
                 <button  type="button" className="w-100 btn btn-cancelar fw-bold bor" 
                         onClick={() => 
-                            setLoginRedirect(
+                            setRedirect(
                                     <Redirect to={{ 
-                                        pathname: '/profile', 
+                                        pathname: '/profile/' + location.state.userData.id, 
                                         state: {
                                             firstLogin: location.state.firstLogin, 
                                             profilePhoto: location.state.profilePhoto, 
@@ -58,6 +58,7 @@ export default function EditProfileScreen(){
             
             api.get('/profile/' + emailUser)
             .then(function (response) {
+                console.log(response)
                 setUserData({
                     id: response.data.id,
                     userName: response.data.userName,
@@ -71,9 +72,9 @@ export default function EditProfileScreen(){
             .catch(function (error) {
                 console.log(error)
                 notyf.error("Desculpe, ocorreu um erro. Favor tentar novamente mais tarde")
-                setLoginRedirect(
+                setRedirect(
                     <Redirect to={{ 
-                        pathname: '/profile', 
+                        pathname: '/profile/' + location.state.userData.id, 
                         state: {
                             firstLogin: location.state.firstLogin, 
                             profilePhoto: location.state.profilePhoto, 
@@ -129,7 +130,7 @@ export default function EditProfileScreen(){
             setSaveButton("Salvar");  
         })
         .finally(()=>{
-            setLoginRedirect(
+            setRedirect(
                 <Redirect to={{ 
                     pathname: '/home', 
                     state: {
@@ -169,7 +170,7 @@ export default function EditProfileScreen(){
             setSaveButton("Salvar");
         })
         .finally(()=>{
-            setLoginRedirect(
+            setRedirect(
                 <Redirect to={{ 
                     pathname: '/home', 
                     state: {
@@ -187,7 +188,7 @@ export default function EditProfileScreen(){
         if(isEmpty(userData.userName) || isEmpty(userData.profileInformation) || isEmpty(userData.region)){
             notyf.error("Favor preencher os campos obrigatórios"); }
         else {
-            setSaveButton(<img src={loading} style={{height: '25px', alignSelf: 'center', opacity: '0.75'}}/>);
+            setSaveButton(<img src={loading} style={{height: '25px', alignSelf: 'center', opacity: '0.75'}} alt="loading"/>);
 
             handleProfilePhotoChange();
             handleCoverPhotoChange();
@@ -302,7 +303,7 @@ export default function EditProfileScreen(){
         
     function logoutBtnClick(){
         dispatch({ type: 'LOG_OUT' })
-        setLoginRedirect(<Redirect to='/login'/>)    }
+        setRedirect(<Redirect to='/login'/>)    }
 
     return(
         <div className='background'>
@@ -350,7 +351,7 @@ export default function EditProfileScreen(){
                             </div>
                         </div>
                     </form>
-                    {loginRedirect}
+                    {redirect}
                 </div>
             </div>
         </div>

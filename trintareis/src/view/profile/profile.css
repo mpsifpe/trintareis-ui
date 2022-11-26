@@ -14,3 +14,11 @@
     margin-top: 15px;
     
 }
+.action_button{
+    display: inline;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 100%;
+    align-content: center;
+}

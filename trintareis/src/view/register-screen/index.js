@@ -4,6 +4,7 @@ import 'firebase/auth';
 import './registerScreen.css';
 
 import Header from '../../components/header-register/index';
+import welcome from '../../resources/welcome.png';
 
 
 function RegisterScreen() {
@@ -17,9 +18,8 @@ function RegisterScreen() {
             return;
         }
 
-        var saveSucess = false;
         setCarregando(1);
-        firebase.auth().createUserWithEmailAndPassword(email, senha).then(resultado => {
+        firebase.auth().createUserWithEmailAndPassword(email, senha).then(() => {
             setCarregando(0);
             alert('Usuário cadastrado com sucesso!');
             setEmail('');
@@ -57,17 +57,12 @@ function RegisterScreen() {
                             do Trinta Reis.
                         </span>
                         <div>
-                        {
-                            carregando ? <button className="form-control btn btn-lg btn-block mt-1 mb-5 btn-cadastro" type="button" disabled>
-                                <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                            </button> :
-                                <button id="homescreen_accept_btn" onClick={cadastrar} type="button" className="form-control btn btn-lg btn-block mt-3 mb-5 btn-cadastro">Aceite e cadastre-se</button>
-                        }
+                            <button id="homescreen_accept_btn" onClick={cadastrar} type="button" className="form-control btn btn-lg btn-block mt-3 mb-5 btn-cadastro w-50">Aceitar e cadastrar</button>
                         </div>
                     </form>
                 </div>
                 <div className="div__img">
-                    <img src="https://firebasestorage.googleapis.com/v0/b/trintareis-23e4c.appspot.com/o/trintareis_img%2Fredes-comunidades-carreira.jpg?alt=media&token=bfd53475-b5fd-438c-bc08-e1c939d5ae46" />
+                    <img src={welcome} />
                 </div>
             </div>
         </div>

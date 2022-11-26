@@ -11,7 +11,6 @@ import loading from '../../resources/loading.gif';
 import Header from '../../components/header-login/index';
 import NotyfContext from '../../components/notyf-toast/NotyfContext';
 import { isEmpty } from '../../helpers/helper';
-import { GiConsoleController } from 'react-icons/gi';
 
 function Login() {
     const [email, setEmail] = useState();
@@ -29,15 +28,13 @@ function Login() {
 
     useEffect(() => {
         if(loginSuccess && (firstLogin != undefined)){ 
-            let mainState = mountState();
 
             if(firstLogin){
                 notyf.success('Bem-vindo!')
-                setLoginRedirect(<Redirect to={{ pathname: '/editProfile', state: mainState }}/>)
+                setLoginRedirect(<Redirect to={{ pathname: '/editProfile', state: { firstLogin: true, profilePhoto: profilePhoto, coverPhoto: coverPhoto, userData: userData } }}/>)
             } else {
                 notyf.success('Bem-vindo de volta!')
                 setLoginRedirect(<Redirect to={{ pathname: '/home', state: { firstLogin: false, profilePhoto: profilePhoto, coverPhoto: coverPhoto, userData: userData } }}/>)
-                //console.log("state -> ", mainState)
             }
         }
     },[firstLogin]);
@@ -52,13 +49,13 @@ function Login() {
             setLoginSuccess(true);
         })
         .catch((error) => {
-            setLoginRedirect(<Redirect to='/login'/>);
+            setEnterBtn("Entrar");
             switch(error.code) {
                 case 'auth/wrong-password':
-                    notyf.error('Senha incorreta');
+                    notyf.error('Email e senha não conferem');
                     break;
                 case 'auth/invalid-email':
-                    notyf.error('E-mail inválido');
+                    notyf.error('Email e senha não conferem');
                     break;
                 case 'auth/user-not-found':
                     notyf.error('Usuário não cadastrado');
@@ -77,6 +74,7 @@ function Login() {
             .then((response) => {
                 if(response.status === 200){
                     setUserData({ 
+                        id: response.data.id,
                         userName: response.data.userName,
                         profileInformation: response.data.profileInformation,
                         details: response.data.details,
@@ -99,7 +97,8 @@ function Login() {
                 console.log(error)
                 loginExists.push(false)
                 
-                setUserData({ 
+                setUserData({
+                    id: "", 
                     userName: "",
                     profileInformation: "",
                     details: "",
@@ -117,11 +116,6 @@ function Login() {
         })
     }
 
-    function mountState(){
-        return { firstLogin: firstLogin, profilePhoto: profilePhoto, coverPhoto: coverPhoto, userData: userData }
-    }
-    
-
     return (
         <div className="div__main">
             <Header/>
@@ -130,7 +124,7 @@ function Login() {
                 <div className="form__signin mx-auto">
                     <form className="signin-container__form">
                         <h1 className="title">Bem-vindo de volta!</h1>
-                        <p className="subtitle">Faça seu login e interaja com milhares de pessoas!</p>
+                        <p className="subtitle">Informe seu email e senha de cadastro para entrar</p>
                         <fieldset className="textfield">
                             <span className="textfield">E-mail</span>
                             <input id="login2_email_npt" onChange={(e) => setEmail(e.target.value)} type="email" className="form-control" placeholder="Digite seu e-mail"/>
