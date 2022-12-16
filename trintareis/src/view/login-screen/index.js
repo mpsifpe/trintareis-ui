@@ -122,7 +122,7 @@ function Login() {
             <hr />
             <div className="div-container container-fluid d-flex justify-content-between align-items-center w-100">
                 <div className="form__signin mx-auto">
-                    <form className="signin-container__form">
+                    <form className="signin_container__form">
                         <h1 className="title">Bem-vindo de volta!</h1>
                         <p className="subtitle">Informe seu email e senha de cadastro para entrar</p>
                         <fieldset className="textfield">
@@ -136,7 +136,7 @@ function Login() {
                         <div className="link__recovery">
                             <Link to="/recoveryPassword" className=""><span>Esqueci minha senha</span></Link>
                         </div>
-                        <button id="login2_enter_btn" onClick={singIn} className="w-100 btn btn-lg fw-bold bor" type="button">{enterBtn}</button>
+                        <button id="login2_enter_btn" onClick={singIn} className="btn__login" type="button">{enterBtn}</button>
                         <span className="invite">Não tem conta?</span>
                         <Link to="/register">
                             <button id="login2_reg_btn" className="w-100 btn btn-rg fw-bold bor" type="button">Cadastre-se</button>

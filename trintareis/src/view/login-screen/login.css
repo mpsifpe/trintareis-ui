@@ -72,7 +72,7 @@
     color: #9ACD32;
     font-style: normal;
 }
-.signin-container__form{
+.signin_container__form{
     position: relative;
     justify-content: center;
     height: 90vh;
@@ -80,7 +80,7 @@
     font-size: large;
     min-width: 480px;
 }
-.signin-container__form p{
+.signin_container__form p{
     color: #363636;
 }
 .title{
@@ -228,4 +228,27 @@
 .link__recovery span:hover{
     text-decoration: underline;
     color: red;
+}
+
+.signin_container__form .btn__login{
+    width: 100%;
+    height: 45px;
+    margin-left: -2px;
+    border-radius:5px;
+    font-size: 20px;
+    background-color: #6aca4f;
+    font-weight: bolder;
+    border-color: #6aca4f;
+    color: #fff;
+}
+
+.signin_container__form .btn__login:hover{
+    width: 100%;
+    height: 45px;
+    margin-left: -2px;
+    border-radius:5px;
+    font-size: 20px;
+    background-color: #59a344;
+    font-weight: bolder;
+    border-color: #59a344;
 }

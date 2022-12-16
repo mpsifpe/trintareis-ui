@@ -183,21 +183,24 @@
 .div__register_btn button{
     width: 100%;
     height: 45px;
-    margin-left: -10px;
+    margin-top: 20px;
+    margin-left: -15px;
     border-radius:30px;
     font-size: 20px;
-    background-color: #69e746;
+    background-color: #6aca4f;
     font-weight: bolder;
-    border-color: #69e746;
+    border-color: #6aca4f;
+    color: #fff;
 }
 
 .div__register_btn button:hover{
     width: 100%;
     height: 45px;
-    margin-left: -10px;
+    margin-top: 20px;
+    margin-left: -15px;
     border-radius:30px;
     font-size: 20px;
-    background-color: #64c749;
+    background-color: #59a344;
     font-weight: bolder;
-    border-color: #64c749;
+    border-color: #59a344;
 }
