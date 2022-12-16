@@ -56,8 +56,8 @@ function RegisterScreen() {
                             <a id="homescreen__cookies_link" href="">Política de Cookies</a>
                             do Trinta Reis.
                         </span>
-                        <div>
-                            <button id="homescreen_accept_btn" onClick={cadastrar} type="button" className="form-control btn btn-lg btn-block mt-3 mb-5 btn-cadastro w-50">Aceitar e cadastrar</button>
+                        <div className="div__register_btn">
+                            <button id="homescreen_accept_btn" onClick={cadastrar} type="button">Aceitar e cadastrar</button>
                         </div>
                     </form>
                 </div>
