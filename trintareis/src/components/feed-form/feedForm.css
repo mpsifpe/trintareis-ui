@@ -68,3 +68,26 @@
 .div__button:hover{
     background-color: rgba(128, 119, 119, 0.4);
 }
+
+.div__btn_post button{
+    width: 180px;
+    height: 40px;
+    margin-top: 20px;
+    margin-left: 38%;
+    border-radius:30px;
+    font-size: 20px;
+    background-color: #6aca4f;
+    border-color: #6aca4f;
+    color: #fff;
+}
+
+.div__btn_post button:hover{
+    width: 180px;
+    height: 40px;
+    margin-top: 20px;
+    margin-left: 38%;
+    border-radius:30px;
+    font-size: 20px;
+    background-color: #59a344;
+    border-color: #59a344;
+}
