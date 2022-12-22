@@ -11,8 +11,8 @@ export default React.createContext(
     },
     types: [
       {
-        type: 'warning',
-        background: 'blue',
+        type: 'info',
+        background: 'darkorange',
         icon: false,
         dismissible: true
       },

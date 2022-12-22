@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { FaHome/*, FaRocketchat*/} from "react-icons/fa";
+import { FaHome, FaRocketchat} from "react-icons/fa";
 import { IoIosNotifications } from "react-icons/io";
 import { MdOutlineGroups, MdExplore } from "react-icons/md";
 import { GiHummingbird } from "react-icons/gi";
@@ -35,7 +35,11 @@ function Header(props) {
     },[]);
 
     function notifyBuilding(){
-        notyf.error("Em desenvolvimento")
+
+        notyf.open({
+            type: 'info',
+            message: 'Em desenvolvimento'
+          });
     }
 
     return (
@@ -43,10 +47,17 @@ function Header(props) {
             <div className="header">
                 <div className="header__left">
                     <div className="div__logo">
-                        <div className="logo__fb">
-                            <GiHummingbird />
-                        </div>
-                        <div className="search__fb">
+                        <Link to={{ pathname: "/home", 
+                                    state: {
+                                        firstLogin: props.firstLogin, 
+                                        profilePhoto: props.profilePhoto, 
+                                        coverPhoto: props.coverPhoto, 
+                                        userData: props.userData }}}>
+                            <div className="logo__fb">
+                                <GiHummingbird />
+                            </div>
+                        </Link>    
+                        <div className="search__fb" onClick={notifyBuilding}>
                             <input type="search" name="header_search_query" placeholder="Pesquisar" />
                         </div>
                     </div>
@@ -87,27 +98,22 @@ function Header(props) {
                                 <MdEventNote />
                                 <span>Eventos</span>
                             </div>
-                        </Link>
+                        </Link>*/}
                         
-                        <Link to={{pathname: "/notifications-screen", state: {
-                                                                        firstLogin: props.firstLogin, 
-                                                                        profilePhoto: props.profilePhoto, 
-                                                                        coverPhoto: props.coverPhoto, 
-                                                                        userData: props.userData }}} className='headerLinkStyle'>*/}
+                        <div className='headerLinkStyle'>
                             <div className="header_button" onClick={notifyBuilding}>
                                 <IoIosNotifications />
                                 <span>Notificações</span>
                             </div>
-                        {//</Link>
-                                }
-                        {/*
-                        <Link to="" className='headerLinkStyle'>
-                            <div className="header_button" >
+                        </div>
+                        
+                        <div className='headerLinkStyle'>
+                            <div className="header_button" onClick={notifyBuilding}>
                                 <FaRocketchat />
                                 <span>Chat</span>
                             </div>
-                        </Link>
-                        */}
+                        </div>
+                        
                     </div>
                 </div>
                 <div className="header__right">
