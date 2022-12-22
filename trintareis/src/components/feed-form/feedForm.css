@@ -43,6 +43,11 @@
     height: 100%;
 }
 
+.div__foto img{
+    height: 45px;
+    width: 45px;
+}
+
 .div__button{
     display: flex;
     align-items: center;
