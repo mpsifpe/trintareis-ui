@@ -1,13 +1,45 @@
+import React, { useState } from 'react';
 import { AiFillVideoCamera, AiFillPicture } from "react-icons/ai";
 import { BsCalendarDate } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import './feedForm.css'
 
+import { useSelector } from 'react-redux';
 import Modal from "../modal/Modal";
 import useModalState from "../../hooks/useModalState";
 
+import firebase from '../../config/firebase';
+import api from '../../config/api';
+
 export default function (props) {
     const [isModalOpen, openModal, closeModal] = useModalState();
+
+    const [load, setLoad] = useState();
+    const [details, setDetails] = useState();
+    const [photo, setPhoto] = useState();
+    const emailUser = useSelector(state => state.emailUser);
+
+    const storege = firebase.storage();
+
+    function enroll() {
+        setLoad(1);
+        storege.ref(`images/${photo.name}`).put(photo);
+
+        api.post('/post-photo/create', {
+            userEmail: emailUser,
+            photoName: photo.name,
+            details: details,
+            views: 0,
+            hour: new Date()
+        }).then((docRef) => {
+            setLoad(0);
+            console.log("Document written with ID: ", docRef.id);
+        }).catch((error) => {
+            setLoad(0);
+            console.error("Error adding document: ", error);
+        });
+
+    }
 
     return (
         <div className="feed">
@@ -75,19 +107,24 @@ export default function (props) {
                             <div>
                                 <div className="div__description">
                                     <label>Descrição</label>
-                                    <textarea className="form-control" rows="30" placeholder="Ex.: tópicos, programa, etc."></textarea>
+                                    <textarea onChange={(e) => setDetails(e.target.value)} className="form-control" rows="30" placeholder="Ex.: tópicos, programa, etc."></textarea>
                                 </div>
                             </div>
                         </div>
                         <div className="">
                             <label>Carregar imagem:</label>
-                            <input type="file" className="form-control" />
+                            <input onChange={(e) => setPhoto(e.target.files[0])} type="file" className="form-control" />
                         </div>
                     </form>
                 </Modal.Content>
                 <Modal.Footer>
                     <div className="div__btn_post">
-                        <button type="button">Postar</button>
+                        {
+                            load ? <button className="form-control btn btn-lg btn-block mt-3 mb-5 btn-cadastro" type="button" disabled>
+                                <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                            </button> :
+                                <button onClick={enroll} type="button">Postar</button>
+                        }
                     </div>
                 </Modal.Footer>
             </Modal>
