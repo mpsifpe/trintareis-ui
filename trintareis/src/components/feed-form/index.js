@@ -10,34 +10,46 @@ import useModalState from "../../hooks/useModalState";
 
 import firebase from '../../config/firebase';
 import api from '../../config/api';
+import { isEmpty } from '../../helpers/helper';
 
 export default function (props) {
     const [isModalOpen, openModal, closeModal] = useModalState();
 
-    const [load, setLoad] = useState();
     const [details, setDetails] = useState();
     const [photo, setPhoto] = useState();
+    const [errorMessage, setErrorMessage] = useState(<></>);
     const emailUser = useSelector(state => state.emailUser);
 
-    const storege = firebase.storage();
+    const storage = firebase.storage();
 
-    function enroll() {
-        setLoad(1);
-        storege.ref(`images/${photo.name}`).put(photo);
+    function postButtonClick() {
+        
+        if (!isEmpty(photo)){
+            setErrorMessage(<></>)
 
-        api.post('/post-photo/create', {
-            userEmail: emailUser,
-            photoName: photo.name,
-            details: details,
-            views: 0,
-            hour: new Date()
-        }).then((docRef) => {
-            setLoad(0);
-            console.log("Document written with ID: ", docRef.id);
-        }).catch((error) => {
-            setLoad(0);
-            console.error("Error adding document: ", error);
-        });
+            let timestamp = new Date()
+            let fileName = (emailUser + "_" + timestamp.toString + photo.name.split(".").pop())
+
+            api.post('/post-photo/create', {
+                params : {
+                    userEmail: emailUser,
+                    photoName: fileName,
+                    details: details,
+                    views: 0,
+                    hour: timestamp,
+                    title: fileName
+                }}    
+            ).then((docRef) => {
+                console.log("Document written with ID: ", docRef.id);
+
+                storage.ref(`images/`+ fileName).put(photo);
+            }).catch((error) => {
+                console.error("Error adding document: ", error);
+            });
+        }
+        else{
+            setErrorMessage(<span style={{color: 'red'}}>Imagem não selecionada</span>)
+        }
 
     }
 
@@ -113,18 +125,14 @@ export default function (props) {
                         </div>
                         <div className="">
                             <label>Carregar imagem:</label>
-                            <input onChange={(e) => setPhoto(e.target.files[0])} type="file" className="form-control" />
+                            <input onChange={(e) => setPhoto(e.target.files[0])} type="file" className="form-control" accept=".jpg, .png, .jpeg, .bmp"/>
+                            {errorMessage}
                         </div>
                     </form>
                 </Modal.Content>
                 <Modal.Footer>
                     <div className="div__btn_post">
-                        {
-                            load ? <button className="form-control btn btn-lg btn-block mt-3 mb-5 btn-cadastro" type="button" disabled>
-                                <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                            </button> :
-                                <button onClick={enroll} type="button">Postar</button>
-                        }
+                        <button onClick={postButtonClick} type="button" disabled={false}>Postar</button>
                     </div>
                 </Modal.Footer>
             </Modal>
