@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { FaHome/*, FaRocketchat*/} from "react-icons/fa";
+import { FaHome, FaRocketchat} from "react-icons/fa";
 import { IoIosNotifications } from "react-icons/io";
 import { MdOutlineGroups, MdExplore } from "react-icons/md";
 import { GiHummingbird } from "react-icons/gi";
@@ -100,14 +100,14 @@ function Header(props) {
                             </div>
                         {//</Link>
                                 }
-                        {/*
-                        <Link to="" className='headerLinkStyle'>
+                        
+                        
                             <div className="header_button" >
                                 <FaRocketchat />
                                 <span>Chat</span>
                             </div>
-                        </Link>
-                        */}
+                        
+                        
                     </div>
                 </div>
                 <div className="header__right">

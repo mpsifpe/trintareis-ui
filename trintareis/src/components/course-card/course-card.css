@@ -3,6 +3,25 @@
     width: 195px;
     height: 365px;
     margin-bottom: 5px;
+    border-radius: 10px;
+    border-color: #ccc !important;
+    border: 1px solid;
+    display: flex;
+    flex-direction: column;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 5px;
+    position: relative;
+}
+
+.friend-card-open{
+    background-image: linear-gradient(180deg, #dfeedf, white, white, white);
+    width: inherit;
+    height: 465px;
+    margin-bottom: 5px;
+    border-radius: 10px;
+    border-color: #ccc !important;
+    border: 1px solid;
     display: flex;
     flex-direction: column;
     margin-left: 5px;
@@ -15,8 +34,6 @@
     padding: 0 10px;
     margin: 0;
     display: block;
-    margin-left: auto;
-    margin-right: auto;
 }
 
 .friend-img{
@@ -42,8 +59,6 @@
     position: absolute;
     bottom: 10px;
     align-self: center;
-    margin-left: auto;
-    margin-right: auto;
 }
 
 .card-button{
@@ -55,8 +70,6 @@
     color: #3d8a50;
     height: 35px;
     width: 175px;
-    margin-left: auto;
-    margin-right: auto;
 }
 
 .card-button:hover {
@@ -85,4 +98,6 @@
     font-weight: normal;
     font-size: medium;
     font-style: normal;
+    max-lines: 2;
+    margin-bottom: 10px;
 }

@@ -18,14 +18,27 @@
   
   .div__title_explore{
     margin-left: 0px;
+    margin-bottom: 15px;
     font-size: 28px;
     font-style: bold;
   }
   
   .div__title_explore span{
     margin-left: 5px;
-    margin-bottom: 5px;
     font-size: 28px;
+    font-style: bold;
+  }
+
+  .div__title_category{
+    margin-left: 0px;
+    font-size: 20px;
+    font-style: bold;
+  }
+  
+  .div__title_category span{
+    margin-left: 5px;
+    margin-bottom: 5px;
+    font-size: 20px;
     font-style: bold;
   }
 
