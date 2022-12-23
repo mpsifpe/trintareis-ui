@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { AiFillVideoCamera, AiFillPicture } from "react-icons/ai";
 import { BsCalendarDate } from "react-icons/bs";
 import { Link } from "react-router-dom";
@@ -11,9 +11,11 @@ import useModalState from "../../hooks/useModalState";
 import firebase from '../../config/firebase';
 import api from '../../config/api';
 import { isEmpty } from '../../helpers/helper';
+import NotyfContext from '../notyf-toast/NotyfContext';
 
 export default function (props) {
     const [isModalOpen, openModal, closeModal] = useModalState();
+    const notyf = useContext(NotyfContext);
 
     const [details, setDetails] = useState();
     const [photo, setPhoto] = useState();
@@ -28,24 +30,26 @@ export default function (props) {
             setErrorMessage(<></>)
 
             let timestamp = new Date()
-            let fileName = (emailUser + "_" + timestamp.toString + photo.name.split(".").pop())
-
+            let fileName = emailUser + "_" + timestamp.getTime() + "." + photo.name.split(".").pop()
+           
             api.post('/post-photo/create', {
-                params : {
                     userEmail: emailUser,
                     photoName: fileName,
                     details: details,
                     views: 0,
                     hour: timestamp,
-                    title: fileName
-                }}    
+                    title: photo.name
+                }
             ).then((docRef) => {
-                console.log("Document written with ID: ", docRef.id);
-
+                console.log(docRef);
                 storage.ref(`images/`+ fileName).put(photo);
+                closeModal();
+
             }).catch((error) => {
                 console.error("Error adding document: ", error);
+                notyf.error("Opa, ocorreu um erro. Favor tentar novamente mais tarde");
             });
+
         }
         else{
             setErrorMessage(<span style={{color: 'red'}}>Imagem não selecionada</span>)
@@ -65,11 +69,11 @@ export default function (props) {
                         </div>
                     </div>
                     <div className="div__button">
-                        <Link to='createPublication' style={{ textDecoration: 'none' }}>
+                        <div style={{ textDecoration: 'none' }}>
                             <div className="div__span">
                                 <span>Começar publicar...</span>
                             </div>
-                        </Link>
+                        </div>
                     </div>
                 </div>
                 <div className="feedForm__icons">
