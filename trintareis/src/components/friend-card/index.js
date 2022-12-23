@@ -84,7 +84,8 @@ export default function FriendCard(props) {
                             <img className="friend-img" src={cardImage} alt="user image"/>
                             <div>{name}</div>
                             <p className="friend-course">{city}</p>
-                            <p className="friend-usertype">{cardEmail}</p>
+                            {//<p className="friend-usertype">{cardEmail}</p>
+                            }
                         </Link>
                     </span>
                     <div>{cardButton}</div>
