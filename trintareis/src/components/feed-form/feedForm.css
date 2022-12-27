@@ -71,7 +71,7 @@
     cursor: pointer;
     height: 100%;
     width: 100%;
-    background-color: rgba(180, 173, 173, 0.4);
+    background-color: #eeeeee;
     border-radius: 25px;
 }
 
@@ -88,7 +88,7 @@
 }
 
 .div__button:hover{
-    background-color: rgba(128, 119, 119, 0.4);
+    background-color: #e6e6e6;
 }
 
 .div__btn_post button{

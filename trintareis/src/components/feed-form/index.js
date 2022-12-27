@@ -78,7 +78,7 @@ export default function (props) {
                     <div className="div__button" onClick={openModal}>
                         <div style={{ textDecoration: 'none' }}>
                             <div className="div__span">
-                                <span>Começar publicar...</span>
+                                <span>Nova publicação</span>
                             </div>
                         </div>
                     </div>
