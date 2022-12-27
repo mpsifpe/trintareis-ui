@@ -79,8 +79,8 @@ export default function (props) {
                 <div className="feedForm__icons">
                     <div className="iconSingle img feedForm__reaction">
                         <button onClick={openModal}>
-                            <AiFillPicture />
-                            <span>
+                            <AiFillPicture className='feedForm_svg'/>
+                            <span className="feedForm__link">
                                 Foto
                             </span>
                         </button>
@@ -96,8 +96,8 @@ export default function (props) {
                     <div className="iconSingle feedForm__reaction">
 
                         <button type="submit">
-                            <AiFillVideoCamera />
-                            <span>
+                            <AiFillVideoCamera className='feedForm_svg'/>
+                            <span className="feedForm__link">
                                 Vídeo
                             </span>
                         </button>
@@ -106,7 +106,7 @@ export default function (props) {
                     <div className="iconSingle evn feedForm__reaction">
                         <Link to='event' style={{ textDecoration: 'none' }}>
                             <button type="submit">
-                                <BsCalendarDate />
+                                <BsCalendarDate className='feedForm_svg'/>
                                 <span className="feedForm__link">
                                     Evento
                                 </span>

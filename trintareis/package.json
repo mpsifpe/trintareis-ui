@@ -17,6 +17,7 @@
     "react-redux": "^7.2.6",
     "react-router-dom": "^5.3.4",
     "react-scripts": "^4.0.3",
+    "react-tooltip": "^5.3.1",
     "redux": "^4.1.2",
     "styled-components": "^5.3.5",
     "use-state-if-mounted": "^1.0.7",

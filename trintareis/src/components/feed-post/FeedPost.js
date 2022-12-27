@@ -552,7 +552,6 @@ export default function (props) {
                     </div>
                 </div>
                 <div className="feedPost__content">
-                    <h2 className='p-3'>{props.title}</h2>
                     <p>
                         {props.conteudo}<br />
                     </p>
@@ -579,7 +578,7 @@ export default function (props) {
                         <span onClick={() => funcCompartilhar({ id: props.id })} className="">Compartilhar</span>
                     </div>
                 </div>
-                <div className='p-3'>
+                <div>
                     {element}
                     {todosComentarios}
                 </div>

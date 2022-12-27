@@ -223,7 +223,7 @@ function Profile(props) {
 
     return (
         <div className="App">
-            <Header firstLogin={location.state.firstLogin} profilePhoto={location.state.profilePhoto} coverPhoto={location.state.coverPhoto} userData={location.state.userData}/>
+            <Header firstLogin={location.state.firstLogin} profilePhoto={location.state.profilePhoto} coverPhoto={location.state.coverPhoto} userData={location.state.userData} hideTooltip={true}/>
             <div className="main">
                 <Perfil photo={urlImageCover}>
                     <div />
