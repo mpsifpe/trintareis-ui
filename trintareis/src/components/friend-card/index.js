@@ -29,16 +29,10 @@ export default function FriendCard(props) {
 
     const [cardImage, setCardImage] = useState(loading);
     const [cardEmail, setCardEmail] = useState("loading");
-    const [cardButton, setCardButton] = useState(<div className='div__card-button'><button className='card-button'/></div>);
+    const [cardButton, setCardButton] = useState(<button className='card-button'/>);
 
     async function updateInfo(){ //método chamado na div principal ao montar componente
-        setName(
-            <div>
-                <Link to={"/profile" + "/" + props.profileId} className='friendcardLinkStyle'> 
-                    <span >{props.nome}</span>
-                </Link>
-            </div>     
-        )    
+        setName(<span className='friendcardLinkStyle'>{props.nome}</span>)    
 
         if(!isEmpty(props.profilePhoto)) { 
             storage.ref("profile_images/" + props.profilePhoto).getDownloadURL()
@@ -67,28 +61,29 @@ export default function FriendCard(props) {
         if (isFriend){
             if(pendingInvite){
                 if(inviter){
-                    setCardButton(<div className='div__card-button'><button className='card-button' onClick={clickAction}>Convidado</button></div>)}
+                    setCardButton(<button className='card-button' onClick={clickAction}>Convidado</button>)}
                 else {
-                    setCardButton(<div className='div__card-button'><button className='card-button' onClick={clickAction}>Aceitar</button></div>)}}
+                    setCardButton(<button className='card-button' onClick={clickAction}>Aceitar</button>)}}
             else {
-                setCardButton(<div className='div__card-button'><button className='card-button' onClick={clickAction}>Desconectar</button></div>)}}
+                setCardButton(<button className='card-button' onClick={clickAction}>Desconectar</button>)}}
         else { 
-            setCardButton(<div className='div__card-button'><button className='card-button' onClick={clickAction}>Conectar</button></div>)}
+            setCardButton(<button className='card-button' onClick={clickAction}>Conectar</button>)}
     }
     
     return(
         <div onLoad={updateInfo}>         
             <div className="friend-card">
-                    <span className="friend-content">
-                        <Link to={{ pathname: '/profile/' + profileId, state: { firstLogin: location.state.firstLogin, profilePhoto: location.state.profilePhoto, coverPhoto: location.state.coverPhoto, userData: location.state.userData } }} style={{textDecoration: "none"}}>
+                    <Link to={{ pathname: '/profile/' + profileId, state: { firstLogin: location.state.firstLogin, profilePhoto: location.state.profilePhoto, coverPhoto: location.state.coverPhoto, userData: location.state.userData } }} style={{textDecoration: "none"}}>
+                        <span className="friend-content">
                             <img className="friend-img" src={cardImage} alt="user image"/>
                             <div>{name}</div>
                             <p className="friend-course">{city}</p>
                             {//<p className="friend-usertype">{cardEmail}</p>
                             }
-                        </Link>
-                    </span>
-                    <div>{cardButton}</div>
+                        </span>
+                    </Link>
+                    
+                    <div className='div__card-button'>{cardButton}</div>
             </div>
         </div>
     )
@@ -104,7 +99,7 @@ export default function FriendCard(props) {
         })
         .then(()=>{
             notyf.success("Conexão desfeita");
-            setCardButton(<div className='div__card-button'><button className='card-button'>Conectar</button></div>);
+            setCardButton(<button className='card-button'>Conectar</button>);
         })
         .catch(function (error) {
             console.log(error);
@@ -119,7 +114,7 @@ export default function FriendCard(props) {
             userEmail: emailUser
         })
         .then(()=>{
-            setCardButton(<div className='div__card-button'><button className='card-button'>Convidado</button></div>);
+            setCardButton(<button className='card-button'>Convidado</button>);
             notyf.success("Solicitação de amizade enviada");
         })
         .catch(function (error) {
@@ -134,7 +129,7 @@ export default function FriendCard(props) {
         api.put('/friends?id=' + idConnection)
         .then((response)=>{
             notyf.success("Convite aceito");
-            setCardButton(<div className='div__card-button'><button className='card-button'>Desconectar</button></div>);
+            setCardButton(<button className='card-button'>Desconectar</button>);
             //findAndUpdateInviteNotification(cardEmail, emailUser);
             //notifyAcceptInvite(cardEmail, emailUser);  
         })

@@ -14,11 +14,14 @@ import user from '../../resources/user.png';
 import firebase from '../../config/firebase';
 import { isEmpty } from '../../helpers/helper';
 import NotyfContext from '../notyf-toast/NotyfContext';
+import { Tooltip } from 'react-tooltip'
+import 'react-tooltip/dist/react-tooltip.css';
 
 function Header(props) {
     const dispatch = useDispatch();
     const [urlImageProfile, setUrlImageProfile] = useState(<img src={loading} style={{opacity: '0.75'}} alt="loading"/>);
     const notyf = useContext(NotyfContext);
+    const [showTooltip, setShowTooltip] = useState(<Tooltip anchorId="profile_img" place="bottom" style={{opacity:0.35, color:'white'}} positionStrategy="absolute"/>)
 
     useEffect(() => {
         const abortController = new AbortController()
@@ -27,6 +30,10 @@ function Header(props) {
             firebase.storage().ref("profile_images/" + props.profilePhoto).getDownloadURL().then(url => setUrlImageProfile(<img src={url} style={{opacity: '1'}} alt="profile image"/>));
         } else {
             setUrlImageProfile(<img src={user} style={{opacity: '1.0'}}/>)
+        }
+
+        if(!isEmpty(props.hideTooltip)){
+            if (props.hideTooltip){ setShowTooltip(<></>)}
         }
 
         return function cleanup() {
@@ -61,6 +68,8 @@ function Header(props) {
                             <input type="search" name="header_search_query" placeholder="Pesquisar" />
                         </div>
                     </div>
+                </div>
+                <div className="header__center">
                     <div className="div__content_header">
                         <Link to={{pathname: "/home", state: {
                                                         firstLogin: props.firstLogin, 
@@ -68,7 +77,7 @@ function Header(props) {
                                                         coverPhoto: props.coverPhoto, 
                                                         userData: props.userData }}} className='headerLinkStyle'>
                             <div className="header_button">
-                                <FaHome />
+                                <FaHome className='icon_button' />
                                 <span>Início</span>
                             </div>
                         </Link >
@@ -78,7 +87,7 @@ function Header(props) {
                                                             coverPhoto: props.coverPhoto, 
                                                             userData: props.userData }}} className='headerLinkStyle'>
                             <div className="header_button">
-                                <MdExplore />
+                                <MdExplore className='icon_button'/>
                                 <span>Explorar</span>
                             </div>
                         </Link>
@@ -88,7 +97,7 @@ function Header(props) {
                                                             coverPhoto: props.coverPhoto, 
                                                             userData: props.userData }}} className='headerLinkStyle'>
                             <div className="header_button">
-                                <MdOutlineGroups />
+                                <MdOutlineGroups className='icon_button'/>
                                 <span>Amigos</span>
                             </div>
                         </Link>
@@ -102,14 +111,14 @@ function Header(props) {
                         
                         <div className='headerLinkStyle'>
                             <div className="header_button" onClick={notifyBuilding}>
-                                <IoIosNotifications />
+                                <IoIosNotifications className='icon_button'/>
                                 <span>Notificações</span>
                             </div>
                         </div>
                         
                         <div className='headerLinkStyle'>
                             <div className="header_button" onClick={notifyBuilding}>
-                                <FaRocketchat />
+                                <FaRocketchat className='icon_button'/>
                                 <span>Chat</span>
                             </div>
                         </div>
@@ -124,12 +133,14 @@ function Header(props) {
                                     profilePhoto: props.profilePhoto, 
                                     coverPhoto: props.coverPhoto, 
                                     userData: props.userData }}}>
-                        <div className="feedPost__profile">
+                        
+                        <div className="img_profile" id="profile_img" data-tooltip-content="Meu perfil">
                             {urlImageProfile}
                         </div>
+                        {showTooltip}
                     </Link>
-                    <div className="div__plus_btn">
-                        <span onClick={() => dispatch({ type: 'LOG_OUT' })}>Sair</span>
+                    <div className="logout_btn">
+                        <span onClick={() => dispatch({ type: 'LOG_OUT' })} className="logout_button_span">Sair</span>
                     </div>
                 </div>
             </div>

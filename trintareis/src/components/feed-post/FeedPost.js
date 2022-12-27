@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
 import { BsThreeDotsVertical, BsFillArrowLeftCircleFill } from "react-icons/bs";
 import { BiLike } from "react-icons/bi";
@@ -7,6 +7,7 @@ import { FaShare } from "react-icons/fa";
 import './feedPost.css'
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import NotyfContext from '../notyf-toast/NotyfContext';
 
 import firebase from '../../config/firebase';
 
@@ -24,6 +25,8 @@ export default function (props) {
     const [todosComentarios, setTodosComentarios] = useState('');
     const [botaoGostei, setBotaoGostei] = useState('');
     const [clistaFotos, setListaFotos] = useState([]);
+
+    const notyf = useContext(NotyfContext);
 
     firebase.firestore().collection('profiles').get().then(async (result) => {
         await result.docs.forEach(doc => {
@@ -494,6 +497,11 @@ export default function (props) {
 
 
     function funcCompartilhar(obj) {
+        notyf.open({
+            type: 'info',
+            message: 'Em desenvolvimento'
+          });
+        /*
         let evento = firebase.firestore().collection('events');
         var shares = [];
         evento.get().then(async (result) => {
@@ -519,7 +527,7 @@ export default function (props) {
                     //  window.location.reload(false);
                 }
             })
-        })
+        })*/
     }
 
 
@@ -552,7 +560,6 @@ export default function (props) {
                     </div>
                 </div>
                 <div className="feedPost__content">
-                    <h2 className='p-3'>{props.title}</h2>
                     <p>
                         {props.conteudo}<br />
                     </p>
@@ -579,7 +586,7 @@ export default function (props) {
                         <span onClick={() => funcCompartilhar({ id: props.id })} className="">Compartilhar</span>
                     </div>
                 </div>
-                <div className='p-3'>
+                <div>
                     {element}
                     {todosComentarios}
                 </div>
