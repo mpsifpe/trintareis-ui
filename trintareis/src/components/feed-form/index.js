@@ -57,6 +57,13 @@ export default function (props) {
 
     }
 
+    function showNotification(){
+        notyf.open({
+            type: 'info',
+            message: 'Em desenvolvimento'
+          });
+    }
+
     return (
         <div className="feed">
             <div className="feedForm">
@@ -95,7 +102,7 @@ export default function (props) {
                     </div>
                     <div className="iconSingle feedForm__reaction">
 
-                        <button type="submit">
+                        <button onClick={showNotification}>
                             <AiFillVideoCamera className='feedForm_svg'/>
                             <span className="feedForm__link">
                                 Vídeo
@@ -104,14 +111,14 @@ export default function (props) {
 
                     </div>
                     <div className="iconSingle evn feedForm__reaction">
-                        <Link to='event' style={{ textDecoration: 'none' }}>
-                            <button type="submit">
+                        
+                            <button onClick={showNotification}>
                                 <BsCalendarDate className='feedForm_svg'/>
                                 <span className="feedForm__link">
                                     Evento
                                 </span>
                             </button>
-                        </Link>
+                        
                     </div>
                 </div>
             </div>
