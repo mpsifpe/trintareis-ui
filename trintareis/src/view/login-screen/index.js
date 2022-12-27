@@ -109,7 +109,7 @@ function Login() {
                 setCoverPhoto("");
             })
             .finally(() => {
-                console.log("hasProfile return " + loginExists[0]);
+                //console.log("hasProfile return " + loginExists[0]);
                 setFirstLogin(!loginExists[0]);
             })
            
