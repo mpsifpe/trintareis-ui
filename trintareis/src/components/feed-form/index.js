@@ -75,7 +75,7 @@ export default function (props) {
                             </Link>
                         </div>
                     </div>
-                    <div className="div__button">
+                    <div className="div__button" onClick={openModal}>
                         <div style={{ textDecoration: 'none' }}>
                             <div className="div__span">
                                 <span>Começar publicar...</span>
