@@ -32,7 +32,7 @@ export default function (props) {
             let timestamp = new Date()
             let fileName = emailUser + "_" + timestamp.getTime() + "." + photo.name.split(".").pop()
            
-            api.post('/post-photo/create', {
+            api.post('/post-content/create', {
                     userEmail: emailUser,
                     photoName: fileName,
                     details: details,
