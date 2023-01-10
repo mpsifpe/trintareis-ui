@@ -10,16 +10,18 @@ body{
 
 .header{
     background-color: white;
-    height: 55px;
+    height: 45px;
     display: inline-flex;
     justify-content: center;
     width: 100%;
+    box-shadow: 2px 2px 2px lightgray;
 }
 
 .header__left{
     width: 20%;
     height: 100%;
-    margin-top: 0px;
+    margin-top: auto;
+    margin-bottom: auto;
     display: inline-flex;
     flex-direction: row;
     justify-content: center;
@@ -46,13 +48,19 @@ body{
     justify-content: center;
 }
 
+.header__right a{
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
 .img_profile img{
-    width: 45px;
-    height: 45px;
+    width: 40px;
+    height: 40px;
     display: flex;
     border-radius: 25px;
     cursor: pointer;
-    margin-top: 5px;
+    margin-top: auto;
+    margin-bottom: auto;
 }
 
 .div__logo{
@@ -65,32 +73,32 @@ body{
     justify-content: center;
     align-items: center;
     align-self: center;
-    border-radius: 10px;
+    border-radius: 25px;
     cursor: pointer;
     padding: 8px 10px;
     font-size: 15px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 5px;
+    margin-top: auto;
+    margin-bottom: auto;
     margin-left: 35px;
     margin-right: 0;
-    width: 50px;
+    width: 60px;
 }
 
-.logout_button_span{
+.logout_btn span{
     justify-content: center;
     font-weight: 500;
     display: flex;
     font-size: 15px;
+    color: #969595;
 }
 
 .logout_btn:hover{
-    font-weight: 800;
-    background-color: #45bd62;
+    background-color: #f8f8f8;
 }
 
-.logout_btn_span:hover{
-    font-weight: 800;
-    color: white;
+.logout_btn:hover span{
+    color: darkgray;
 }
 
 .logo__fb{
@@ -103,10 +111,9 @@ body{
 }
 
 .logo__fb svg{
-    border: 2px solid;
-    border-radius: 3px;
     color: #45bd62;
     font-size: 40px;
+    margin-bottom: 2px;
 }
 
 .search-form{
@@ -116,6 +123,8 @@ body{
     line-height: 40px;
     padding: 8px 10px;
     align-items: center;
+    margin-top: auto;
+    margin-bottom: auto;
 }
 
 .search__fb{
@@ -123,14 +132,19 @@ body{
     align-self: center;
 }
 
-.search__fb svg{
-    color: grey;
-    font-size: 15px;
+.search__fb input{
+    width: 175px;
+    height: 40px;
+    padding-left: 12px;
+    padding-right: 5px;
+    border-width: 0px;
+    border-radius: 25px;
+    border-color: #f8f8f8;
+    background-color: #f8f8f8;
 }
 
-.search__fb input{
-    width: 150px;
-    height: 40px;
+::placeholder{
+    text-align: center;
 }
 
 .div__content_header{
@@ -157,17 +171,16 @@ body{
     margin-right: 15px;
     width: 50px;
     font-weight: bold;
-    
+    margin-top: auto;
+    margin-bottom: auto;
 }
 
 .header_button:hover .icon_button{
     font-weight: bolder;
-    color: #45bd62;
 }
 
 .header_button:hover{
     font-weight: bolder;
-    color: #45bd62;
 }
 
 

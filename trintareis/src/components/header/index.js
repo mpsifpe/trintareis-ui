@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { FaHome, FaRocketchat} from "react-icons/fa";
+import { FaHome } from "react-icons/fa";
 import { IoIosNotifications } from "react-icons/io";
+import { IoChatbubblesSharp } from "react-icons/io5";
 import { MdOutlineGroups, MdExplore } from "react-icons/md";
 import { GiHummingbird } from "react-icons/gi";
 //import { MdEventNote } from "react-icons/md";
@@ -78,7 +79,7 @@ function Header(props) {
                                                         userData: props.userData }}} className='headerLinkStyle'>
                             <div className="header_button">
                                 <FaHome className='icon_button' />
-                                <span>Início</span>
+                                <span hidden="true">Início</span>
                             </div>
                         </Link >
                         <Link to={{pathname: "/explore", state: {
@@ -88,7 +89,7 @@ function Header(props) {
                                                             userData: props.userData }}} className='headerLinkStyle'>
                             <div className="header_button">
                                 <MdExplore className='icon_button'/>
-                                <span>Explorar</span>
+                                <span hidden="true">Explorar</span>
                             </div>
                         </Link>
                         <Link to={{pathname: "/myfriends", state: {
@@ -98,7 +99,7 @@ function Header(props) {
                                                             userData: props.userData }}} className='headerLinkStyle'>
                             <div className="header_button">
                                 <MdOutlineGroups className='icon_button'/>
-                                <span>Amigos</span>
+                                <span hidden="true">Amigos</span>
                             </div>
                         </Link>
                         {/*
@@ -112,14 +113,14 @@ function Header(props) {
                         <div className='headerLinkStyle'>
                             <div className="header_button" onClick={notifyBuilding}>
                                 <IoIosNotifications className='icon_button'/>
-                                <span>Notificações</span>
+                                <span hidden="true">Notificações</span>
                             </div>
                         </div>
                         
-                        <div className='headerLinkStyle'>
-                            <div className="header_button" onClick={notifyBuilding}>
-                                <FaRocketchat className='icon_button'/>
-                                <span>Chat</span>
+                        <div className='headerLinkStyle' data-tooltip-content="Chat">
+                            <div className="header_button" onClick={notifyBuilding} >
+                                <IoChatbubblesSharp className='icon_button'/>
+                                <span hidden="true">Chat</span>
                             </div>
                         </div>
                         
@@ -137,13 +138,14 @@ function Header(props) {
                         <div className="img_profile" id="profile_img" data-tooltip-content="Meu perfil">
                             {urlImageProfile}
                         </div>
-                        {showTooltip}
+                        
                     </Link>
                     <div className="logout_btn">
-                        <span onClick={() => dispatch({ type: 'LOG_OUT' })} className="logout_button_span">Sair</span>
+                        <span onClick={() => dispatch({ type: 'LOG_OUT' })}>Sair</span>
                     </div>
                 </div>
             </div>
+            {showTooltip}
         </div>
     )
 }
