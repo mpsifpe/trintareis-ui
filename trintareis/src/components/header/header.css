@@ -390,6 +390,7 @@ body{
     background-color: white;
     padding: 10px;
     border-radius: 15px;
+    box-shadow: 2px 2px 2px lightgray, 1px 1px 1px lightgray inset;
 }
 
 .feedForm{
@@ -454,6 +455,7 @@ body{
     margin: 20px 100px;
     background-color: white;
     border-radius: 15px;
+    box-shadow: 2px 2px 2px lightgray ;
 }
 
 .feedPost__profile{
