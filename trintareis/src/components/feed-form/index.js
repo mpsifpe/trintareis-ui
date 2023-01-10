@@ -38,7 +38,8 @@ export default function (props) {
                     details: details,
                     views: 0,
                     hour: timestamp,
-                    title: photo.name
+                    title: photo.name,
+                    publicPost: true
                 }
             ).then((docRef) => {
                 console.log(docRef);
