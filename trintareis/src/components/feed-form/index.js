@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { AiFillVideoCamera, AiFillPicture } from "react-icons/ai";
+import { HiPhotograph, HiVideoCamera, HiMenuAlt2 } from "react-icons/hi";
 import { BsCalendarDate } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import './feedForm.css'
@@ -87,37 +87,29 @@ export default function (props) {
                 <div className="feedForm__icons">
                     <div className="iconSingle img feedForm__reaction">
                         <button onClick={openModal}>
-                            <AiFillPicture className='feedForm_svg'/>
-                            <span className="feedForm__link">
-                                Foto
-                            </span>
+                            <HiPhotograph className='feedForm_svg'/>
+                            <div className="feedForm__link">
+                                <span>Imagem</span>
+                            </div>
                         </button>
-                        {/* <Link to='postPhoto' style={{ textDecoration: 'none' }}>
-                            <button type="submit">
-                                <AiFillPicture />
-                                <span>
-                                    Foto
-                                </span>
-                            </button>
-                        </Link> */}
                     </div>
                     <div className="iconSingle feedForm__reaction">
 
                         <button onClick={showNotification}>
-                            <AiFillVideoCamera className='feedForm_svg'/>
-                            <span className="feedForm__link">
-                                Vídeo
-                            </span>
+                            <HiVideoCamera className='feedForm_svg'/>
+                            <div className="feedForm__link">
+                                <span>Video</span>
+                            </div>
                         </button>
 
                     </div>
                     <div className="iconSingle evn feedForm__reaction">
                         
                             <button onClick={showNotification}>
-                                <BsCalendarDate className='feedForm_svg'/>
-                                <span className="feedForm__link">
-                                    Evento
-                                </span>
+                                <HiMenuAlt2 className='feedForm_svg'/>
+                                <div className="feedForm__link">
+                                    <span>Artigo</span>
+                                </div>
                             </button>
                         
                     </div>

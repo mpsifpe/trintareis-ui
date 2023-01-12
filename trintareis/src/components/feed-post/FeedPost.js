@@ -1,40 +1,98 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { FaPencilAlt, FaTrashAlt } from "react-icons/fa";
-import { BsThreeDotsVertical, BsFillArrowLeftCircleFill } from "react-icons/bs";
-import { BiLike } from "react-icons/bi";
-import { CgComment } from "react-icons/cg";
-import { FaShare } from "react-icons/fa";
 import './feedPost.css'
+import React, { useState, useEffect, useContext } from 'react';
+import { HiHeart, HiOutlineHeart, HiOutlineAnnotation, HiOutlineShare, HiOutlinePencilAlt, HiOutlineTrash, HiDotsVertical, HiOutlineArrowCircleLeft } from "react-icons/hi";
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import NotyfContext from '../notyf-toast/NotyfContext';
 
+import api from '../../config/api';
 import firebase from '../../config/firebase';
+import NotyfContext from '../notyf-toast/NotyfContext';
+import user from '../../resources/user.png';
+import loading from '../../resources/loading.gif';
 
 export default function (props) {
-    const [urlImages, setUrlImages] = useState('');
-    const emailUser = useSelector(state => state.emailUser);
+
+    const notyf = useContext(NotyfContext);
+    const loggedUser = useSelector(state => state.emailUser);
+    const date = new Date();
+
+    const [urlImages, setUrlImages] = useState(loading);
     const [curtir, setCurti] = useState('');
     const [curtiu, setCurtiu] = useState('');
     const [totalComentario, setTotalComentario] = useState('');
     const [userName, setUserName] = useState('');
-    const date = new Date();
     const [compartilhar, setCompartilhar] = useState('');
     const [compartilhou, setCompartilhou] = useState('');
     const [element, setElement] = useState('');
     const [todosComentarios, setTodosComentarios] = useState('');
     const [botaoGostei, setBotaoGostei] = useState('');
     const [clistaFotos, setListaFotos] = useState([]);
+    const [profileData, setProfileData] = useState({});
 
-    const notyf = useContext(NotyfContext);
+    useEffect(() => {
+        const abortController = new AbortController();
 
-    firebase.firestore().collection('profiles').get().then(async (result) => {
-        await result.docs.forEach(doc => {
-            if (doc.data().emailUser == emailUser) {
-                setUserName(doc.data().userName);
-            }
-        })
-    })
+        api.get('/profile/' + props.emailUser)
+            .then(function (response) {
+                console.log(response)
+                setProfileData({
+                    id: response.data.id,
+                    userName: response.data.userName,
+                    profileInformation: response.data.profileInformation,
+                    details: response.data.details,
+                    region: response.data.region,
+                    city: response.data.city,
+                    coverPhoto: response.data.coverPhoto,
+                    profilePhoto: response.data.profilePhoto            })
+            })
+            .catch(function (error) {
+                console.log(error)
+                notyf.error("Desculpe, ocorreu um erro. Favor tentar novamente mais tarde")
+            })
+
+        setBotaoGostei(
+            <div className='feed-content-bt-gostei'>
+                <HiOutlineHeart />
+                {/*<span onClick={() => funcGostei({ id: props.id })} id={props.id + '_botao'} className="">Gostei</span>*/}
+                <span onClick={sendNotificationToast} className="">Gostei</span>
+            </div>);
+
+        firebase.storage().ref(`images/${props.img}`).getDownloadURL().then(url => setUrlImages(url));
+
+        if (Array.isArray(props.like) && props.like.length > 0) {
+            setCurti(props.like.length);
+            setTotalComentario(props.coments.length);
+            
+            props.like.forEach(function (like) {
+                if (like == loggedUser) {
+                    setCurtiu(1);
+                    setBotaoGostei(
+                        <div className='feed-content-bt-gostei'>
+                            <HiHeart style={{ color: 'cornflowerblue' }} />
+                            <div onClick={() => funcDesgostei({ id: props.id })} id={props.id + '_botao'} className="feed-comentario-gostei">Gostei</div>
+                        </div>);
+                }
+            })
+        } else {
+            setCurti(0);
+            setCurtiu(0);
+        }
+        if (Array.isArray(props.share) && props.share.length > 0) {
+            setCompartilhar(props.share.length);
+            props.share.forEach(function (share) {
+                if (share == loggedUser) {
+                    setCompartilhou(1);
+                }
+            })
+        } else {
+            setCompartilhar(0);
+            setCompartilhou(0);
+        }
+        return function cleanup() {
+            abortController.abort()
+        }
+    }, []);
+
 
     function calcularHoras(tempo, tipo) {
         var date1 = new Date(tempo);
@@ -65,8 +123,6 @@ export default function (props) {
         return diffDays + "horas";
     }
 
-
-
     function exibirComentario(props, idEvento) {
         let listItems2 = [];
         var coment = "";
@@ -96,7 +152,6 @@ export default function (props) {
 
             console.log(reordenar);
 
-            let posicao = 0;
             listItems2 = reordenar.map(
                 (number) =>
                     <div>
@@ -111,7 +166,7 @@ export default function (props) {
                             </div>
 
                             <div className='feed-comentario-metad-right'>
-                                <a onClick={() => atualizarComentario({ json }, number.order, idEvento, 'true')} className="shadow-interpolacao-feed"><BsThreeDotsVertical /></a>
+                                <a onClick={() => atualizarComentario({ json }, number.order, idEvento, 'true')} className="shadow-interpolacao-feed"><HiDotsVertical /></a>
                             </div>
                         </div>
                         <br />
@@ -160,9 +215,9 @@ export default function (props) {
                                         </div>
 
                                         <div className='feed-comentario-metad-right'>
-                                            <a onClick={() => atualizarComentario({ lista }, number.order, idEvento)} className="shadow-interpolacao-feed"><FaPencilAlt /></a>
-                                            <Link to={`#`} onClick={() => { if (window.confirm('Deseja apagar o comentário?')) { apagarComentario(lista, number.order, idEvento) }; }} className="shadow-interpolacao-feed"> <FaTrashAlt /></Link>
-                                            <a onClick={() => exibirComentario({ comentario }, number.oder)} className="shadow-interpolacao-feed"><BsFillArrowLeftCircleFill /></a>
+                                            <a onClick={() => atualizarComentario({ lista }, number.order, idEvento)} className="shadow-interpolacao-feed"><HiOutlinePencilAlt /></a>
+                                            <Link to={`#`} onClick={() => { if (window.confirm('Deseja apagar o comentário?')) { apagarComentario(lista, number.order, idEvento) }; }} className="shadow-interpolacao-feed"> <HiOutlineTrash /></Link>
+                                            <a onClick={() => exibirComentario({ comentario }, number.oder)} className="shadow-interpolacao-feed"><HiOutlineArrowCircleLeft /></a>
                                         </div>
                                     </div>
                                     <br />
@@ -212,46 +267,6 @@ export default function (props) {
         }
     }
 
-    useEffect(() => {
-        const abortController = new AbortController();
-        setBotaoGostei(<div className='feed-content-bt-gostei'>
-            <BiLike />
-            <span onClick={() => funcGostei({ id: props.id })} id={props.id + '_botao'} className="">Gostei</span>
-        </div>);
-        firebase.storage().ref(`images/${props.img}`).getDownloadURL().then(url => setUrlImages(url));
-        if (Array.isArray(props.like) && props.like.length > 0) {
-            setCurti(props.like.length);
-            setTotalComentario(props.coments.length);
-            
-            props.like.forEach(function (like) {
-                if (like == emailUser) {
-                    setCurtiu(1);
-                    setBotaoGostei(<div className='feed-content-bt-gostei'>
-                        <BiLike style={{ color: 'cornflowerblue' }} />
-                        <div onClick={() => funcDesgostei({ id: props.id })} id={props.id + '_botao'} className="feed-comentario-gostei">Gostei</div>
-                    </div>);
-                }
-            })
-        } else {
-            setCurti(1);
-            setCurtiu(0);
-        }
-        if (Array.isArray(props.share) && props.share.length > 0) {
-            setCompartilhar(props.share.length);
-            props.share.forEach(function (share) {
-                if (share == emailUser) {
-                    setCompartilhou(1);
-                }
-            })
-        } else {
-            setCompartilhar(1);
-            setCompartilhou(0);
-        }
-        return function cleanup() {
-            abortController.abort()
-        }
-    }, []);
-
     function salvarComentario(obj) {
         obj.preventDefault();
         let evento = firebase.firestore().collection('events');
@@ -263,7 +278,7 @@ export default function (props) {
                         if (doc.data().coments != "") {
                             comentarios = doc.data().coments;
                         }
-                        comentarios.push({ data: date.getTime(), tipo_comentario: 'c', autor: userName, email: emailUser, content: obj.target[0].value });
+                        comentarios.push({ data: date.getTime(), tipo_comentario: 'c', autor: userName, email: loggedUser, content: obj.target[0].value });
                         console.log('Comentario Criado: ' + obj.target[0].value);
                         evento.doc(obj.target[1].value).update({
                             coments: comentarios
@@ -278,6 +293,7 @@ export default function (props) {
             });
         });
     }
+
     function apagarComentario(lista, posiaco, idEvento) {
         let evento = firebase.firestore().collection('events');
         var comentarios = [];
@@ -324,7 +340,7 @@ export default function (props) {
         var i = lista.length;
         lista.forEach(function (coment) {
             if (i == obj.target[1].value) {
-                reordenar.unshift({ id: i, data: date.getTime(), tipo_comentario: 'e', autor: userName, email: emailUser, content: obj.target[0].value });
+                reordenar.unshift({ id: i, data: date.getTime(), tipo_comentario: 'e', autor: userName, email: loggedUser, content: obj.target[0].value });
                 console.log('Comentario Editado: ' + obj.target[0].value);
             } else {
                 reordenar.unshift(coment);
@@ -361,6 +377,9 @@ export default function (props) {
 
     function comentarios(obj, comentarios) {
 
+        sendNotificationToast()
+        
+          /*
         let listaFoto = [];
         firebase.firestore().collection('profiles').get().then(async (result) => {
             await result.docs.forEach(doc => {
@@ -383,6 +402,7 @@ export default function (props) {
                 </div>
             </form>
         );
+        */
     }
 
     function limparComentario(obj) {
@@ -409,7 +429,7 @@ export default function (props) {
 
     function funcDesgostei(obj) {
         setBotaoGostei(<div className='feed-content-bt-gostei'>
-            <BiLike />
+            <HiOutlineHeart />
             <div onClick={() => funcGostei({ id: props.id })} id={props.id + '_botao'} className="">Gostei</div>
         </div>);
 
@@ -421,7 +441,7 @@ export default function (props) {
                 if (doc.id == obj.id) {
                     console.log(doc.data().like);
                     doc.data().like.forEach(function (like) {
-                        if (like == emailUser) {
+                        if (like == loggedUser) {
                             retorno = false;
                         } else {
                             likes.push(like)
@@ -445,10 +465,11 @@ export default function (props) {
     }
 
     function funcGostei(obj) {
-        setBotaoGostei(<div>
-            <BiLike style={{ color: 'cornflowerblue' }} />
-            <span onClick={() => funcDesgostei({ id: props.id })} id={props.id + '_botao'} className="feed-comentario-gostei">Gostei</span>
-        </div>);
+        setBotaoGostei(
+            <div>
+                <HiHeart style={{ color: 'cornflowerblue' }} />
+                <span onClick={() => funcDesgostei({ id: props.id })} id={props.id + '_botao'} className="feed-comentario-gostei">Gostei</span>
+            </div>);
 
         let evento = firebase.firestore().collection('events');
         var likes = [];
@@ -458,29 +479,29 @@ export default function (props) {
                     var retorno = true;
                     if (Array.isArray(doc.data().like)) {
                         doc.data().like.forEach(function (like) {
-                            if (like == emailUser) {
+                            if (like == loggedUser) {
                                 retorno = false;
                             }
                         })
                     } else {
-                        if (doc.data().like == emailUser) {
+                        if (doc.data().like == loggedUser) {
                             retorno = false;
                         }
                     }
                     if (retorno) {
                         if (doc.data().like == '') {
                             evento.doc(obj.id).update({
-                                like: emailUser
+                                like: loggedUser
                             })
                         } else if (doc.data().like != '' && !Array.isArray(doc.data().like)) {
                             likes.push(doc.data().like);
-                            likes.push(emailUser);
+                            likes.push(loggedUser);
                             evento.doc(obj.id).update({
                                 like: likes
                             })
                         } else {
                             likes = doc.data().like;
-                            likes.push(emailUser);
+                            likes.push(loggedUser);
                             evento.doc(obj.id).update({
                                 like: likes
                             })
@@ -497,10 +518,7 @@ export default function (props) {
 
 
     function funcCompartilhar(obj) {
-        notyf.open({
-            type: 'info',
-            message: 'Em desenvolvimento'
-          });
+        sendNotificationToast()
         /*
         let evento = firebase.firestore().collection('events');
         var shares = [];
@@ -531,22 +549,27 @@ export default function (props) {
     }
 
 
+    function sendNotificationToast(){
+        notyf.open({
+            type: 'info',
+            message: 'Em desenvolvimento'
+          })
+    }
 
 
-
-
+    //---------------------------------------------------------return---------------------------------------
     return (
         <div className="feedPost">
             <div className="feedPostSingle">
                 <div className="feedPost__profile">
                     <div>
 
-                        <Link to={props.emailUser === emailUser ? `/profile` : `/profile/${props.profileId}`}>
-                            <img src={props.profilePhoto} />
+                        <Link to={props.emailUser === loggedUser ? `/profile` : `/profile/${props.profileId}`}>
+                            <img src={props.profilePhoto ? props.profilePhoto : user} />
                         </Link>
                     </div>
                     <div className="div__info">
-                        <Link to={props.emailUser === emailUser ? `/profile` : `/profile/${props.profileId}`}>
+                        <Link to={props.emailUser === loggedUser ? `/profile` : `/profile/${props.profileId}`}>
                             <div>
                                 <span>{props.nome}</span>
                             </div>
@@ -577,12 +600,12 @@ export default function (props) {
                     </div>
 
                     <div className="feedPost__reaction">
-                        <CgComment />
+                        <HiOutlineAnnotation />
                         <span onClick={() => comentarios({ id: props.id }, { comentario: props.coments })} className="">comentar ({totalComentario})</span>
                     </div>
 
                     <div className="feedPost__reaction">
-                        <FaShare />
+                        <HiOutlineShare />
                         <span onClick={() => funcCompartilhar({ id: props.id })} className="">Compartilhar</span>
                     </div>
                 </div>

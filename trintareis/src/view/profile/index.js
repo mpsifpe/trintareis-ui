@@ -1,6 +1,6 @@
 import './profile.css';
 import React, { useState, useEffect, useContext } from 'react';
-import { Link, useLocation, useParams, Redirect } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import { MdDone, MdClose } from "react-icons/md";
 import { Perfil, Content, Details } from './styles';
@@ -15,7 +15,6 @@ import cover from '../../resources/cover.png';
 import firebase from '../../config/firebase';
 import NotyfContext from '../../components/notyf-toast/NotyfContext';
 import api from '../../config/api';
-import { GiConsoleController } from 'react-icons/gi';
 
 
 function Profile(props) {

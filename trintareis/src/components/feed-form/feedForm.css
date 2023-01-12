@@ -48,6 +48,10 @@
     flex-direction: column;
 }
 
+.feedForm__link span{
+    color: black;
+}
+
 .div__header{
     height: 50px;
 }
