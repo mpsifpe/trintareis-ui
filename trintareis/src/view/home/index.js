@@ -44,35 +44,10 @@ function Home() {
             })
             .then((posts)=>{
                 setTest(posts.data.content);
-
-                posts.data.content.forEach(post => {    
-                    api.get('/profile/' + post.userEmail)
-                    .then((profile) => {
-                        setEventos({ ...eventos, response: profile})(
-                            {
-                                id: profile.data.id,
-                                img: post.photoName,
-                                profilePhoto: profile.data.profilePhoto, 
-                                profileInformation: profile.data.profileInformation,
-                                title: post.title,
-                                nome: profile.data.userName,
-                                horario: post.hour,
-                                conteudo: post.details,
-                                emailUser: post.userEmail,
-                                profileId: profile.data.id, 
-                                like: post.like,
-                                share: post.share,
-                                coments: post.coments
-                            }
-                        )
-                    })
-                    .catch(error => console.log(error))
-                });
             })
             .catch((error)=>{
                 console.log(error)
             })
-
         }
 
         fetch();
