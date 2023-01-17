@@ -97,7 +97,7 @@ function Login() {
                 console.log(error)
 
                 if(error.code === 'ERR_NETWORK'){
-                    () => {dispatch({ type: 'LOG_OUT' })}
+                    dispatch({ type: 'LOG_OUT' })
                     notyf.error("Desculpe, ocorreu um erro no servidor");
                     setLoginRedirect(<Redirect to='/login'/>);
                 }

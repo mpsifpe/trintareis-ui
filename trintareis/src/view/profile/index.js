@@ -20,7 +20,7 @@ import api from '../../config/api';
 function Profile(props) {
 
     const emailUser = useSelector(state => state.emailUser);
-    const storage = firebase.storage();
+    //const storage = firebase.storage();
     const events = firebase.firestore().collection('events');
     const notyf = useContext(NotyfContext);
 

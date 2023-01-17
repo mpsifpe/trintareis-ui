@@ -212,7 +212,26 @@ export default function EditProfileScreen(){
                 
                 setUserData({ ...userData, profilePhoto: profileImageName })
                 
-                storage.ref("profile_images/" + profileImageName).put(profilePhotoNew)
+                storage.ref("profile_images/" + profileImageName).put(profilePhotoNew).then(()=>{
+                    storage.ref("profile_images/" + profileImageName).getDownloadURL().then(url => {
+                        api.put('/profile/update', {
+                            "id": userData.id,
+                            "city": userData.city,
+                            "details": userData.details,
+                            "coverPhoto": coverImageName,
+                            "profileInformation": userData.profileInformation,
+                            "profilePhoto": url,
+                            "emailUser": emailUser,
+                            "region": userData.region,
+                            "userName": userData.userName
+                        })
+                        .catch((error) => console.log(error))
+                        .finally(()=>{
+                            setUserData({ ...userData, profilePhoto: url })
+                        })
+
+                    })
+                })
             
             } else { 
                 setUserData({ ...userData, profilePhoto: "" })  }
@@ -227,8 +246,28 @@ export default function EditProfileScreen(){
                     profileImageName = (emailUser + "_profile." + profilePhotoNew.name.split(".").pop())
 
                     storage.ref("profile_images/" + userData.profilePhoto).delete().then(()=>{
+
                         setUserData({ ...userData, profilePhoto: profileImageName });
-                        storage.ref("profile_images/" + profileImageName).put(profilePhotoNew)
+
+                        storage.ref("profile_images/" + profileImageName).put(profilePhotoNew).then(()=>{
+                            storage.ref("profile_images/" + profileImageName).getDownloadURL().then(url => {
+                                api.put('/profile/update', {
+                                    "id": userData.id,
+                                    "city": userData.city,
+                                    "details": userData.details,
+                                    "coverPhoto": coverImageName,
+                                    "profileInformation": userData.profileInformation,
+                                    "profilePhoto": url,
+                                    "emailUser": emailUser,
+                                    "region": userData.region,
+                                    "userName": userData.userName
+                                })
+                                .catch((error) => console.log(error))
+                                .finally(()=>{
+                                    setUserData({ ...userData, profilePhoto: url })
+                                })
+                            })
+                        })
                     })
                     .catch(function (error) {
                         console.log(error);
@@ -246,7 +285,25 @@ export default function EditProfileScreen(){
                     
                     setUserData({ ...userData, profilePhoto: profileImageName })
 
-                    storage.ref("profile_images/" + profileImageName).put(profilePhotoNew)
+                    storage.ref("profile_images/" + profileImageName).put(profilePhotoNew).then(()=>{
+                        storage.ref("profile_images/" + profileImageName).getDownloadURL().then(url => {
+                            api.put('/profile/update', {
+                                "id": userData.id,
+                                "city": userData.city,
+                                "details": userData.details,
+                                "coverPhoto": coverImageName,
+                                "profileInformation": userData.profileInformation,
+                                "profilePhoto": url,
+                                "emailUser": emailUser,
+                                "region": userData.region,
+                                "userName": userData.userName
+                            })
+                            .catch((error) => console.log(error))
+                            .finally(()=>{
+                                setUserData({ ...userData, profilePhoto: url })
+                            })
+                        })
+                    })
                 }
             }
             
@@ -264,7 +321,25 @@ export default function EditProfileScreen(){
 
                 setUserData({ ...userData, coverPhoto: coverImageName })
 
-                storage.ref("profile_images/" + coverImageName).put(coverPhotoNew)
+                storage.ref("profile_images/" + coverImageName).put(coverPhotoNew).then(()=>{
+                    storage.ref("profile_images/" + coverImageName).getDownloadURL().then(url => {
+                        api.put('/profile/update', {
+                            "id": userData.id,
+                            "city": userData.city,
+                            "details": userData.details,
+                            "coverPhoto": url,
+                            "profileInformation": userData.profileInformation,
+                            "profilePhoto": profileImageName,
+                            "emailUser": emailUser,
+                            "region": userData.region,
+                            "userName": userData.userName
+                        })
+                        .catch((error) => console.log(error))
+                        .finally(()=>{
+                            setUserData({ ...userData, coverPhoto: url })
+                        })
+                    })
+                })
 
             } else { 
                 setUserData({ ...userData, coverPhoto: "" })  }
@@ -278,8 +353,28 @@ export default function EditProfileScreen(){
                     coverImageName = (emailUser + "_cover." + coverPhotoNew.name.split(".").pop())
 
                     storage.ref("profile_images/" + userData.coverPhoto).delete().then(()=>{
+
                         setUserData({ ...userData, coverPhoto: coverImageName });
-                        storage.ref("profile_images/" + coverImageName).put(coverPhotoNew)         
+
+                        storage.ref("profile_images/" + coverImageName).put(coverPhotoNew).then(()=>{
+                            storage.ref("profile_images/" + coverImageName).getDownloadURL().then(url => {
+                                api.put('/profile/update', {
+                                    "id": userData.id,
+                                    "city": userData.city,
+                                    "details": userData.details,
+                                    "coverPhoto": url,
+                                    "profileInformation": userData.profileInformation,
+                                    "profilePhoto": profileImageName,
+                                    "emailUser": emailUser,
+                                    "region": userData.region,
+                                    "userName": userData.userName
+                                })
+                                .catch((error) => console.log(error))
+                                .finally(()=>{
+                                    setUserData({ ...userData, coverPhoto: url })
+                                })
+                            })
+                        })       
                     }).catch(function (error) {
                         console.log(error);
                         setUserData({ ...userData, coverPhoto: "" });
@@ -290,9 +385,30 @@ export default function EditProfileScreen(){
                 }   
             } else {
                 if (!isEmpty(coverPhotoNew)){
+
                     coverImageName = (emailUser + "_cover." + coverPhotoNew.name.split(".").pop())
+
                     setUserData({ ...userData, coverPhoto: coverImageName })
-                    storage.ref("profile_images/" + coverImageName).put(coverPhotoNew)
+
+                    storage.ref("profile_images/" + coverImageName).put(coverPhotoNew).then(()=>{
+                        storage.ref("profile_images/" + coverImageName).getDownloadURL().then(url => {
+                            api.put('/profile/update', {
+                                "id": userData.id,
+                                "city": userData.city,
+                                "details": userData.details,
+                                "coverPhoto": url,
+                                "profileInformation": userData.profileInformation,
+                                "profilePhoto": profileImageName,
+                                "emailUser": emailUser,
+                                "region": userData.region,
+                                "userName": userData.userName
+                            })
+                            .catch((error) => console.log(error))
+                            .finally(()=>{
+                                setUserData({ ...userData, coverPhoto: url })
+                            })
+                        })
+                    })
                 }
             }
         }
