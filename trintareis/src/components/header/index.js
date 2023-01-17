@@ -79,7 +79,7 @@ function Header(props) {
                                                         userData: props.userData }}} className='headerLinkStyle'>
                             <div className="header_button">
                                 <FaHome className='icon_button' />
-                                <span hidden="true">Início</span>
+                                <span hidden={true}>Início</span>
                             </div>
                         </Link >
                         <Link to={{pathname: "/explore", state: {
@@ -89,7 +89,7 @@ function Header(props) {
                                                             userData: props.userData }}} className='headerLinkStyle'>
                             <div className="header_button">
                                 <MdExplore className='icon_button'/>
-                                <span hidden="true">Explorar</span>
+                                <span hidden={true}>Explorar</span>
                             </div>
                         </Link>
                         <Link to={{pathname: "/myfriends", state: {
@@ -99,7 +99,7 @@ function Header(props) {
                                                             userData: props.userData }}} className='headerLinkStyle'>
                             <div className="header_button">
                                 <MdOutlineGroups className='icon_button'/>
-                                <span hidden="true">Amigos</span>
+                                <span hidden={true}>Amigos</span>
                             </div>
                         </Link>
                         {/*
@@ -113,14 +113,14 @@ function Header(props) {
                         <div className='headerLinkStyle'>
                             <div className="header_button" onClick={notifyBuilding}>
                                 <IoIosNotifications className='icon_button'/>
-                                <span hidden="true">Notificações</span>
+                                <span hidden={true}>Notificações</span>
                             </div>
                         </div>
                         
                         <div className='headerLinkStyle' data-tooltip-content="Chat">
                             <div className="header_button" onClick={notifyBuilding} >
                                 <IoChatbubblesSharp className='icon_button'/>
-                                <span hidden="true">Chat</span>
+                                <span hidden={true}>Chat</span>
                             </div>
                         </div>
                         
