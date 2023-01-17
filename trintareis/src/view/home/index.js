@@ -10,8 +10,9 @@ import user from '../../resources/user.png';
 
 import api from '../../config/api';
 import { isEmpty } from '../../helpers/helper';
+import { formatDate } from '../../helpers/helper';
 
-function Home() {
+export default function Home() {
     
     let location = useLocation();
     const [eventos, setEventos] = useState([]);
@@ -58,7 +59,7 @@ function Home() {
                         profileInformation={item.profileInformation}
                         title={item.title}
                         nome={item.userName}
-                        horario={item.hour}
+                        horario={formatDate(item.hour)}
                         conteudo={item.title}
                         emailUser={item.userEmail}
                         profileId={item.profileId}
@@ -70,5 +71,3 @@ function Home() {
         </div>
     )
 }
-
-export default Home;

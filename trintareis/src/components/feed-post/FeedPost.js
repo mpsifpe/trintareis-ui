@@ -1,12 +1,13 @@
 
 import './feedPost.css'
 import React, { useState, useEffect, useContext } from 'react';
-import { HiHeart, HiOutlineHeart, HiOutlineAnnotation, HiOutlineShare, HiOutlinePencilAlt, HiOutlineTrash, HiDotsVertical, HiOutlineArrowCircleLeft } from "react-icons/hi";
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { HiHeart, HiOutlineHeart, HiOutlineAnnotation, HiOutlineShare, HiOutlinePencilAlt, HiOutlineTrash, HiDotsVertical, HiOutlineArrowCircleLeft } from "react-icons/hi";
+
+import user from '../../resources/user.png';
 import firebase from '../../config/firebase';
 import NotyfContext from '../notyf-toast/NotyfContext';
-import user from '../../resources/user.png';
 import { isEmpty } from '../../helpers/helper';
 
 
@@ -117,9 +118,6 @@ export default function (props) {
                                 <span>{props.nome}</span>
                             </div>
                         </Link>
-                        <div>
-                            <span>{props.profileInformation}</span>
-                        </div>
                         <div>
                             <span>{props.horario}</span>
                         </div>
