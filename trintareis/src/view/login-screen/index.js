@@ -95,18 +95,26 @@ function Login() {
             })
             .catch((error) => {
                 console.log(error)
-                loginExists.push(false)
-                
-                setUserData({
-                    id: "", 
-                    userName: "",
-                    profileInformation: "",
-                    details: "",
-                    region: "",
-                    city: "" })
 
-                setProfilePhoto("");
-                setCoverPhoto("");
+                if(error.code === 'ERR_NETWORK'){
+                    () => {dispatch({ type: 'LOG_OUT' })}
+                    notyf.error("Desculpe, ocorreu um erro no servidor");
+                    setLoginRedirect(<Redirect to='/login'/>);
+                }
+                else {
+                    loginExists.push(false)
+                    
+                    setUserData({
+                        id: "", 
+                        userName: "",
+                        profileInformation: "",
+                        details: "",
+                        region: "",
+                        city: "" })
+
+                    setProfilePhoto("");
+                    setCoverPhoto("");
+                }
             })
             .finally(() => {
                 //console.log("hasProfile return " + loginExists[0]);
