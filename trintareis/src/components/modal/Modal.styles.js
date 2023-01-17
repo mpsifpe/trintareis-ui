@@ -59,6 +59,7 @@ const wrapperModifiers = {
 
 export const Wrapper = styled.div`
   ${({ size }) => css`
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     box-shadow: 0 5px 16px rgba(0, 0, 0, 0.2);
     background: #FAFAFA;
     color: #333;
@@ -73,11 +74,13 @@ export const Wrapper = styled.div`
 `;
 
 export const Header = styled.div`
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     border-bottom: 1px solid #EAEAEA;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 1.6rem 0;
+    padding-top: 0.75rem;
+    padding-bottom: 0.25rem;
     position: relative;
     .title {
       font-size: 1.5rem;
@@ -88,9 +91,9 @@ export const Header = styled.div`
       position: absolute;
       right: 0.8rem;
       border-radius: 50%;
-      width: 1.6rem;
-      height: 1.6rem;
-      padding: 0;
+      width: 1.8rem;
+      height: 1.8rem;
+      padding-bottom: 0.5rem;
       display: flex;
       justify-content: center;
       align-items: center;

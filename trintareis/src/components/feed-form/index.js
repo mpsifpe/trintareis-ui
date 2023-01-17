@@ -14,7 +14,9 @@ import { isEmpty } from '../../helpers/helper';
 import NotyfContext from '../notyf-toast/NotyfContext';
 
 export default function (props) {
-    const [isModalOpen, openModal, closeModal] = useModalState();
+    const [isTextPostOpen, openTextPost, closeTextPost] = useModalState();
+    const [isPhotoPostOpen, openPhotoPost, closePhotoPost] = useModalState();
+
     const notyf = useContext(NotyfContext);
 
     const [details, setDetails] = useState();
@@ -44,7 +46,7 @@ export default function (props) {
             ).then((docRef) => {
                 console.log(docRef);
                 storage.ref(`images/`+ fileName).put(photo);
-                closeModal();
+                closePhotoPost();
 
             }).catch((error) => {
                 console.error("Error adding document: ", error);
@@ -76,7 +78,7 @@ export default function (props) {
                             </Link>
                         </div>
                     </div>
-                    <div className="div__button" onClick={openModal}>
+                    <div className="div__button" onClick={openTextPost}>
                         <div style={{ textDecoration: 'none' }}>
                             <div className="div__span">
                                 <span>Nova publicação</span>
@@ -86,7 +88,7 @@ export default function (props) {
                 </div>
                 <div className="feedForm__icons">
                     <div className="iconSingle img feedForm__reaction">
-                        <button onClick={openModal}>
+                        <button onClick={openPhotoPost}>
                             <HiPhotograph  className='feedForm_svg'/>
                             <div className="feedForm__link">
                                 <span>Imagem</span>
@@ -112,21 +114,40 @@ export default function (props) {
                 </div>
             </div>
 
-            <Modal title='Publicar' isOpen={isModalOpen} onClose={closeModal}>
+            <Modal title='Publicar' isOpen={isPhotoPostOpen} onClose={closePhotoPost}>
                 <Modal.Content>
                     <form className="form">
                         <div className="row">
                             <div>
                                 <div className="div__description">
                                     <label>Descrição</label>
-                                    <textarea onChange={(e) => setDetails(e.target.value)} className="form-control" rows="30" placeholder="Ex.: tópicos, programa, etc."></textarea>
+                                    <textarea onChange={(e) => setDetails(e.target.value)} className="form-control" rows="30" placeholder="Ex.: tópicos, programa, etc." maxLength={300} style={{height:"100px"}}></textarea>
                                 </div>
                             </div>
                         </div>
                         <div className="">
-                            <label>Carregar imagem:</label>
+                            <label>Carregar imagem</label>
                             <input onChange={(e) => setPhoto(e.target.files[0])} type="file" className="form-control" accept=".jpg, .png, .jpeg, .bmp"/>
                             {errorMessage}
+                        </div>
+                    </form>
+                </Modal.Content>
+                <Modal.Footer>
+                    <div className="div__btn_post">
+                        <button onClick={postButtonClick} type="button" disabled={false}>Postar</button>
+                    </div>
+                </Modal.Footer>
+            </Modal>
+            <Modal title='Publicar' isOpen={isTextPostOpen} onClose={closeTextPost}>
+                <Modal.Content>
+                    <form className="form">
+                        <div className="row">
+                            <div>
+                                <div className="div__description">
+                                    <label>Descrição</label>
+                                    <textarea onChange={(e) => setDetails(e.target.value)} className="form-control" rows="10" placeholder="Ex.: tópicos, programa, etc." maxLength={300} style={{height:"200px"}}></textarea>
+                                </div>
+                            </div>
                         </div>
                     </form>
                 </Modal.Content>

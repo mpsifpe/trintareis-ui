@@ -2,6 +2,7 @@ import styled, { css } from 'styled-components';
 
 const ModalContent = styled.div`
   ${({ theme }) => css`
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     flex-grow: 1;
     padding: 0 0.8rem;
     overflow-y: scroll;
