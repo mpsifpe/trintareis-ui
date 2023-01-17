@@ -3,7 +3,6 @@ import React, { useState, useEffect, useContext } from 'react';
 import { HiHeart, HiOutlineHeart, HiOutlineAnnotation, HiOutlineShare, HiOutlinePencilAlt, HiOutlineTrash, HiDotsVertical, HiOutlineArrowCircleLeft } from "react-icons/hi";
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-
 import api from '../../config/api';
 import firebase from '../../config/firebase';
 import NotyfContext from '../notyf-toast/NotyfContext';
@@ -16,7 +15,7 @@ export default function (props) {
     const loggedUser = useSelector(state => state.emailUser);
     const date = new Date();
 
-    const [urlImages, setUrlImages] = useState(loading);
+    const [urlImages, setUrlImages] = useState('');
     const [curtir, setCurti] = useState('');
     const [curtiu, setCurtiu] = useState('');
     const [totalComentario, setTotalComentario] = useState('');

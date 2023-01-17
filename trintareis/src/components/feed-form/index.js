@@ -87,31 +87,27 @@ export default function (props) {
                 <div className="feedForm__icons">
                     <div className="iconSingle img feedForm__reaction">
                         <button onClick={openModal}>
-                            <HiPhotograph className='feedForm_svg'/>
+                            <HiPhotograph  className='feedForm_svg'/>
                             <div className="feedForm__link">
                                 <span>Imagem</span>
                             </div>
                         </button>
                     </div>
                     <div className="iconSingle feedForm__reaction">
-
                         <button onClick={showNotification}>
                             <HiVideoCamera className='feedForm_svg'/>
                             <div className="feedForm__link">
                                 <span>Video</span>
                             </div>
                         </button>
-
                     </div>
                     <div className="iconSingle evn feedForm__reaction">
-                        
                             <button onClick={showNotification}>
                                 <HiMenuAlt2 className='feedForm_svg'/>
                                 <div className="feedForm__link">
                                     <span>Artigo</span>
                                 </div>
                             </button>
-                        
                     </div>
                 </div>
             </div>
