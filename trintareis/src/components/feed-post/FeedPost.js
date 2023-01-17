@@ -214,7 +214,7 @@ export default function (props) {
     useEffect(() => {
         const abortController = new AbortController();
         setBotaoGostei(<div className='feed-content-bt-gostei'>
-            <BiLike />
+            <HiHeart />
             <span onClick={() => funcGostei({ id: props.id })} id={props.id + '_botao'} className="">Gostei</span>
         </div>);
         firebase.storage().ref(`images/${props.img}`).getDownloadURL().then(url => setUrlImages(url));
@@ -226,7 +226,7 @@ export default function (props) {
                 if (like == loggedUser) {
                     setCurtiu(1);
                     setBotaoGostei(<div className='feed-content-bt-gostei'>
-                        <BiLike style={{ color: 'cornflowerblue' }} />
+                        <HiHeart style={{ color: 'cornflowerblue' }} />
                         <div onClick={() => funcDesgostei({ id: props.id })} id={props.id + '_botao'} className="feed-comentario-gostei">Gostei</div>
                     </div>);
                 }
@@ -445,7 +445,7 @@ export default function (props) {
 
     function funcGostei(obj) {
         setBotaoGostei(<div>
-            <BiLike style={{ color: 'cornflowerblue' }} />
+            <HiHeart style={{ color: 'cornflowerblue' }} />
             <span onClick={() => funcDesgostei({ id: props.id })} id={props.id + '_botao'} className="feed-comentario-gostei">Gostei</span>
         </div>);
 
