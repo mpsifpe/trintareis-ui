@@ -30,6 +30,7 @@ export default function (props) {
     const [clistaFotos, setListaFotos] = useState([]);
     const [profileData, setProfileData] = useState({});
     const [profilePhoto, setProfilePhoto] = useState(user);
+    const [profileLink, setProfileLink] = useState("");
 
     useEffect(() => {
         const abortController = new AbortController();
@@ -101,19 +102,31 @@ export default function (props) {
             message: 'Em desenvolvimento'
           })
     }
+
     
     return (
         <div className="feedPost">
             <div className="feedPostSingle">
                 <div className="feedPost__profile">
                     <div>
-
-                        <Link to={props.emailUser === loggedUser ? `/profile` : `/profile/${props.profileId}`}>
+                        <Link to={{ pathname: ("/profile/" + props.profileId), 
+                                    state: {
+                                        firstLogin: props.stateFirstLogin, 
+                                        profilePhoto: props.stateProfilePhoto, 
+                                        coverPhoto: props.stateCoverPhoto, 
+                                        userData: props.stateUserData }
+                                }} style={{ textDecoration: 'none' }}>
                             <img src={profilePhoto} />
                         </Link>
                     </div>
                     <div className="div__info">
-                        <Link to={props.emailUser === loggedUser ? `/profile` : `/profile/${props.profileId}`}>
+                        <Link to={{ pathname: ("/profile/" + props.profileId), 
+                                    state: {
+                                        firstLogin: props.stateFirstLogin, 
+                                        profilePhoto: props.stateProfilePhoto, 
+                                        coverPhoto: props.stateCoverPhoto, 
+                                        userData: props.stateUserData }
+                                }} style={{ textDecoration: 'none' }}>
                             <div>
                                 <span>{props.nome}</span>
                             </div>

@@ -55,13 +55,13 @@ function Profile(props) {
                 profileEmail = emailUser
                 
                 if(!isEmpty(location.state.profilePhoto)) { 
-                    storage.ref("profile_images/" + location.state.profilePhoto).getDownloadURL()
-                    .then(url => setUrlImageProfile(url))}
-                else {setUrlImageProfile(user)}
+                    setUrlImageProfile(location.state.profilePhoto)}
+                else {
+                    setUrlImageProfile(user)}
                 
-                if(!isEmpty(location.state.coverPhoto)) {  
-                    storage.ref("profile_images/" + location.state.coverPhoto).getDownloadURL()
-                    .then(url => seturlImageCover(url))}
+                if(!isEmpty(location.state.coverPhoto)){ 
+                    // storage.ref("profile_images/" + location.state.coverPhoto).getDownloadURL().then(url => console.log(url))
+                    seturlImageCover(location.state.coverPhoto)}
                 
                 setActionButton(  <Link to={{pathname: '/editProfile', state: location.state}} style={{ textDecoration: 'none' }}>
                                     <label className='action_button'>Editar</label>
@@ -89,13 +89,13 @@ function Profile(props) {
                     profileEmail = response.data.emailUser
     
                     if(!isEmpty(response.data.profilePhoto)) { 
-                        storage.ref("profile_images/" + response.data.profilePhoto).getDownloadURL()
-                        .then(url => setUrlImageProfile(url))}
-                    else {setUrlImageProfile(user)}
+                        setUrlImageProfile(response.data.profilePhoto)}
+                    else {
+                        setUrlImageProfile(user)}
                     
                     if(!isEmpty(response.data.coverPhoto)) {  
-                        storage.ref("profile_images/" + response.data.coverPhoto).getDownloadURL()
-                        .then(url => seturlImageCover(url))}
+                        // storage.ref("profile_images/" + response.data.coverPhoto).getDownloadURL().then(url => console.log(url))
+                        seturlImageCover(response.data.coverPhoto)}
                 })
                 .catch((error) => {
                     console.log(error)

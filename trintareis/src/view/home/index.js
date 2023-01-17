@@ -60,12 +60,16 @@ export default function Home() {
                         title={item.title}
                         nome={item.userName}
                         horario={formatDate(item.hour)}
-                        conteudo={item.title}
+                        conteudo={item.text}
                         emailUser={item.userEmail}
                         profileId={item.profileId}
                         like={item.views}
                         share={item.share}
-                        coments={item.coments}/>)
+                        coments={item.coments}
+                        stateFirstLogin={location.state.firstLogin}
+                        stateProfilePhoto={location.state.profilePhoto} 
+                        stateCoverPhoto={location.state.coverPhoto} 
+                        stateUserData={location.state.userData}/>)
                 }
             </div>
         </div>
