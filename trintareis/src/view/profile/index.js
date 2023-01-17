@@ -1,6 +1,6 @@
 import './profile.css';
 import React, { useState, useEffect, useContext } from 'react';
-import { Link, useLocation, useParams, Redirect } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import { MdDone, MdClose } from "react-icons/md";
 import { Perfil, Content, Details } from './styles';
