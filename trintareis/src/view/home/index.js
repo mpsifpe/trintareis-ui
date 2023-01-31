@@ -41,14 +41,10 @@ export default function Home() {
         }
     }, []);
 
-    function printContent(){
-        console.log(eventos)
-    }
-
     return (
         <div className="App">
             <Header firstLogin={location.state.firstLogin} profilePhoto={location.state.profilePhoto} coverPhoto={location.state.coverPhoto} userData={location.state.userData}/>
-            <div className="feed_content" onClick={printContent}>
+            <div className="feed_content">
                 <FeedForm profilePhoto={urlImageProfile} />
                 {
                 eventos.map(item => 
