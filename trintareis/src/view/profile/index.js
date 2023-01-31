@@ -66,16 +66,6 @@ function Profile(props) {
                                     <label className='action_button'>Editar</label>
                                 </Link>)
                 
-                events.where('emailUser', '==', emailUser).orderBy("dataTime", "desc").get().then((events) => {
-                    events.forEach((event) => {       
-                        const date = new Date(event.data().dataTime);
-                        listEventos.push({
-                            id: event.id,
-                            timePublication: date.getHours() + ':' + date.getMinutes(),
-                            ...event.data()
-                        })  
-                    })
-                });
             } 
             else {
                 api.get('/profile/get-by-id/' + params.id)
@@ -130,25 +120,12 @@ function Profile(props) {
                         }
                     })
                     .catch((error)=>{console.log(error)})
-
-                    events.where('emailUser', '==', profileEmail).orderBy("dataTime", "desc").get().then((events) => {
-                        events.forEach((event) => {       
-                            const date = new Date(event.data().dataTime);
-                            listEventos.push({
-                                id: event.id,
-                                timePublication: date.getHours() + ':' + date.getMinutes(),
-                                ...event.data()
-                            })  
-                        })
-                    })
                 })
                 
             }
         }
 
-        fetch().then(() => {
-            setEventos(listEventos);
-            })
+        fetch()
 
         return function cleanup() {
             abortController.abort()
@@ -258,7 +235,9 @@ function Profile(props) {
                     </div>
                 }
                 <div className="div__timeline">
-                    {eventos.map(item => <TimeLine key={item.id} id={item.id} userName={item.userName} profileInf={item.profileInformatio} profilePhoto={urlImageProfile} img={item.photo} title={item.title} nome={item.userName} horario={item.timePublication} conteudo={item.details} />)}
+                    {/*
+                        eventos.map(item => <TimeLine key={item.id} id={item.id} userName={item.userName} profileInf={item.profileInformatio} profilePhoto={urlImageProfile} img={item.photo} title={item.title} nome={item.userName} horario={item.timePublication} conteudo={item.details} />)
+                    */}
                 </div>
             </div>
         </div>
