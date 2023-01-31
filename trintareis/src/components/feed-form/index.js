@@ -16,17 +16,19 @@ import NotyfContext from '../notyf-toast/NotyfContext';
 export default function (props) {
     const [isTextPostOpen, openTextPost, closeTextPost] = useModalState();
     const [isPhotoPostOpen, openPhotoPost, closePhotoPost] = useModalState();
+    const [isVideoPostOpen, openVideoPost, closeVideoPost] = useModalState();
 
     const notyf = useContext(NotyfContext);
 
-    const [details, setDetails] = useState();
+    const [text, setText] = useState();
     const [photo, setPhoto] = useState();
+    const [video, setVideo] = useState();
     const [errorMessage, setErrorMessage] = useState(<></>);
     const emailUser = useSelector(state => state.emailUser);
 
     const storage = firebase.storage();
 
-    function postButtonClick() {
+    function postPhotoClick() {
         
         if (!isEmpty(photo)){
             setErrorMessage(<></>)
@@ -34,14 +36,16 @@ export default function (props) {
             let timestamp = new Date()
             let fileName = emailUser + "_" + timestamp.getTime() + "." + photo.name.split(".").pop()
            
-            api.post('/post-content/post-photo', {
+            api.post('/content/post-content', {
                     userEmail: emailUser,
                     photoName: fileName,
-                    details: details,
+                    text: text,
+                    title: photo.name,
                     views: 0,
                     hour: timestamp,
-                    title: photo.name,
-                    publicPost: true
+                    publicPost: true,
+                    share:0,
+                    typePost: "POST_PHOTO"
                 }
             ).then((docRef) => {
                 console.log(docRef);
@@ -96,7 +100,7 @@ export default function (props) {
                         </button>
                     </div>
                     <div className="iconSingle feedForm__reaction">
-                        <button onClick={showNotification}>
+                        <button onClick={openVideoPost}>
                             <HiVideoCamera className='feedForm_svg'/>
                             <div className="feedForm__link">
                                 <span>Video</span>
@@ -114,6 +118,7 @@ export default function (props) {
                 </div>
             </div>
 
+            {/* Modal para postar foto  */}
             <Modal title='Publicar' isOpen={isPhotoPostOpen} onClose={closePhotoPost}>
                 <Modal.Content>
                     <form className="form">
@@ -121,7 +126,7 @@ export default function (props) {
                             <div>
                                 <div className="div__description">
                                     <label>Descrição</label>
-                                    <textarea onChange={(e) => setDetails(e.target.value)} className="form-control" rows="30" placeholder="Ex.: tópicos, programa, etc." maxLength={300} style={{height:"100px"}}></textarea>
+                                    <textarea onChange={(e) => setText(e.target.value)} className="form-control" rows="30" placeholder="Ex.: tópicos, programa, etc." maxLength={300} style={{height:"100px"}}></textarea>
                                 </div>
                             </div>
                         </div>
@@ -134,10 +139,38 @@ export default function (props) {
                 </Modal.Content>
                 <Modal.Footer>
                     <div className="div__btn_post">
-                        <button onClick={postButtonClick} type="button" disabled={false}>Postar</button>
+                        <button onClick={postPhotoClick} type="button" disabled={false}>Postar</button>
                     </div>
                 </Modal.Footer>
             </Modal>
+
+            {/* Modal para postar vídeo  */}
+            <Modal title='Publicar' isOpen={isVideoPostOpen} onClose={closeVideoPost}>
+                <Modal.Content>
+                    <form className="form">
+                        <div className="row">
+                            <div>
+                                <div className="div__description">
+                                    <label>Descrição</label>
+                                    <textarea onChange={(e) => setText(e.target.value)} className="form-control" rows="30" placeholder="Ex.: tópicos, programa, etc." maxLength={300} style={{height:"100px"}}></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="">
+                            <label>Carregar vídeo</label>
+                            <input onChange={(e) => setPhoto(e.target.files[0])} type="file" className="form-control" accept=".jpg, .png, .jpeg, .bmp"/>
+                            {errorMessage}
+                        </div>
+                    </form>
+                </Modal.Content>
+                <Modal.Footer>
+                    <div className="div__btn_post">
+                        <button onClick={postPhotoClick} type="button" disabled={false}>Postar</button>
+                    </div>
+                </Modal.Footer>
+            </Modal>
+
+            {/* Modal para postar texto  */}
             <Modal title='Publicar' isOpen={isTextPostOpen} onClose={closeTextPost}>
                 <Modal.Content>
                     <form className="form">
@@ -145,7 +178,7 @@ export default function (props) {
                             <div>
                                 <div className="div__description">
                                     <label>Descrição</label>
-                                    <textarea onChange={(e) => setDetails(e.target.value)} className="form-control" rows="10" placeholder="Ex.: tópicos, programa, etc." maxLength={300} style={{height:"200px"}}></textarea>
+                                    <textarea onChange={(e) => setText(e.target.value)} className="form-control" rows="10" placeholder="Ex.: tópicos, programa, etc." maxLength={300} style={{height:"200px"}}></textarea>
                                 </div>
                             </div>
                         </div>
@@ -153,7 +186,7 @@ export default function (props) {
                 </Modal.Content>
                 <Modal.Footer>
                     <div className="div__btn_post">
-                        <button onClick={postButtonClick} type="button" disabled={false}>Postar</button>
+                        <button onClick={postPhotoClick} type="button" disabled={false}>Postar</button>
                     </div>
                 </Modal.Footer>
             </Modal>

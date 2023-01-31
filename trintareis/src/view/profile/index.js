@@ -59,8 +59,7 @@ function Profile(props) {
                 else {
                     setUrlImageProfile(user)}
                 
-                if(!isEmpty(location.state.coverPhoto)){ 
-                    // storage.ref("profile_images/" + location.state.coverPhoto).getDownloadURL().then(url => console.log(url))
+                if(!isEmpty(location.state.coverPhoto)){
                     seturlImageCover(location.state.coverPhoto)}
                 
                 setActionButton(  <Link to={{pathname: '/editProfile', state: location.state}} style={{ textDecoration: 'none' }}>
