@@ -126,3 +126,21 @@ export const Details = styled.div`
         font-size: 25px;
     }
 `;
+
+export const Dropdown = styled.div`
+    margin-left: 10%;
+    background-color: white;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+    width: 80%;
+    padding-left: 50px;
+    padding-bottom: 10px;
+
+    .div__dropdown{
+        margin-left: 87%;
+        width: 90px;
+        border: 5px solid white;
+        border-radius: 2px;
+    }
+`;
