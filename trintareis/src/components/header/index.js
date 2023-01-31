@@ -1,10 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { FaHome } from "react-icons/fa";
-import { IoIosNotifications } from "react-icons/io";
-import { IoChatbubblesSharp } from "react-icons/io5";
-import { MdOutlineGroups, MdExplore } from "react-icons/md";
+import { IoNotificationsOutline, IoHomeOutline, IoPeopleOutline, IoCompassOutline, IoChatbubblesOutline, IoLogOutOutline } from "react-icons/io5";
 import { GiHummingbird } from "react-icons/gi";
-//import { MdEventNote } from "react-icons/md";
 import { useSelector, useDispatch } from 'react-redux';
 
 import './header.css';
@@ -12,7 +8,6 @@ import '../stories/stories.css'
 import { Link, Redirect } from 'react-router-dom';
 import loading from '../../resources/loading.gif';
 import user from '../../resources/user.png';
-import firebase from '../../config/firebase';
 import { isEmpty } from '../../helpers/helper';
 import NotyfContext from '../notyf-toast/NotyfContext';
 import { Tooltip } from 'react-tooltip'
@@ -27,11 +22,7 @@ function Header(props) {
     useEffect(() => {
         const abortController = new AbortController()
         
-        if(!isEmpty(props.profilePhoto)){
-            firebase.storage().ref("profile_images/" + props.profilePhoto).getDownloadURL().then(url => setUrlImageProfile(<img src={url} style={{opacity: '1'}} alt="profile image"/>));
-        } else {
-            setUrlImageProfile(<img src={user} style={{opacity: '1.0'}}/>)
-        }
+        !isEmpty(props.profilePhoto) ? setUrlImageProfile(props.profilePhoto) : setUrlImageProfile(user);
 
         if(!isEmpty(props.hideTooltip)){
             if (props.hideTooltip){ setShowTooltip(<></>)}
@@ -78,7 +69,7 @@ function Header(props) {
                                                         coverPhoto: props.coverPhoto, 
                                                         userData: props.userData }}} className='headerLinkStyle'>
                             <div className="header_button">
-                                <FaHome className='icon_button' />
+                                <IoHomeOutline className='icon_button' />
                                 <span hidden={true}>Início</span>
                             </div>
                         </Link >
@@ -88,7 +79,7 @@ function Header(props) {
                                                             coverPhoto: props.coverPhoto, 
                                                             userData: props.userData }}} className='headerLinkStyle'>
                             <div className="header_button">
-                                <MdExplore className='icon_button'/>
+                                <IoCompassOutline className='icon_button'/>
                                 <span hidden={true}>Explorar</span>
                             </div>
                         </Link>
@@ -98,7 +89,7 @@ function Header(props) {
                                                             coverPhoto: props.coverPhoto, 
                                                             userData: props.userData }}} className='headerLinkStyle'>
                             <div className="header_button">
-                                <MdOutlineGroups className='icon_button'/>
+                                <IoPeopleOutline className='icon_button'/>
                                 <span hidden={true}>Amigos</span>
                             </div>
                         </Link>
@@ -112,14 +103,14 @@ function Header(props) {
                         
                         <div className='headerLinkStyle'>
                             <div className="header_button" onClick={notifyBuilding}>
-                                <IoIosNotifications className='icon_button'/>
+                                <IoNotificationsOutline className='icon_button'/>
                                 <span hidden={true}>Notificações</span>
                             </div>
                         </div>
                         
                         <div className='headerLinkStyle' data-tooltip-content="Chat">
                             <div className="header_button" onClick={notifyBuilding} >
-                                <IoChatbubblesSharp className='icon_button'/>
+                                <IoChatbubblesOutline className='icon_button'/>
                                 <span hidden={true}>Chat</span>
                             </div>
                         </div>
@@ -136,12 +127,14 @@ function Header(props) {
                                     userData: props.userData }}}>
                         
                         <div className="img_profile" id="profile_img" data-tooltip-content="Meu perfil">
-                            {urlImageProfile}
+                            <img src={urlImageProfile}/>
                         </div>
                         
                     </Link>
-                    <div className="logout_btn">
-                        <span onClick={() => dispatch({ type: 'LOG_OUT' })}>Sair</span>
+                    <div className="header_button">
+                        <span onClick={() => dispatch({ type: 'LOG_OUT' })}>
+                            <IoLogOutOutline className='icon_button'/>
+                        </span>
                     </div>
                 </div>
             </div>

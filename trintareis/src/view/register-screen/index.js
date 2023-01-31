@@ -1,33 +1,51 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useRef } from "react";
+import { Redirect } from 'react-router-dom';
 import firebase from '../../config/firebase';
 import 'firebase/auth';
 import './registerScreen.css';
 
 import Header from '../../components/header-register/index';
 import welcome from '../../resources/welcome.png';
+import NotyfContext from "../../components/notyf-toast/NotyfContext";
+import { enterHandler, focusChangeOnEnter } from "../../helpers/helper";
 
 
 function RegisterScreen() {
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
-    const [carregando, setCarregando] = useState();
+    const [redirect, setRedirect] = useState(<></>)
+
+    const notyf = useContext(NotyfContext);
+    const passwordRef = useRef(null);
 
     function cadastrar() {
         if (!email || !senha) {
-            alert('Você precisa informa o email e senha para realizar o cadastro!');
-            return;
-        }
+            notyf.error('Favor informar email e senha');
+        } 
+        else {
+            firebase.auth().createUserWithEmailAndPassword(email, senha).then(() => {
+                alert('Usuário cadastrado com sucesso!');
+                setRedirect(
+                    <Redirect to={{ 
+                        pathname: '/editProfile', 
+                        state: { 
+                            firstLogin: true, 
+                            profilePhoto: "", 
+                            coverPhoto: "", 
+                            userData: {
+                                id: "", 
+                                userName: "",
+                                profileInformation: "",
+                                details: "",
+                                region: "",
+                                city: "" }}}}/>)
 
-        setCarregando(1);
-        firebase.auth().createUserWithEmailAndPassword(email, senha).then(() => {
-            setCarregando(0);
-            alert('Usuário cadastrado com sucesso!');
-            setEmail('');
-            setSenha('');
-        }).catch(erro => {
-            alert(erro);
-            setCarregando(0);
-        })
+            })
+            .catch(erro => {
+                console.log(erro);
+                notyf.error("Desculpe, ocorreu um erro ao fazer seu cadastro");
+            })
+        }
     }
 
     return (
@@ -41,11 +59,11 @@ function RegisterScreen() {
                         <p className="subtitle">Conheça pessoas, instituições e desfrute de uma rede colaborativa para seu descobrimento profissional!</p>
                         <fieldset className="textfield mb-24 mt32">
                             <label>E-mail</label>
-                            <input id="homescreen_email_npt" onChange={(e) => setEmail(e.target.value)} value={email} type="email" className="form-control my-2" placeholder="Digite seu e-mail" />
+                            <input id="homescreen_email_npt" onChange={(e) => setEmail(e.target.value)} onKeyDown={(e) => focusChangeOnEnter(e, passwordRef)} value={email} type="email" className="form-control my-2" placeholder="Digite seu e-mail" />
                         </fieldset>
                         <fieldset className="textfield mb-12">
                             <label>Senha</label>
-                            <input id="homescreen_passw_npt" onChange={(e) => setSenha(e.target.value)} value={senha} type="password" className="form-control my-2" placeholder="Digite sua Senha" />
+                            <input id="homescreen_passw_npt" onKeyDown={(e) => enterHandler(e, cadastrar)} onChange={(e) => setSenha(e.target.value)} ref={passwordRef} value={senha} type="password" className="form-control my-2" placeholder="Digite sua Senha" />
                         </fieldset>
                         <span className="span__agreement">
                             Ao clicar em Aceite e cadastre-se, você aceita o
@@ -64,6 +82,7 @@ function RegisterScreen() {
                 <div className="div__img">
                     <img src={welcome} />
                 </div>
+                {redirect}
             </div>
         </div>
     )

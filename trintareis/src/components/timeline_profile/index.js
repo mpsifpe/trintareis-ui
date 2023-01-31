@@ -1,22 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import minios_bg from '../../resources/minios.jpg';
-import { BiLike } from "react-icons/bi";
-import { CgComment } from "react-icons/cg";
-import { FaShare } from "react-icons/fa";
+import { Link } from 'react-router-dom';
+import { HiHeart, HiOutlineHeart, HiOutlineAnnotation, HiOutlineShare } from "react-icons/hi";
 import './timeline.css'
 
-import { Link } from 'react-router-dom';
-
+import { isEmpty } from '../../helpers/helper';
+import user from '../../resources/user.png';
+import loading from '../../resources/loading.gif';
 import firebase from '../../config/firebase';
 
 export default function (props) {
-    const [urlImages, setUrlImages] = useState('');
+    const [urlImages, setUrlImages] = useState(loading);
     
     useEffect(() => {
         const abortController = new AbortController()
 
-        firebase.storage().ref(`images/${props.img}`).getDownloadURL().then(url => setUrlImages(url));
-
+        if (!isEmpty(props.img)){
+            firebase.storage().ref(`images/${props.img}`).getDownloadURL().then(url => setUrlImages(url));
+        } else {
+            setUrlImages(null);
+        }
+        
         return function cleanup() {
             abortController.abort()
         }
@@ -27,48 +30,59 @@ export default function (props) {
             <div className="feedPostSingle">
                 <div className="feedPost__profile">
                     <div>
-                        <Link to="profile">
+                        <Link to={{ pathname: ("/profile/" + props.profileId), 
+                                    state: {
+                                        firstLogin: props.stateFirstLogin, 
+                                        profilePhoto: props.stateProfilePhoto, 
+                                        coverPhoto: props.stateCoverPhoto, 
+                                        userData: props.stateUserData }
+                                }} style={{ textDecoration: 'none' }}>
                             <img src={props.profilePhoto} />
                         </Link>
                     </div>
                     <div className="div__info">
-                        <div>
-                            <Link to="profile">
-                                <span>{props.userName}</span>
-                            </Link>
-                        </div>
-                        <div>
-                            <span>{props.profileInf}</span>
-                        </div>
+                        <Link to={{ pathname: ("/profile/" + props.profileId), 
+                                    state: {
+                                        firstLogin: props.stateFirstLogin, 
+                                        profilePhoto: props.stateProfilePhoto, 
+                                        coverPhoto: props.stateCoverPhoto, 
+                                        userData: props.stateUserData }
+                                }} style={{ textDecoration: 'none' }}>
+                            <div>
+                                <span>{props.nome}</span>
+                            </div>
+                        </Link>
                         <div>
                             <span>{props.horario}</span>
                         </div>
                     </div>
                 </div>
                 <div className="feedPost__content">
-                    <h2 className='p-3'>{props.title}</h2>
                     <p>
                         {props.conteudo}<br />
                     </p>
 
                     <img src={urlImages} />
                 </div>
-
+                <div className="div__info">
+                    <div>
+                    </div>
+                </div>
                 <hr />
 
                 <div className="feedPost__util">
                     <div className="feedPost__reaction">
-                        <BiLike />
+                        <HiOutlineHeart />
                         <span className="">Gostei</span>
                     </div>
 
                     <div className="feedPost__reaction">
-                        <CgComment />
+                        <HiOutlineAnnotation />
                         <span>Comentar</span>
                     </div>
 
                     <div className="feedPost__reaction">
-                        <FaShare />
+                        <HiOutlineShare />
                         <span>Compartilhar</span>
                     </div>
                 </div>
