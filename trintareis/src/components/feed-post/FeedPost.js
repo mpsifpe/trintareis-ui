@@ -6,6 +6,7 @@ import { useSelector } from 'react-redux';
 import { HiHeart, HiOutlineHeart, HiOutlineAnnotation, HiOutlineShare, HiOutlinePencilAlt, HiOutlineTrash, HiDotsVertical, HiOutlineArrowCircleLeft } from "react-icons/hi";
 
 import user from '../../resources/user.png';
+import loading from '../../resources/loading.gif';
 import firebase from '../../config/firebase';
 import NotyfContext from '../notyf-toast/NotyfContext';
 import { isEmpty } from '../../helpers/helper';
@@ -42,9 +43,7 @@ export default function (props) {
                 <span onClick={sendNotificationToast} className="">Gostei</span>
             </div>
         );
-
-        firebase.storage().ref(`images/${props.img}`).getDownloadURL().then(url => setUrlImages(url));
-
+        
         if (!isEmpty(props.like)) {
             setCurti(props.like);}
         
@@ -53,6 +52,10 @@ export default function (props) {
         
         if (!isEmpty(props.profilePhoto)){
             setProfilePhoto(props.profilePhoto)
+        }
+
+        if(props.tipo === "POST_PHOTO" || props.tipo === "POST_VIDEO"){
+            firebase.storage().ref(`images/${props.img}`).getDownloadURL().then(url => setUrlImages(url));
         }
 
             /*
@@ -155,7 +158,7 @@ export default function (props) {
 
                     <div className="feedPost__reaction">
                         <HiOutlineAnnotation />
-                        <span onClick={() => comentarios({ id: props.id }, { comentario: props.coments })} className="">comentar ({totalComentario})</span>
+                        <span onClick={() => comentarios({ id: props.id }, { comentario: props.coments })} className="">Comentar ({totalComentario})</span>
                     </div>
 
                     <div className="feedPost__reaction">

@@ -64,6 +64,64 @@ export default function (props) {
 
     }
 
+    function postVideoClick() {
+        
+        if (!isEmpty(video)){
+            setErrorMessage(<></>)
+
+            let timestamp = new Date()
+            let fileName = emailUser + "_" + timestamp.getTime() + "." + video.name.split(".").pop()
+           
+            api.post('/content/post-content', {
+                    userEmail: emailUser,
+                    photoName: fileName,
+                    text: text,
+                    title: video.name,
+                    views: 0,
+                    hour: timestamp,
+                    publicPost: true,
+                    share:0,
+                    typePost: "POST_VIDEO"
+                }
+            ).then((docRef) => {
+                console.log(docRef);
+                storage.ref(`images/`+ fileName).put(video);
+                closeVideoPost();
+
+            }).catch((error) => {
+                console.error("Error adding document: ", error);
+                notyf.error("Opa, ocorreu um erro. Favor tentar novamente mais tarde");
+            });
+
+        }
+        else{
+            setErrorMessage(<span style={{color: 'red'}}>Imagem não selecionada</span>)
+        }
+
+    }
+
+    function postTextClick() {
+        
+        api.post('/content/post-content', {
+                userEmail: emailUser,
+                text: text,
+                views: 0,
+                hour: new Date(),
+                publicPost: true,
+                share:0,
+                typePost: "POST_TEXT"
+            }
+        ).then((docRef) => {
+            console.log(docRef);
+            closeTextPost();
+
+        }).catch((error) => {
+            console.error("Error adding document: ", error);
+            notyf.error("Opa, ocorreu um erro. Favor tentar novamente mais tarde");
+        });
+
+    }
+
     function showNotification(){
         notyf.open({
             type: 'info',
@@ -158,14 +216,14 @@ export default function (props) {
                         </div>
                         <div className="">
                             <label>Carregar vídeo</label>
-                            <input onChange={(e) => setPhoto(e.target.files[0])} type="file" className="form-control" accept=".jpg, .png, .jpeg, .bmp"/>
+                            <input onChange={(e) => setPhoto(e.target.files[0])} type="file" className="form-control" accept=".mp4, .wmv, .flv, .mpeg"/>
                             {errorMessage}
                         </div>
                     </form>
                 </Modal.Content>
                 <Modal.Footer>
                     <div className="div__btn_post">
-                        <button onClick={postPhotoClick} type="button" disabled={false}>Postar</button>
+                        <button onClick={postVideoClick} type="button" disabled={false}>Postar</button>
                     </div>
                 </Modal.Footer>
             </Modal>
@@ -177,7 +235,7 @@ export default function (props) {
                         <div className="row">
                             <div>
                                 <div className="div__description">
-                                    <label>Descrição</label>
+                                    <label>Escreva aqui sua publicação</label>
                                     <textarea onChange={(e) => setText(e.target.value)} className="form-control" rows="10" placeholder="Ex.: tópicos, programa, etc." maxLength={300} style={{height:"200px"}}></textarea>
                                 </div>
                             </div>
@@ -186,7 +244,7 @@ export default function (props) {
                 </Modal.Content>
                 <Modal.Footer>
                     <div className="div__btn_post">
-                        <button onClick={postPhotoClick} type="button" disabled={false}>Postar</button>
+                        <button onClick={postTextClick} type="button" disabled={false}>Postar</button>
                     </div>
                 </Modal.Footer>
             </Modal>
