@@ -1,7 +1,7 @@
 import './login.css';
 import 'firebase/auth';
 
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext, useEffect, useRef } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
@@ -10,7 +10,7 @@ import api from '../../config/api';
 import loading from '../../resources/loading.gif';
 import Header from '../../components/header-login/index';
 import NotyfContext from '../../components/notyf-toast/NotyfContext';
-import { isEmpty } from '../../helpers/helper';
+import { isEmpty, enterHandler, focusChangeOnEnter } from '../../helpers/helper';
 
 function Login() {
     const [email, setEmail] = useState();
@@ -25,6 +25,7 @@ function Login() {
 
     const dispatch = useDispatch();
     const notyf = useContext(NotyfContext);
+    const passwordRef = useRef(null);
 
     useEffect(() => {
         if(loginSuccess && (firstLogin != undefined)){ 
@@ -40,80 +41,93 @@ function Login() {
     },[firstLogin]);
 
     function singIn() {
-        
-        setEnterBtn(<img src={loading} style={{height: '25px', alignSelf: 'center', opacity: '0.75'}}/>);
+        if(isEmpty(email) || isEmpty(senha)){
+            notyf.error("Preencher email e senha");
+        }
+        else{
+            setEnterBtn(<img src={loading} style={{height: '25px', alignSelf: 'center', opacity: '0.75'}}/>);
 
-        firebase.auth().signInWithEmailAndPassword(email, senha)
-        .then(result => {
-            dispatch({ type: 'LOG_IN', emailUser: result.user.email });
-            setLoginSuccess(true);
-        })
-        .catch((error) => {
-            setEnterBtn("Entrar");
-            switch(error.code) {
-                case 'auth/wrong-password':
-                    notyf.error('Email e senha não conferem');
-                    break;
-                case 'auth/invalid-email':
-                    notyf.error('Email e senha não conferem');
-                    break;
-                case 'auth/user-not-found':
-                    notyf.error('Usuário não cadastrado');
-                    break;
-                case 'auth/argument-error':
-                    notyf.error('Favor informar email e senha');
-                    break;
-                default:
-                    notyf.error(error.message);
-            }
-        })
-        .finally(()=>{
-            let loginExists = []
-
-            api.get('/profile/' + email)
-            .then((response) => {
-                if(response.status === 200){
-                    setUserData({ 
-                        id: response.data.id,
-                        userName: response.data.userName,
-                        profileInformation: response.data.profileInformation,
-                        details: response.data.details,
-                        region: response.data.region,
-                        city: response.data.city })
-    
-                    if(!isEmpty(response.data.profilePhoto)) {  setProfilePhoto(response.data.profilePhoto)
-                    } else {  setProfilePhoto("") };
-                    
-                    if(!isEmpty(response.data.coverPhoto)) {  setCoverPhoto(response.data.coverPhoto)
-                    } else {  setCoverPhoto("") };
-    
-                    
-                    loginExists.push(true);
-
-                } else {
-                    loginExists.push(false)}
+            firebase.auth().signInWithEmailAndPassword(email, senha)
+            .then(result => {
+                dispatch({ type: 'LOG_IN', emailUser: result.user.email });
+                setLoginSuccess(true);
             })
             .catch((error) => {
-                console.log(error)
-                loginExists.push(false)
-                
-                setUserData({
-                    id: "", 
-                    userName: "",
-                    profileInformation: "",
-                    details: "",
-                    region: "",
-                    city: "" })
+                setEnterBtn("Entrar");
+                switch(error.code) {
+                    case 'auth/wrong-password':
+                        notyf.error('Email e senha não conferem');
+                        break;
+                    case 'auth/invalid-email':
+                        notyf.error('Email e senha não conferem');
+                        break;
+                    case 'auth/user-not-found':
+                        notyf.error('Usuário não cadastrado');
+                        break;
+                    case 'auth/argument-error':
+                        notyf.error('Favor informar email e senha');
+                        break;
+                    default:
+                        notyf.error(error.message);
+                }
+            })
+            .finally(()=>{
+                let loginExists = []
 
-                setProfilePhoto("");
-                setCoverPhoto("");
+                api.get('/profile/' + email)
+                .then((response) => {
+                    if(response.status === 200){
+                        setUserData({ 
+                            id: response.data.id,
+                            userName: response.data.userName,
+                            profileInformation: response.data.profileInformation,
+                            details: response.data.details,
+                            region: response.data.region,
+                            city: response.data.city })
+        
+                        if(!isEmpty(response.data.profilePhoto)) {  setProfilePhoto(response.data.profilePhoto)
+                        } else {  setProfilePhoto("") };
+                        
+                        if(!isEmpty(response.data.coverPhoto)) {  setCoverPhoto(response.data.coverPhoto)
+                        } else {  setCoverPhoto("") };
+            
+                        loginExists.push(true);
+                    }
+                })
+                .catch((error) => {
+                    console.log(error)
+
+                    switch(error.code) {
+                        case 'ERR_NETWORK':
+                            dispatch({ type: 'LOG_OUT' });
+                            notyf.error("Desculpe, ocorreu um erro no servidor");
+                            setLoginRedirect(<Redirect to='/login'/>);
+                            break;
+                        case 'ERR_BAD_REQUEST':
+                            console.log("primeiro login");
+                            loginExists.push(false);
+                            break;
+                        default:
+                            loginExists.push(false)
+                        
+                            setProfilePhoto("");
+                            setCoverPhoto("");
+                            setUserData({
+                                            id: "", 
+                                            userName: "",
+                                            profileInformation: "",
+                                            details: "",
+                                            region: "",
+                                            city: ""
+                                        })
+                            
+                    }
+                })
+                .finally(() => {
+                    setFirstLogin(!loginExists[0])
+                })
             })
-            .finally(() => {
-                //console.log("hasProfile return " + loginExists[0]);
-                setFirstLogin(!loginExists[0]);
-            })
-           
-        })
+        }
     }
 
     return (
@@ -127,11 +141,11 @@ function Login() {
                         <p className="subtitle">Informe seu email e senha de cadastro para entrar</p>
                         <fieldset className="textfield">
                             <span className="textfield">E-mail</span>
-                            <input id="login2_email_npt" onChange={(e) => setEmail(e.target.value)} type="email" className="form-control" placeholder="Digite seu e-mail"/>
+                            <input id="login2_email_npt" onChange={(e) => setEmail(e.target.value)} onKeyDown={(e) => focusChangeOnEnter(e, passwordRef)} type="email" className="form-control" placeholder="Digite seu e-mail"/>
                         </fieldset>
                         <fieldset className="textfield">
                             <span className="textfield">Senha</span>
-                            <input id="login2_passw_npt" onChange={(e) => setSenha(e.target.value)} type="password" className="form-control" placeholder="Digite sua Senha" />
+                            <input id="login2_passw_npt" onChange={(e) => setSenha(e.target.value)} onKeyDown={(e) => enterHandler(e, singIn)} ref={passwordRef} type="password" className="form-control" placeholder="Digite sua Senha" />
                         </fieldset>
                         <div className="link__recovery">
                             <Link to="/recoveryPassword" className=""><span>Esqueci minha senha</span></Link>

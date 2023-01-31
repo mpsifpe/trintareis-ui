@@ -14,17 +14,21 @@ import { isEmpty } from '../../helpers/helper';
 import NotyfContext from '../notyf-toast/NotyfContext';
 
 export default function (props) {
-    const [isModalOpen, openModal, closeModal] = useModalState();
+    const [isTextPostOpen, openTextPost, closeTextPost] = useModalState();
+    const [isPhotoPostOpen, openPhotoPost, closePhotoPost] = useModalState();
+    const [isVideoPostOpen, openVideoPost, closeVideoPost] = useModalState();
+
     const notyf = useContext(NotyfContext);
 
-    const [details, setDetails] = useState();
+    const [text, setText] = useState();
     const [photo, setPhoto] = useState();
+    const [video, setVideo] = useState();
     const [errorMessage, setErrorMessage] = useState(<></>);
     const emailUser = useSelector(state => state.emailUser);
 
     const storage = firebase.storage();
 
-    function postButtonClick() {
+    function postPhotoClick() {
         
         if (!isEmpty(photo)){
             setErrorMessage(<></>)
@@ -32,19 +36,21 @@ export default function (props) {
             let timestamp = new Date()
             let fileName = emailUser + "_" + timestamp.getTime() + "." + photo.name.split(".").pop()
            
-            api.post('/post-content/post-photo', {
+            api.post('/content/post-content', {
                     userEmail: emailUser,
                     photoName: fileName,
-                    details: details,
+                    text: text,
+                    title: photo.name,
                     views: 0,
                     hour: timestamp,
-                    title: photo.name,
-                    publicPost: true
+                    publicPost: true,
+                    share:0,
+                    typePost: "POST_PHOTO"
                 }
             ).then((docRef) => {
                 console.log(docRef);
                 storage.ref(`images/`+ fileName).put(photo);
-                closeModal();
+                closePhotoPost();
 
             }).catch((error) => {
                 console.error("Error adding document: ", error);
@@ -55,6 +61,64 @@ export default function (props) {
         else{
             setErrorMessage(<span style={{color: 'red'}}>Imagem não selecionada</span>)
         }
+
+    }
+
+    function postVideoClick() {
+        
+        if (!isEmpty(video)){
+            setErrorMessage(<></>)
+
+            let timestamp = new Date()
+            let fileName = emailUser + "_" + timestamp.getTime() + "." + video.name.split(".").pop()
+           
+            api.post('/content/post-content', {
+                    userEmail: emailUser,
+                    photoName: fileName,
+                    text: text,
+                    title: video.name,
+                    views: 0,
+                    hour: timestamp,
+                    publicPost: true,
+                    share:0,
+                    typePost: "POST_VIDEO"
+                }
+            ).then((docRef) => {
+                console.log(docRef);
+                storage.ref(`images/`+ fileName).put(video);
+                closeVideoPost();
+
+            }).catch((error) => {
+                console.error("Error adding document: ", error);
+                notyf.error("Opa, ocorreu um erro. Favor tentar novamente mais tarde");
+            });
+
+        }
+        else{
+            setErrorMessage(<span style={{color: 'red'}}>Imagem não selecionada</span>)
+        }
+
+    }
+
+    function postTextClick() {
+        
+        api.post('/content/post-content', {
+                userEmail: emailUser,
+                text: text,
+                views: 0,
+                hour: new Date(),
+                publicPost: true,
+                share:0,
+                typePost: "POST_TEXT"
+            }
+        ).then((docRef) => {
+            console.log(docRef);
+            closeTextPost();
+
+        }).catch((error) => {
+            console.error("Error adding document: ", error);
+            notyf.error("Opa, ocorreu um erro. Favor tentar novamente mais tarde");
+        });
 
     }
 
@@ -76,7 +140,7 @@ export default function (props) {
                             </Link>
                         </div>
                     </div>
-                    <div className="div__button" onClick={openModal}>
+                    <div className="div__button" onClick={openTextPost}>
                         <div style={{ textDecoration: 'none' }}>
                             <div className="div__span">
                                 <span>Nova publicação</span>
@@ -86,7 +150,7 @@ export default function (props) {
                 </div>
                 <div className="feedForm__icons">
                     <div className="iconSingle img feedForm__reaction">
-                        <button onClick={openModal}>
+                        <button onClick={openPhotoPost}>
                             <HiPhotograph  className='feedForm_svg'/>
                             <div className="feedForm__link">
                                 <span>Imagem</span>
@@ -94,7 +158,7 @@ export default function (props) {
                         </button>
                     </div>
                     <div className="iconSingle feedForm__reaction">
-                        <button onClick={showNotification}>
+                        <button onClick={openVideoPost}>
                             <HiVideoCamera className='feedForm_svg'/>
                             <div className="feedForm__link">
                                 <span>Video</span>
@@ -112,19 +176,20 @@ export default function (props) {
                 </div>
             </div>
 
-            <Modal title='Publicar' isOpen={isModalOpen} onClose={closeModal}>
+            {/* Modal para postar foto  */}
+            <Modal title='Publicar' isOpen={isPhotoPostOpen} onClose={closePhotoPost}>
                 <Modal.Content>
                     <form className="form">
                         <div className="row">
                             <div>
                                 <div className="div__description">
                                     <label>Descrição</label>
-                                    <textarea onChange={(e) => setDetails(e.target.value)} className="form-control" rows="30" placeholder="Ex.: tópicos, programa, etc."></textarea>
+                                    <textarea onChange={(e) => setText(e.target.value)} className="form-control" rows="30" placeholder="Ex.: tópicos, programa, etc." maxLength={300} style={{height:"100px"}}></textarea>
                                 </div>
                             </div>
                         </div>
                         <div className="">
-                            <label>Carregar imagem:</label>
+                            <label>Carregar imagem</label>
                             <input onChange={(e) => setPhoto(e.target.files[0])} type="file" className="form-control" accept=".jpg, .png, .jpeg, .bmp"/>
                             {errorMessage}
                         </div>
@@ -132,7 +197,54 @@ export default function (props) {
                 </Modal.Content>
                 <Modal.Footer>
                     <div className="div__btn_post">
-                        <button onClick={postButtonClick} type="button" disabled={false}>Postar</button>
+                        <button onClick={postPhotoClick} type="button" disabled={false}>Postar</button>
+                    </div>
+                </Modal.Footer>
+            </Modal>
+
+            {/* Modal para postar vídeo  */}
+            <Modal title='Publicar' isOpen={isVideoPostOpen} onClose={closeVideoPost}>
+                <Modal.Content>
+                    <form className="form">
+                        <div className="row">
+                            <div>
+                                <div className="div__description">
+                                    <label>Descrição</label>
+                                    <textarea onChange={(e) => setText(e.target.value)} className="form-control" rows="30" placeholder="Ex.: tópicos, programa, etc." maxLength={300} style={{height:"100px"}}></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="">
+                            <label>Carregar vídeo</label>
+                            <input onChange={(e) => setPhoto(e.target.files[0])} type="file" className="form-control" accept=".mp4, .wmv, .flv, .mpeg"/>
+                            {errorMessage}
+                        </div>
+                    </form>
+                </Modal.Content>
+                <Modal.Footer>
+                    <div className="div__btn_post">
+                        <button onClick={postVideoClick} type="button" disabled={false}>Postar</button>
+                    </div>
+                </Modal.Footer>
+            </Modal>
+
+            {/* Modal para postar texto  */}
+            <Modal title='Publicar' isOpen={isTextPostOpen} onClose={closeTextPost}>
+                <Modal.Content>
+                    <form className="form">
+                        <div className="row">
+                            <div>
+                                <div className="div__description">
+                                    <label>Escreva aqui sua publicação</label>
+                                    <textarea onChange={(e) => setText(e.target.value)} className="form-control" rows="10" placeholder="Ex.: tópicos, programa, etc." maxLength={300} style={{height:"200px"}}></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </Modal.Content>
+                <Modal.Footer>
+                    <div className="div__btn_post">
+                        <button onClick={postTextClick} type="button" disabled={false}>Postar</button>
                     </div>
                 </Modal.Footer>
             </Modal>

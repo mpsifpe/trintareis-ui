@@ -1,13 +1,16 @@
+
 import './feedPost.css'
 import React, { useState, useEffect, useContext } from 'react';
-import { HiHeart, HiOutlineHeart, HiOutlineAnnotation, HiOutlineShare, HiOutlinePencilAlt, HiOutlineTrash, HiDotsVertical, HiOutlineArrowCircleLeft } from "react-icons/hi";
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import api from '../../config/api';
-import firebase from '../../config/firebase';
-import NotyfContext from '../notyf-toast/NotyfContext';
+import { HiHeart, HiOutlineHeart, HiOutlineAnnotation, HiOutlineShare, HiOutlinePencilAlt, HiOutlineTrash, HiDotsVertical, HiOutlineArrowCircleLeft } from "react-icons/hi";
+
 import user from '../../resources/user.png';
 import loading from '../../resources/loading.gif';
+import firebase from '../../config/firebase';
+import NotyfContext from '../notyf-toast/NotyfContext';
+import { isEmpty } from '../../helpers/helper';
+
 
 export default function (props) {
 
@@ -17,54 +20,159 @@ export default function (props) {
 
     const [urlImages, setUrlImages] = useState('');
     const [curtir, setCurti] = useState('');
-    const [curtiu, setCurtiu] = useState('');
-    const [totalComentario, setTotalComentario] = useState('');
+    const [curtiu, setCurtiu] = useState(0);
+    const [totalComentario, setTotalComentario] = useState(0);
     const [userName, setUserName] = useState('');
     const [compartilhar, setCompartilhar] = useState('');
     const [compartilhou, setCompartilhou] = useState('');
     const [element, setElement] = useState('');
-    const [todosComentarios, setTodosComentarios] = useState('');
+    const [todosComentarios, setTodosComentarios] = useState("");
     const [botaoGostei, setBotaoGostei] = useState('');
     const [clistaFotos, setListaFotos] = useState([]);
+    const [profileData, setProfileData] = useState({});
+    const [profilePhoto, setProfilePhoto] = useState(user);
+    const [profileLink, setProfileLink] = useState("");
 
-    firebase.firestore().collection('profiles').get().then(async (result) => {
-        await result.docs.forEach(doc => {
-            if (doc.data().emailUser == loggedUser) {
-                setUserName(doc.data().userName);
-            }
-        })
-    })
+    useEffect(() => {
+        const abortController = new AbortController();
 
-    function calcularHoras(tempo, tipo) {
-        var date1 = new Date(tempo);
-        var date2 = new Date();
-        var diffDays = 0;
-        var timeDiff = Math.abs(date2.getTime() - date1.getTime());
-        var diffHour = Math.ceil(timeDiff / (1000 * 3600));
-        var texto = '';
-        if (tipo == 'c') {
-            texto = 'Há ';
-        } else if (tipo == 'e') {
-            texto = 'Modificado há ';
+        setBotaoGostei(
+            <div className='feed-content-bt-gostei'>
+                <HiOutlineHeart />
+                {/*<span onClick={() => funcGostei({ id: props.id })} id={props.id + '_botao'} className="">Gostei</span>*/}
+                <span onClick={sendNotificationToast} className="">Gostei</span>
+            </div>
+        );
+        
+        if (!isEmpty(props.like)) {
+            setCurti(props.like);}
+        
+        if (!isEmpty(props.share)) {
+            setTotalComentario(props.share);}
+        
+        if (!isEmpty(props.profilePhoto)){
+            setProfilePhoto(props.profilePhoto)
+        }
+
+        if(props.tipo === "POST_PHOTO" || props.tipo === "POST_VIDEO"){
+            firebase.storage().ref(`images/${props.img}`).getDownloadURL().then(url => setUrlImages(url));
+        }
+
+            /*
+        if (Array.isArray(props.like) && props.like.length > 0) {
+            setCurti(props.like.length);
+            setTotalComentario(props.coments.length);
+            
+            /*
+            props.like.forEach(function (like) {
+                if (like == loggedUser) {
+                    setCurtiu(1);
+                    setBotaoGostei(
+                        <div className='feed-content-bt-gostei'>
+                            <HiHeart style={{ color: 'cornflowerblue' }} />
+                            <div onClick={() => funcDesgostei({ id: props.id })} id={props.id + '_botao'} className="feed-comentario-gostei">Gostei</div>
+                        </div>);
+                }
+            }) 
+
         } else {
-            texto = 'Há ';
-        }
-        if (diffHour <= 1) {
-            var diffminutes = Math.ceil(timeDiff / (1000 * 60));
-            return diffminutes + " minuto(s)";
-        }
-        if (diffHour > 1 && diffHour < 24) {
-            return diffHour + " horas(s)";
-        }
-        if (diffHour > 24) {
-            diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
-            return texto + diffDays + " dias(s)";
+            setCurti(0);
+            setCurtiu(0);
+        } */
+
+        /*
+        if (Array.isArray(props.share) && props.share.length > 0) {
+            setCompartilhar(props.share.length);
+            props.share.forEach(function (share) {
+                if (share == loggedUser) {
+                    setCompartilhou(1);
+                }
+            })
+        } else {
+            setCompartilhar(0);
+            setCompartilhou(0);
         }
 
-        return diffDays + "horas";
+        */
+        return function cleanup() {
+            abortController.abort()
+        }
+    }, []);
+    
+    function sendNotificationToast(){
+        notyf.open({
+            type: 'info',
+            message: 'Em desenvolvimento'
+          })
     }
 
+    
+    return (
+        <div className="feedPost">
+            <div className="feedPostSingle">
+                <div className="feedPost__profile">
+                    <div>
+                        <Link to={{ pathname: ("/profile/" + props.profileId), 
+                                    state: {
+                                        firstLogin: props.stateFirstLogin, 
+                                        profilePhoto: props.stateProfilePhoto, 
+                                        coverPhoto: props.stateCoverPhoto, 
+                                        userData: props.stateUserData }
+                                }} style={{ textDecoration: 'none' }}>
+                            <img src={profilePhoto} />
+                        </Link>
+                    </div>
+                    <div className="div__info">
+                        <Link to={{ pathname: ("/profile/" + props.profileId), 
+                                    state: {
+                                        firstLogin: props.stateFirstLogin, 
+                                        profilePhoto: props.stateProfilePhoto, 
+                                        coverPhoto: props.stateCoverPhoto, 
+                                        userData: props.stateUserData }
+                                }} style={{ textDecoration: 'none' }}>
+                            <div>
+                                <span>{props.nome}</span>
+                            </div>
+                        </Link>
+                        <div>
+                            <span>{props.horario}</span>
+                        </div>
+                    </div>
+                </div>
+                <div className="feedPost__content">
+                    <p>
+                        {props.conteudo}<br />
+                    </p>
 
+                    <img src={urlImages} />
+                </div>
+                <div className="div__info">
+                    <div>
+                    </div>
+                </div>
+                <hr />
+                <div className="feedPost__util">
+                    <div className="feedPost__reaction">
+                        {botaoGostei}({curtir})
+                    </div>
+
+                    <div className="feedPost__reaction">
+                        <HiOutlineAnnotation />
+                        <span onClick={() => comentarios({ id: props.id }, { comentario: props.coments })} className="">Comentar ({totalComentario})</span>
+                    </div>
+
+                    <div className="feedPost__reaction">
+                        <HiOutlineShare />
+                        <span onClick={() => funcCompartilhar({ id: props.id })} className="">Compartilhar</span>
+                    </div>
+                </div>
+                <div>
+                    {element}
+                    {todosComentarios}
+                </div>
+            </div>
+        </div>
+    )
 
     function exibirComentario(props, idEvento) {
         let listItems2 = [];
@@ -95,7 +203,6 @@ export default function (props) {
 
             console.log(reordenar);
 
-            let posicao = 0;
             listItems2 = reordenar.map(
                 (number) =>
                     <div>
@@ -211,46 +318,6 @@ export default function (props) {
         }
     }
 
-    useEffect(() => {
-        const abortController = new AbortController();
-        setBotaoGostei(<div className='feed-content-bt-gostei'>
-            <HiHeart />
-            <span onClick={() => funcGostei({ id: props.id })} id={props.id + '_botao'} className="">Gostei</span>
-        </div>);
-        firebase.storage().ref(`images/${props.img}`).getDownloadURL().then(url => setUrlImages(url));
-        if (Array.isArray(props.like) && props.like.length > 0) {
-            setCurti(props.like.length);
-            setTotalComentario(props.coments.length);
-            
-            props.like.forEach(function (like) {
-                if (like == loggedUser) {
-                    setCurtiu(1);
-                    setBotaoGostei(<div className='feed-content-bt-gostei'>
-                        <HiHeart style={{ color: 'cornflowerblue' }} />
-                        <div onClick={() => funcDesgostei({ id: props.id })} id={props.id + '_botao'} className="feed-comentario-gostei">Gostei</div>
-                    </div>);
-                }
-            })
-        } else {
-            setCurti(1);
-            setCurtiu(0);
-        }
-        if (Array.isArray(props.share) && props.share.length > 0) {
-            setCompartilhar(props.share.length);
-            props.share.forEach(function (share) {
-                if (share == loggedUser) {
-                    setCompartilhou(1);
-                }
-            })
-        } else {
-            setCompartilhar(1);
-            setCompartilhou(0);
-        }
-        return function cleanup() {
-            abortController.abort()
-        }
-    }, []);
-
     function salvarComentario(obj) {
         obj.preventDefault();
         let evento = firebase.firestore().collection('events');
@@ -277,6 +344,7 @@ export default function (props) {
             });
         });
     }
+
     function apagarComentario(lista, posiaco, idEvento) {
         let evento = firebase.firestore().collection('events');
         var comentarios = [];
@@ -360,6 +428,9 @@ export default function (props) {
 
     function comentarios(obj, comentarios) {
 
+        sendNotificationToast()
+        
+          /*
         let listaFoto = [];
         firebase.firestore().collection('profiles').get().then(async (result) => {
             await result.docs.forEach(doc => {
@@ -382,6 +453,7 @@ export default function (props) {
                 </div>
             </form>
         );
+        */
     }
 
     function limparComentario(obj) {
@@ -444,10 +516,11 @@ export default function (props) {
     }
 
     function funcGostei(obj) {
-        setBotaoGostei(<div>
-            <HiHeart style={{ color: 'cornflowerblue' }} />
-            <span onClick={() => funcDesgostei({ id: props.id })} id={props.id + '_botao'} className="feed-comentario-gostei">Gostei</span>
-        </div>);
+        setBotaoGostei(
+            <div>
+                <HiHeart style={{ color: 'cornflowerblue' }} />
+                <span onClick={() => funcDesgostei({ id: props.id })} id={props.id + '_botao'} className="feed-comentario-gostei">Gostei</span>
+            </div>);
 
         let evento = firebase.firestore().collection('events');
         var likes = [];
@@ -494,12 +567,8 @@ export default function (props) {
 
     }
 
-
     function funcCompartilhar(obj) {
-        notyf.open({
-            type: 'info',
-            message: 'Em desenvolvimento'
-          });
+        sendNotificationToast()
         /*
         let evento = firebase.firestore().collection('events');
         var shares = [];
@@ -529,67 +598,32 @@ export default function (props) {
         })*/
     }
 
+    function calcularHoras(tempo, tipo) {
+        var date1 = new Date(tempo);
+        var date2 = new Date();
+        var diffDays = 0;
+        var timeDiff = Math.abs(date2.getTime() - date1.getTime());
+        var diffHour = Math.ceil(timeDiff / (1000 * 3600));
+        var texto = '';
+        if (tipo == 'c') {
+            texto = 'Há ';
+        } else if (tipo == 'e') {
+            texto = 'Modificado há ';
+        } else {
+            texto = 'Há ';
+        }
+        if (diffHour <= 1) {
+            var diffminutes = Math.ceil(timeDiff / (1000 * 60));
+            return diffminutes + " minuto(s)";
+        }
+        if (diffHour > 1 && diffHour < 24) {
+            return diffHour + " horas(s)";
+        }
+        if (diffHour > 24) {
+            diffDays = Math.ceil(timeDiff / (1000 * 3600 * 24));
+            return texto + diffDays + " dias(s)";
+        }
 
-
-
-
-
-    return (
-        <div className="feedPost">
-            <div className="feedPostSingle">
-                <div className="feedPost__profile">
-                    <div>
-
-                        <Link to={props.emailUser === loggedUser ? `/profile` : `/profile/${props.profileId}`}>
-                            <img src={props.profilePhoto} />
-                        </Link>
-                    </div>
-                    <div className="div__info">
-                        <Link to={props.emailUser === loggedUser ? `/profile` : `/profile/${props.profileId}`}>
-                            <div>
-                                <span>{props.nome}</span>
-                            </div>
-                        </Link>
-                        <div>
-                            <span>{props.profileInformation}</span>
-                        </div>
-                        <div>
-                            <span>{props.horario}</span>
-                        </div>
-                    </div>
-                </div>
-                <div className="feedPost__content">
-                    <p>
-                        {props.conteudo}<br />
-                    </p>
-
-                    <img src={urlImages} />
-                </div>
-                <div className="div__info">
-                    <div>
-                    </div>
-                </div>
-                <hr />
-                <div className="feedPost__util">
-                    <div className="feedPost__reaction">
-                        {botaoGostei}({curtir})
-                    </div>
-
-                    <div className="feedPost__reaction">
-                        <HiOutlineAnnotation />
-                        <span onClick={() => comentarios({ id: props.id }, { comentario: props.coments })} className="">comentar ({totalComentario})</span>
-                    </div>
-
-                    <div className="feedPost__reaction">
-                        <HiOutlineShare />
-                        <span onClick={() => funcCompartilhar({ id: props.id })} className="">Compartilhar</span>
-                    </div>
-                </div>
-                <div>
-                    {element}
-                    {todosComentarios}
-                </div>
-            </div>
-        </div>
-    )
+        return diffDays + "horas";
+    }
 }

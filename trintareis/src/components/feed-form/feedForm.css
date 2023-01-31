@@ -11,7 +11,9 @@
     column-gap: auto;
     border-radius: 8px;
     transition: all 0.2s ease;
-    font-weight: 500;
+    font-weight: normal;
+    font-size: medium;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .feedForm__reaction button{
@@ -27,8 +29,8 @@
 }
 
 .feedForm_svg{
-    height: 30px;
-    width: 30px;
+    height: 35px;
+    width: 35px;
 }
 
 .feedForm__reaction:hover button{
@@ -40,6 +42,7 @@
     display: grid;
     margin-right: auto;
     margin-left: auto;
+    margin-bottom: 0px;
 }
 
 .feedForm__link{
@@ -76,7 +79,7 @@
     height: 100%;
     width: 100%;
     background-color: #f8f8f8;
-    border-radius: 25px;
+    border-radius: 10px;
     margin-left: 10px;
 }
 

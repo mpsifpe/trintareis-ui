@@ -1,11 +1,10 @@
+import React, { useRef } from 'react';
+import { IoCloseOutline } from "react-icons/io5";
+
 import * as S from './Modal.styles';
 import ModalContent from './elements/Content';
 import ModalFooter from './elements/Footer';
-import { useRef } from 'react';
 import useOutsideClick from '../../hooks/useOutsideClick';
-import React from 'react';
-
-import { AiOutlineClose } from "react-icons/ai";
 
 /**
  * Modal component
@@ -31,7 +30,7 @@ const Modal = ({
         <S.Header>
           <h3 className='title'>{title}</h3>
           
-          <AiOutlineClose
+          <IoCloseOutline
             className='close-button'
             aria-label='Close modal'
             onClick={onClose}

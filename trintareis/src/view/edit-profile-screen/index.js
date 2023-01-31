@@ -31,7 +31,10 @@ export default function EditProfileScreen(){
     const [redirect, setRedirect] = useState(null);
     const [saveButton, setSaveButton] = useState("Salvar");    
     const [cancelButton, setCancelButton] = useState(<button type="button" className="w-100 btn btn-cancelar fw-bold bor"/>);
+    const [deleteProfilePhotoButton, setDeleteProfilePhotoButton] = useState(<></>)
     const [titleText, setTitleText] = useState( <div><h3>Carregando...</h3></div> );
+    const [photoText, setPhotoText] = useState("Carregar foto de perfil");
+    const [coverText, setCoverText] = useState("Carregar imagem de capa");
 
     const emailUser = useSelector(state => state.emailUser);
     const storage = firebase.storage();
@@ -59,6 +62,18 @@ export default function EditProfileScreen(){
             api.get('/profile/' + emailUser)
             .then(function (response) {
                 console.log(response)
+                console.log("profile foto>>>", response.data.profilePhoto)
+
+                if (!isEmpty(response.data.profilePhoto)){
+                    setPhotoText("Trocar foto de perfil");
+                    setDeleteProfilePhotoButton(<button onClick={()=>{deletePhotoClick("profilePhoto")}} type="button" className="w-100 btn btn-salvar fw-bold bor">Apagar</button>);
+                }
+                
+                if (!isEmpty(response.data.coverPhoto)){
+                    setCoverText("Trocar imagem de capa");
+                    //setDeleteProfilePhotoButton(<button onClick={()=>{deletePhoto("profilePhoto")}} type="button" className="w-100 btn btn-salvar fw-bold bor">Apagar</button>);
+                }
+
                 setUserData({
                     id: response.data.id,
                     userName: response.data.userName,
@@ -102,160 +117,67 @@ export default function EditProfileScreen(){
         }
     },[]);
    
+    function handleProfilePhotoChange(image){ 
 
-    function putUpdateProfile(){
-        console.log("put update")
-
-        api.put('/profile/update', {
-            "id": userData.id,
-            "city": userData.city,
-            "details": userData.details,
-            "coverPhoto": coverImageName,
-            "profileInformation": userData.profileInformation,
-            "profilePhoto": profileImageName,
-            "emailUser": emailUser,
-            "region": userData.region,
-            "userName": userData.userName
-        })
-        .then(function (response) {
-            console.log(response)
-            if (response.status === 201){
-                notyf.success("Perfil editado com sucesso!")
-                delay(2000)
-            }
-        })
-        .catch(function (error) {
-            console.log(error)
-            notyf.error("Ocorreu um erro, favor tente novamente")
-            setSaveButton("Salvar");  
-        })
-        .finally(()=>{
-            setRedirect(
-                <Redirect to={{ 
-                    pathname: '/home', 
-                    state: {
-                        firstLogin: location.state.firstLogin, 
-                        profilePhoto: profileImageName, 
-                        coverPhoto: coverImageName, 
-                        userData: userData 
-                    }}}
-                />
-            )}
-        )
-    }
-
-    function postCreateProfile() {
-        console.log("post create")
-
-        api.post('/profile/create', {
-            "city": userData.city,
-            "details": userData.details,
-            "coverPhoto": coverImageName,
-            "profileInformation": userData.profileInformation,
-            "profilePhoto": profileImageName,
-            "emailUser": emailUser,
-            "region": userData.region,
-            "userName": userData.userName
-        })
-        .then(function (response) {  
-            console.log(response)  
-            if (response.status === 201){
-                notyf.success("Perfil criado com sucesso!")
-                delay(2000)
-            }
-        })
-        .catch(function (error) {
-            console.log(error)
-            notyf.error("Ocorreu um erro, favor tente novamente");
-            setSaveButton("Salvar");
-        })
-        .finally(()=>{
-            setRedirect(
-                <Redirect to={{ 
-                    pathname: '/home', 
-                    state: {
-                        firstLogin: false, 
-                        profilePhoto: profileImageName, 
-                        coverPhoto: coverImageName, 
-                        userData: userData 
-                    }}}
-                />
-            )}
-        )
-    }
-
-    function saveBtnClick(){
-        if(isEmpty(userData.userName) || isEmpty(userData.profileInformation) || isEmpty(userData.region)){
-            notyf.error("Favor preencher os campos obrigatórios"); }
-        else {
-            setSaveButton(<img src={loading} style={{height: '25px', alignSelf: 'center', opacity: '0.75'}} alt="loading"/>);
-
-            handleProfilePhotoChange();
-            handleCoverPhotoChange();
-          
-            if(location.state.firstLogin){ 
-                postCreateProfile() } 
-            else { 
-                putUpdateProfile() }
+        if(!location.state.firstLogin){    
             
-        }  
-    }
-   
+            // perfil sem profilePhoto
+            if (isEmpty(userData.profilePhoto)){
 
-    function handleProfilePhotoChange(){ 
-        
-        if(location.state.firstLogin){  
-        //----esse bloco insere as fotos na criação do perfil----
-            if (!isEmpty(profilePhotoNew)){
-
-                profileImageName = (emailUser + "_profile." + profilePhotoNew.name.split(".").pop())
+                profileImageName = (emailUser + "_profile." + image.name.split(".").pop());
                 
-                setUserData({ ...userData, profilePhoto: profileImageName })
-                
-                storage.ref("profile_images/" + profileImageName).put(profilePhotoNew)
-            
-            } else { 
-                setUserData({ ...userData, profilePhoto: "" })  }
+                storage.ref("profile_images/" + profileImageName).put(image)
+                    .then(()=>{
+                        storage.ref("profile_images/" + profileImageName).getDownloadURL()
+                            .then((url)=>{
+                                setUserData({ ...userData, profilePhoto: url });
+                            });
 
-        } else {
-        //----esse bloco insere as fotos na edição do perfil----
-            //----se já existe foto de profile, exclui a antiga primeiro---
-            if (!isEmpty(userData.profilePhoto)){
-
-                if (!isEmpty(profilePhotoNew)){
-
-                    profileImageName = (emailUser + "_profile." + profilePhotoNew.name.split(".").pop())
-
-                    storage.ref("profile_images/" + userData.profilePhoto).delete().then(()=>{
-                        setUserData({ ...userData, profilePhoto: profileImageName });
-                        storage.ref("profile_images/" + profileImageName).put(profilePhotoNew)
                     })
-                    .catch(function (error) {
+                    .catch((error) => {
+                        console.log("Erro ao carregar profilePhoto - ");
                         console.log(error);
-                        setUserData({ ...userData, profilePhoto: "" });
-                        profileImageName = ""
+                        notyf.error("Desculpe, ocorreu um erro ao atualizar sua foto do perfil");
                     })
-                } else {
-                    profileImageName = userData.profilePhoto
-                }   
 
+            // perfil com profilePhoto
             } else {
-                if (!isEmpty(profilePhotoNew)){
+                
+                //----nova foto selecionada, exclui a antiga primeiro para depois subir a nova
+                //----para deletar a foto será exibido um botão específico
+                profileImageName = (emailUser + "_profile." + image.name.split(".").pop())
 
-                    profileImageName = (emailUser + "_profile." + profilePhotoNew.name.split(".").pop())
+                storage.refFromURL(userData.profilePhoto).delete().then(()=>{
                     
-                    setUserData({ ...userData, profilePhoto: profileImageName })
+                    //----se delete com sucesso, url é apagada do userData e nova imagem é carregada
+                    setUserData({ ...userData, profilePhoto: "" });
+                    
+                    storage.ref("profile_images/" + profileImageName).put(image)
+                        .then(()=>{
+                            storage.ref("profile_images/" + profileImageName).getDownloadURL()
+                                .then((url)=>{
+                                    setUserData({ ...userData, profilePhoto: url });
+                                });
+                        })
+                        .catch((error) => {
+                            console.log("Erro ao carregar profilePhoto - ");
+                            console.log(error);
+                            notyf.error("Desculpe, ocorreu um erro ao atualizar sua foto do perfil");
+                        })
 
-                    storage.ref("profile_images/" + profileImageName).put(profilePhotoNew)
-                }
+                })
+                .catch(function (error) {
+                    //----caso ocorra erro no delete, a url permanecerá no userData
+                    console.log(">>>Erro ao deletar profilePhoto");
+                    console.log(error);
+                    notyf.error("Desculpe, ocorreu um erro ao atualizar sua foto do perfil");
+                })
             }
-            
         }
-        
     }
 
     function handleCoverPhotoChange(){      
-        
+        /*
         if(location.state.firstLogin){  
         //----esse bloco insere as fotos na criação do perfil----
             if (!isEmpty(coverPhotoNew)){
@@ -265,6 +187,7 @@ export default function EditProfileScreen(){
                 setUserData({ ...userData, coverPhoto: coverImageName })
 
                 storage.ref("profile_images/" + coverImageName).put(coverPhotoNew)
+                .then(()=>{ updateRef("coverPhoto", coverImageName) })
 
             } else { 
                 setUserData({ ...userData, coverPhoto: "" })  }
@@ -278,8 +201,12 @@ export default function EditProfileScreen(){
                     coverImageName = (emailUser + "_cover." + coverPhotoNew.name.split(".").pop())
 
                     storage.ref("profile_images/" + userData.coverPhoto).delete().then(()=>{
+
                         setUserData({ ...userData, coverPhoto: coverImageName });
-                        storage.ref("profile_images/" + coverImageName).put(coverPhotoNew)         
+
+                        storage.ref("profile_images/" + coverImageName).put(coverPhotoNew)
+                        .then(()=>{ updateRef("coverPhoto", coverImageName) })
+
                     }).catch(function (error) {
                         console.log(error);
                         setUserData({ ...userData, coverPhoto: "" });
@@ -290,20 +217,135 @@ export default function EditProfileScreen(){
                 }   
             } else {
                 if (!isEmpty(coverPhotoNew)){
+
                     coverImageName = (emailUser + "_cover." + coverPhotoNew.name.split(".").pop())
+
                     setUserData({ ...userData, coverPhoto: coverImageName })
+
                     storage.ref("profile_images/" + coverImageName).put(coverPhotoNew)
+                    .then(()=>{ updateRef("coverPhoto", coverImageName) })
                 }
             }
         }
-        
+        */
     }
-    
-    const handleFieldChange = (event) => { setUserData({ ...userData, [event.target.name]: event.target.value })}
+
+    function putUpdateProfile(){
+        console.log("put update");
+        delay(3000);
+
+        api.put('/profile/update', {
+            "id": userData.id,
+            "city": userData.city,
+            "details": userData.details,
+            "coverPhoto": userData.coverPhoto,
+            "profileInformation": userData.profileInformation,
+            "profilePhoto": userData.profilePhoto,
+            "emailUser": emailUser,
+            "region": userData.region,
+            "userName": userData.userName
+        })
+        .then(function (response) {
+            console.log(response)
+
+            if (response.status === 201){
+                notyf.success("Perfil editado com sucesso!")
+                setRedirect(
+                    <Redirect to={{ 
+                        pathname: '/home', 
+                        state: {
+                            firstLogin: false, 
+                            profilePhoto: userData.profilePhoto,
+                            coverPhoto: userData.coverPhoto, 
+                            userData: userData 
+                        }}}
+                    />
+                )
+            }
+        })
+        .catch(function (error) {
+            console.log(error)
+            notyf.error("Ocorreu um erro, favor tente novamente")
+            setSaveButton("Salvar");
+        })
+    }
+
+    function postCreateProfile() {
+        console.log("post create")
+
+        api.post('/profile/create', {
+            "city": userData.city,
+            "details": userData.details,
+            "coverPhoto": "",
+            "profileInformation": userData.profileInformation,
+            "profilePhoto": "",
+            "emailUser": emailUser,
+            "region": userData.region,
+            "userName": userData.userName
+        })
+        .then(function (response) {  
+            console.log(response)
+
+            if (response.status === 201){
+                delay(5000);
+                notyf.success("Perfil criado com sucesso!");
+
+                setRedirect(
+                    <Redirect to={{ 
+                        pathname: '/home', 
+                        state: {
+                                firstLogin: false,
+                                profilePhoto: userData.profilePhoto, 
+                                coverPhoto: userData.coverPhoto, 
+                                userData: userData 
+                               }}}
+                    />
+                )
+            }
+        })
+        .catch(function (error) {
+            console.log(error)
+            notyf.error("Ocorreu um erro, favor tente novamente");
+            setSaveButton("Salvar");
+        })
+    }
+
+    function saveBtnClick(){
+        if(saveButton === "Salvar"){
+            if(isEmpty(userData.userName) || isEmpty(userData.profileInformation) || isEmpty(userData.region)){
+                notyf.error("Favor preencher os campos obrigatórios"); }
+            else {
+                setSaveButton(<img src={loading} style={{height: '25px', alignSelf: 'center', opacity: '0.75'}} alt="loading"/>);
+
+                handleProfilePhotoChange();
+                //handleCoverPhotoChange();
+                
+                if(location.state.firstLogin){ 
+                    postCreateProfile() } 
+                else { 
+                    putUpdateProfile() }
+                
+            }
+        }
+    }
+
+    function deletePhotoClick(type){
         
-    function logoutBtnClick(){
-        dispatch({ type: 'LOG_OUT' })
-        setRedirect(<Redirect to='/login'/>)    }
+        if(type === "profilePhoto"){
+            setDeleteProfilePhotoButton(<button type="button" className="w-100 btn btn-salvar fw-bold bor"><img src={loading} style={{height: '25px', alignSelf: 'center', opacity: '0.75'}} alt="loading"/></button>);
+                
+            storage.refFromURL(userData.profilePhoto).delete().then(()=>{
+                setDeleteProfilePhotoButton(<></>);
+                notyf.success("Foto de perfil apagada com sucesso");
+            })
+            .catch(function (error) {
+                console.log(">>>Erro ao deletar coverPhoto");
+                console.log(error);
+                notyf.error("Desculpe, ocorreu um erro ao apagar sua foto");
+                setDeleteProfilePhotoButton(<button onClick={()=>{deletePhotoClick("profilePhoto")}} type="button" className="w-100 btn btn-salvar fw-bold bor">Apagar</button>);
+            })
+        }
+    }
 
     return(
         <div className='background'>
@@ -319,12 +361,12 @@ export default function EditProfileScreen(){
                         <div className="row">
                             <div className="form-group">
                                 <div className="form-group">
-                                    <label className="field_title_label">Informações de carreira<span style={{color: 'red'}}>*</span></label>
-                                    <input onChange={handleFieldChange} name="profileInformation" value={getValue(userData.profileInformation)} type="text" className="form-control" rows="3" placeholder="Ex.: Estudante, Professor, Palestrante, etc."/>
+                                    <label className="field_title_label">Profissão<span style={{color: 'red'}}>*</span></label>
+                                    <input onChange={handleFieldChange} name="profileInformation" value={getValue(userData.profileInformation)} type="text" className="form-control" rows="3" placeholder="Ex.: Estudante, Professor, Engenheiro, etc"/>
                                 </div>
                                 <div className="form-group">
                                     <label className="field_title_label">Descreva quem é você</label>
-                                    <textarea onChange={handleFieldChange} name="details" value={getValue(userData.details)} type="text"className="form-control" rows="3" placeholder="Ex.: profissão, hobby, interesses, currículo acadêmico, etc."/>
+                                    <textarea onChange={handleFieldChange} name="details" value={getValue(userData.details)} type="text"className="form-control" rows="3" placeholder="Ex.: Formação, hobby, interesses, currículo acadêmico, etc"/>
                                 </div>
                                 <div className="form-group">
                                     <label className="field_title_label">País<span style={{color: 'red'}}>*</span></label>
@@ -337,11 +379,12 @@ export default function EditProfileScreen(){
                             </div>
                         </div>
                         <div className="form">
-                            <label className="field_title_label">Carregar/alterar foto do perfil</label>
-                            <input onChange={(e) => setProfilePhotoNew(e.target.files[0])} type="file" className="form-control" accept=".jpg, .png, .jpeg, .bmp"/>
+                            <label className="field_title_label">{photoText}</label>
+                            <input onChange={(e) => handleProfilePhotoChange(e.target.files[0])} type="file" className="form-control" accept=".jpg, .png, .jpeg, .bmp"/>
+                            {deleteProfilePhotoButton}
                         </div>
                         <div className="form">
-                            <label className="field_title_label">Carregar/alterar imagem de capa</label>
+                            <label className="field_title_label">{coverText}</label>
                             <input onChange={(e) => setCoverPhotoNew(e.target.files[0])} type="file" className="form-control" accept=".jpg, .png, .jpeg, .bmp"/>
                         </div>
                         <div className="div_buttons_row">
@@ -356,10 +399,18 @@ export default function EditProfileScreen(){
             </div>
         </div>
     )
+    
+    function handleFieldChange(event){
+        setUserData({ ...userData, [event.target.name]: event.target.value })}
+       
+    function logoutBtnClick(){
+        dispatch({ type: 'LOG_OUT' })
+        setRedirect(<Redirect to='/login'/>)    }
+    
+    function getValue(field){
+        if(isEmpty(field)){  return ("");   } 
+        else {  return (field);  }
+    }
 }
 
 
-function getValue(field){
-    if(isEmpty(field)){  return ("");   } 
-    else {  return (field);  }
-}

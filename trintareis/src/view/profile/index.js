@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { MdDone, MdClose } from "react-icons/md";
 import { Perfil, Content, Details } from './styles';
 
-import { isEmpty } from '../../helpers/helper';
+import { isEmpty, formatDate } from '../../helpers/helper';
 import Header from '../../components/header/index';
 import FeedForm from '../../components/feed-form/index';
 import TimeLine from '../../components/timeline_profile/index';
@@ -15,13 +15,12 @@ import cover from '../../resources/cover.png';
 import firebase from '../../config/firebase';
 import NotyfContext from '../../components/notyf-toast/NotyfContext';
 import api from '../../config/api';
-import { GiConsoleController } from 'react-icons/gi';
 
 
 function Profile(props) {
 
     const emailUser = useSelector(state => state.emailUser);
-    const storage = firebase.storage();
+    //const storage = firebase.storage();
     const events = firebase.firestore().collection('events');
     const notyf = useContext(NotyfContext);
 
@@ -56,28 +55,17 @@ function Profile(props) {
                 profileEmail = emailUser
                 
                 if(!isEmpty(location.state.profilePhoto)) { 
-                    storage.ref("profile_images/" + location.state.profilePhoto).getDownloadURL()
-                    .then(url => setUrlImageProfile(url))}
-                else {setUrlImageProfile(user)}
+                    setUrlImageProfile(location.state.profilePhoto)}
+                else {
+                    setUrlImageProfile(user)}
                 
-                if(!isEmpty(location.state.coverPhoto)) {  
-                    storage.ref("profile_images/" + location.state.coverPhoto).getDownloadURL()
-                    .then(url => seturlImageCover(url))}
+                if(!isEmpty(location.state.coverPhoto)){
+                    seturlImageCover(location.state.coverPhoto)}
                 
                 setActionButton(  <Link to={{pathname: '/editProfile', state: location.state}} style={{ textDecoration: 'none' }}>
                                     <label className='action_button'>Editar</label>
                                 </Link>)
                 
-                events.where('emailUser', '==', emailUser).orderBy("dataTime", "desc").get().then((events) => {
-                    events.forEach((event) => {       
-                        const date = new Date(event.data().dataTime);
-                        listEventos.push({
-                            id: event.id,
-                            timePublication: date.getHours() + ':' + date.getMinutes(),
-                            ...event.data()
-                        })  
-                    })
-                });
             } 
             else {
                 api.get('/profile/get-by-id/' + params.id)
@@ -90,13 +78,13 @@ function Profile(props) {
                     profileEmail = response.data.emailUser
     
                     if(!isEmpty(response.data.profilePhoto)) { 
-                        storage.ref("profile_images/" + response.data.profilePhoto).getDownloadURL()
-                        .then(url => setUrlImageProfile(url))}
-                    else {setUrlImageProfile(user)}
+                        setUrlImageProfile(response.data.profilePhoto)}
+                    else {
+                        setUrlImageProfile(user)}
                     
                     if(!isEmpty(response.data.coverPhoto)) {  
-                        storage.ref("profile_images/" + response.data.coverPhoto).getDownloadURL()
-                        .then(url => seturlImageCover(url))}
+                        // storage.ref("profile_images/" + response.data.coverPhoto).getDownloadURL().then(url => console.log(url))
+                        seturlImageCover(response.data.coverPhoto)}
                 })
                 .catch((error) => {
                     console.log(error)
@@ -132,25 +120,25 @@ function Profile(props) {
                         }
                     })
                     .catch((error)=>{console.log(error)})
-
-                    events.where('emailUser', '==', profileEmail).orderBy("dataTime", "desc").get().then((events) => {
-                        events.forEach((event) => {       
-                            const date = new Date(event.data().dataTime);
-                            listEventos.push({
-                                id: event.id,
-                                timePublication: date.getHours() + ':' + date.getMinutes(),
-                                ...event.data()
-                            })  
-                        })
-                    })
                 })
                 
             }
+
+            api.get('/content/getContent/',{
+                params : {
+                    page: 0,
+                    size: 10
+                }
+            })
+            .then((posts)=>{
+                setEventos(posts.data.content);
+            })
+            .catch((error)=>{
+                console.log(error)
+            })
         }
 
-        fetch().then(() => {
-            setEventos(listEventos);
-            })
+        fetch()
 
         return function cleanup() {
             abortController.abort()
@@ -260,7 +248,28 @@ function Profile(props) {
                     </div>
                 }
                 <div className="div__timeline">
-                    {eventos.map(item => <TimeLine key={item.id} id={item.id} userName={item.userName} profileInf={item.profileInformatio} profilePhoto={urlImageProfile} img={item.photo} title={item.title} nome={item.userName} horario={item.timePublication} conteudo={item.details} />)}
+                {
+                    eventos.map(item => 
+                        <TimeLine  key={item.id}
+                            id={item.id}
+                            img={item.photoName}
+                            profilePhoto={item.profilePhotoUrl}
+                            profileInformation={item.profileInformation}
+                            title={item.title}
+                            nome={item.userName}
+                            horario={formatDate(item.hour)}
+                            conteudo={item.text}
+                            emailUser={item.userEmail}
+                            profileId={item.profileId}
+                            like={item.views}
+                            share={item.share}
+                            coments={item.coments}
+                            tipo={item.typePost}
+                            stateFirstLogin={location.state.firstLogin}
+                            stateProfilePhoto={location.state.profilePhoto} 
+                            stateCoverPhoto={location.state.coverPhoto} 
+                            stateUserData={location.state.userData}/>)
+                }
                 </div>
             </div>
         </div>
