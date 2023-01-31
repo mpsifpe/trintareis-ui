@@ -23,7 +23,7 @@ import DropdownProfile from '../../components/dropdown-profile';
 function Profile(props) {
 
     const emailUser = useSelector(state => state.emailUser);
-    //const storage = firebase.storage();
+    const storage = firebase.storage();
     const events = firebase.firestore().collection('events');
     const notyf = useContext(NotyfContext);
 
@@ -36,7 +36,7 @@ function Profile(props) {
     const [region, setRegion] = useState("");
     const [details, setDetails] = useState("");
     const [actionButton, setActionButton] = useState(<></>);
-
+    
     let profileEmail, idConnection = "";
     let isFriend, inviter, pending = false;
     let location = useLocation();
@@ -46,186 +46,179 @@ function Profile(props) {
     useEffect(() => {
         const abortController = new AbortController()
 
-        async function fetch() {
+        async function fetch() { 
 
-            if (params.id === location.state.userData.id) {
+            if(params.id === location.state.userData.id){
 
-                setUserName(location.state.userData.userName)
+                setUserName(location.state.userData.userName)   
                 setProfileInformation(location.state.userData.profileInformation)
                 setCity(location.state.userData.city)
                 setRegion(location.state.userData.region)
                 setDetails(location.state.userData.details)
                 profileEmail = emailUser
-
-                if (!isEmpty(location.state.profilePhoto)) {
+                
+                if(!isEmpty(location.state.profilePhoto)) { 
                     storage.ref("profile_images/" + location.state.profilePhoto).getDownloadURL()
-                        .then(url => setUrlImageProfile(url))
-                }
-                else { setUrlImageProfile(user) }
-
-                if (!isEmpty(location.state.coverPhoto)) {
+                    .then(url => setUrlImageProfile(url))}
+                else {setUrlImageProfile(user)}
+                
+                if(!isEmpty(location.state.coverPhoto)) {  
                     storage.ref("profile_images/" + location.state.coverPhoto).getDownloadURL()
-                        .then(url => seturlImageCover(url))
-                }
-
-                setActionButton(<Link to={{ pathname: '/editProfile', state: location.state }} style={{ textDecoration: 'none' }}>
-                    <label className='action_button'>Editar</label>
-                </Link>)
-
+                    .then(url => seturlImageCover(url))}
+                
+                setActionButton(  <Link to={{pathname: '/editProfile', state: location.state}} style={{ textDecoration: 'none' }}>
+                                    <label className='action_button'>Editar</label>
+                                </Link>)
+                
                 events.where('emailUser', '==', emailUser).orderBy("dataTime", "desc").get().then((events) => {
-                    events.forEach((event) => {
+                    events.forEach((event) => {       
                         const date = new Date(event.data().dataTime);
                         listEventos.push({
                             id: event.id,
                             timePublication: date.getHours() + ':' + date.getMinutes(),
                             ...event.data()
-                        })
+                        })  
                     })
                 });
-            }
+            } 
             else {
                 api.get('/profile/get-by-id/' + params.id)
-                    .then((response) => {
-                        setUserName(response.data.userName)
-                        setProfileInformation(response.data.profileInformation)
-                        setDetails(response.data.details)
-                        setRegion(response.data.region)
-                        setCity(response.data.city)
-                        profileEmail = response.data.emailUser
-
-                        if (!isEmpty(response.data.profilePhoto)) {
-                            storage.ref("profile_images/" + response.data.profilePhoto).getDownloadURL()
-                                .then(url => setUrlImageProfile(url))
-                        }
-                        else { setUrlImageProfile(user) }
-
-                        if (!isEmpty(response.data.coverPhoto)) {
-                            storage.ref("profile_images/" + response.data.coverPhoto).getDownloadURL()
-                                .then(url => seturlImageCover(url))
+                .then((response) => {
+                    setUserName(response.data.userName)
+                    setProfileInformation(response.data.profileInformation)
+                    setDetails(response.data.details)
+                    setRegion(response.data.region)
+                    setCity(response.data.city)
+                    profileEmail = response.data.emailUser
+    
+                    if(!isEmpty(response.data.profilePhoto)) { 
+                        storage.ref("profile_images/" + response.data.profilePhoto).getDownloadURL()
+                        .then(url => setUrlImageProfile(url))}
+                    else {setUrlImageProfile(user)}
+                    
+                    if(!isEmpty(response.data.coverPhoto)) {  
+                        storage.ref("profile_images/" + response.data.coverPhoto).getDownloadURL()
+                        .then(url => seturlImageCover(url))}
+                })
+                .catch((error) => {
+                    console.log(error)
+                    notyf.error("Desculpe, ocorreu um erro")
+                })
+                .then(()=>{
+                    setActionButton(<label className='action_button' onClick={actionButtonClick}>Conectar</label>)
+                    api.get('/friends/',{
+                        params : {
+                            userEmail: emailUser,
+                            page: 0,
+                            size: 100
                         }
                     })
-                    .catch((error) => {
-                        console.log(error)
-                        notyf.error("Desculpe, ocorreu um erro")
-                    })
-                    .then(() => {
-                        setActionButton(<label className='action_button' onClick={actionButtonClick}>Conectar</label>)
-                        api.get('/friends/', {
-                            params: {
-                                userEmail: emailUser,
-                                page: 0,
-                                size: 100
-                            }
-                        })
-                            .then(function (response) {
-                                for (let i = 0; i < response.data.content.length; i++) {
-                                    if (response.data.content[i].id === params.id) {
-                                        idConnection = response.data.content[i].idConnection;
-                                        profileEmail = response.data.content[i].userEmail;
-                                        inviter = response.data.content[i].inviter;
-                                        isFriend = true;
-
-                                        if (response.data.content[i].pending) {
-                                            pending = true;
-                                            if (response.data.content[i].inviter) {
-                                                setActionButton(<label className='action_button' onClick={actionButtonClick}>Convidado</label>);
-                                            } else { setActionButton(<label className='action_button' onClick={actionButtonClick}>Aceitar</label>); }
-                                        }
-                                        else {
-                                            setActionButton(<label className='action_button' onClick={actionButtonClick}>Desconectar</label>);
-                                        }
-                                    }
+                    .then(function (response) {
+                        for(let i = 0; i < response.data.content.length; i++){
+                            if(response.data.content[i].id === params.id){
+                                idConnection = response.data.content[i].idConnection;
+                                profileEmail = response.data.content[i].userEmail;
+                                inviter = response.data.content[i].inviter;
+                                isFriend = true;
+                                
+                                if(response.data.content[i].pending){
+                                    pending = true;
+                                    if(response.data.content[i].inviter){
+                                        setActionButton(<label className='action_button' onClick={actionButtonClick}>Convidado</label>);
+                                    } else { setActionButton(<label className='action_button' onClick={actionButtonClick}>Aceitar</label>); }
                                 }
-                            })
-                            .catch((error) => { console.log(error) })
+                                else{
+                                    setActionButton(<label className='action_button' onClick={actionButtonClick}>Desconectar</label>);
+                                }
+                            }
+                        }
+                    })
+                    .catch((error)=>{console.log(error)})
 
-                        events.where('emailUser', '==', profileEmail).orderBy("dataTime", "desc").get().then((events) => {
-                            events.forEach((event) => {
-                                const date = new Date(event.data().dataTime);
-                                listEventos.push({
-                                    id: event.id,
-                                    timePublication: date.getHours() + ':' + date.getMinutes(),
-                                    ...event.data()
-                                })
-                            })
+                    events.where('emailUser', '==', profileEmail).orderBy("dataTime", "desc").get().then((events) => {
+                        events.forEach((event) => {       
+                            const date = new Date(event.data().dataTime);
+                            listEventos.push({
+                                id: event.id,
+                                timePublication: date.getHours() + ':' + date.getMinutes(),
+                                ...event.data()
+                            })  
                         })
                     })
-
+                })
+                
             }
         }
 
         fetch().then(() => {
             setEventos(listEventos);
-        })
+            })
 
         return function cleanup() {
             abortController.abort()
         }
     }, []);
 
-    function actionButtonClick() {
-        if (isFriend) {
-            if (pending) {
-                if (inviter) {
+    function actionButtonClick(){
+        if(isFriend){
+            if(pending){
+                if(inviter){
                     api.delete('/friends', {
-                        params: {
-                            idConnection: idConnection
-                        }
-                    })
-                        .then(() => {
-                            notyf.success("Conexão desfeita");
-                            setActionButton(<label className='action_button'><MdClose /></label>);
-                        })
-                        .catch((error) => {
-                            console.log(error)
-                            notyf.error("Desculpe, ocorreu um erro");
-                            setActionButton(<></>);
-                        })
-                }
-                else {
-                    api.put('/friends?id=' + idConnection)
-                        .then(() => {
-                            notyf.success("Convite aceito");
-                            setActionButton(<label className='action_button'><MdDone /></label>);
-                        })
-                        .catch((error) => {
-                            console.log(error)
-                            notyf.error("Desculpe, ocorreu um erro");
-                            setActionButton(<></>);
-                        })
-                }
-            }
-            else {
-                api.delete('/friends', {
-                    params: {
-                        idConnection: idConnection
-                    }
-                })
-                    .then(() => {
+                        params : {
+                            idConnection : idConnection
+                        }})
+                    .then(()=>{
                         notyf.success("Conexão desfeita");
-                        setActionButton(<label className='action_button'><MdClose /></label>);
+                        setActionButton(<label className='action_button'><MdClose/></label>);
                     })
-                    .catch((error) => {
+                    .catch((error)=>{
                         console.log(error)
                         notyf.error("Desculpe, ocorreu um erro");
                         setActionButton(<></>);
                     })
+                }
+                else{
+                    api.put('/friends?id=' + idConnection)
+                    .then(()=>{
+                        notyf.success("Convite aceito");
+                        setActionButton(<label className='action_button'><MdDone/></label>);
+                    })
+                    .catch((error)=>{
+                        console.log(error)
+                        notyf.error("Desculpe, ocorreu um erro");
+                        setActionButton(<></>);
+                    })
+                }
+            }
+            else {
+                api.delete('/friends', {
+                    params : {
+                        idConnection : idConnection
+                    }})
+                .then(()=>{
+                    notyf.success("Conexão desfeita");
+                    setActionButton(<label className='action_button'><MdClose/></label>);
+                })
+                .catch((error)=>{
+                    console.log(error)
+                    notyf.error("Desculpe, ocorreu um erro");
+                    setActionButton(<></>);
+                })
             }
         }
-        else {
+        else{
             api.post('/friends/create', {
                 userEmailFriend: profileEmail,
                 userEmail: emailUser
             })
-                .then(() => {
-                    notyf.success("Convite enviado");
-                    setActionButton(<label className='action_button'><MdDone /></label>);
-                })
-                .catch((error) => {
-                    console.log(error)
-                    notyf.error("Desculpe, ocorreu um erro");
-                })
-            setActionButton(<></>);
+            .then(()=>{
+                notyf.success("Convite enviado");
+                setActionButton(<label className='action_button'><MdDone/></label>);
+            })
+            .catch((error)=>{
+                console.log(error)
+                notyf.error("Desculpe, ocorreu um erro");})
+                setActionButton(<></>);
         }
     }
 
