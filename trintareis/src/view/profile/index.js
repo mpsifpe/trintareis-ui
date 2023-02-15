@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import { MdDone, MdClose } from "react-icons/md";
 import { Perfil, Content, Details, Dropdown } from './styles';
 
-import { isEmpty, formatDate } from '../../helpers/helper';
+import { isEmpty, formatDate, isURL } from '../../helpers/helper';
 import Header from '../../components/header/index';
 import FeedForm from '../../components/feed-form/index';
 import TimeLine from '../../components/timeline_profile/index';
@@ -15,7 +15,6 @@ import cover from '../../resources/cover.png';
 import firebase from '../../config/firebase';
 import NotyfContext from '../../components/notyf-toast/NotyfContext';
 import api from '../../config/api';
-import { GiConsoleController } from 'react-icons/gi';
 
 import DropdownProfile from '../../components/dropdown-profile';
 
@@ -58,28 +57,27 @@ function Profile(props) {
                 profileEmail = emailUser
                 
                 if(!isEmpty(location.state.profilePhoto)) { 
-                    storage.ref("profile_images/" + location.state.profilePhoto).getDownloadURL()
-                    .then(url => setUrlImageProfile(url))}
-                else {setUrlImageProfile(user)}
+                    if(isURL(location.state.profilePhoto)){
+                        setUrlImageProfile(location.state.profilePhoto)
+                    } else {
+                        storage.ref("profile_images/" + location.state.profilePhoto).getDownloadURL().then(url => setUrlImageProfile(url))
+                    }
+                }
+                else {
+                    setUrlImageProfile(user)
+                }
                 
-                if(!isEmpty(location.state.coverPhoto)) {  
-                    storage.ref("profile_images/" + location.state.coverPhoto).getDownloadURL()
-                    .then(url => seturlImageCover(url))}
+                if(!isEmpty(location.state.coverPhoto)) {
+                    if(isURL(location.state.coverPhoto)){
+                        seturlImageCover(location.state.coverPhoto)
+                    } else {
+                        storage.ref("profile_images/" + location.state.coverPhoto).getDownloadURL().then(url => seturlImageCover(url))
+                    }
+                }
                 
                 setActionButton(  <Link to={{pathname: '/editProfile', state: location.state}} style={{ textDecoration: 'none' }}>
                                     <label className='action_button'>Editar</label>
                                 </Link>)
-                
-                events.where('emailUser', '==', emailUser).orderBy("dataTime", "desc").get().then((events) => {
-                    events.forEach((event) => {       
-                        const date = new Date(event.data().dataTime);
-                        listEventos.push({
-                            id: event.id,
-                            timePublication: date.getHours() + ':' + date.getMinutes(),
-                            ...event.data()
-                        })  
-                    })
-                });
             } 
             else {
                 api.get('/profile/get-by-id/' + params.id)

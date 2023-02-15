@@ -3,13 +3,14 @@ import './feedPost.css'
 import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import ReactPlayer from 'react-player';
 import { HiHeart, HiOutlineHeart, HiOutlineAnnotation, HiOutlineShare, HiOutlinePencilAlt, HiOutlineTrash, HiDotsVertical, HiOutlineArrowCircleLeft } from "react-icons/hi";
 
 import user from '../../resources/user.png';
 import loading from '../../resources/loading.gif';
 import firebase from '../../config/firebase';
 import NotyfContext from '../notyf-toast/NotyfContext';
-import { isEmpty } from '../../helpers/helper';
+import { isEmpty, isURL } from '../../helpers/helper';
 
 
 export default function (props) {
@@ -18,7 +19,7 @@ export default function (props) {
     const loggedUser = useSelector(state => state.emailUser);
     const date = new Date();
 
-    const [urlImages, setUrlImages] = useState('');
+    const [media, setMedia] = useState(<></>);
     const [curtir, setCurti] = useState('');
     const [curtiu, setCurtiu] = useState(0);
     const [totalComentario, setTotalComentario] = useState(0);
@@ -45,17 +46,43 @@ export default function (props) {
         );
         
         if (!isEmpty(props.like)) {
-            setCurti(props.like);}
+            setCurti(props.like)}
         
         if (!isEmpty(props.share)) {
-            setTotalComentario(props.share);}
+            setTotalComentario(props.share)}
         
         if (!isEmpty(props.profilePhoto)){
-            setProfilePhoto(props.profilePhoto)
-        }
+            setProfilePhoto(props.profilePhoto)}
 
-        if(props.tipo === "POST_PHOTO" || props.tipo === "POST_VIDEO"){
-            firebase.storage().ref(`images/${props.img}`).getDownloadURL().then(url => setUrlImages(url));
+        switch(props.tipo){
+            
+            case "POST_PHOTO":
+                if(isURL(props.img)){
+                    setMedia(<img src={props.img}/>)
+                } else {
+                    firebase.storage().ref(`images/${props.img}`).getDownloadURL().then(url => {setMedia(<img src={url}/>)});
+                }
+                break;
+            
+            case "POST_VIDEO":
+                let link = props.img
+                setMedia(
+                    <ReactPlayer 
+                        url={
+                            link.includes("/watch?v=")
+                            ? link.replace("/watch?v=", "/embed/")
+                            : link
+                        } 
+                        controls={true} 
+                        origin= {window.location}
+                        className='react-player'
+                        config={{ youtube: { playerVars: { origin: 'https://www.youtube.com' } } }}
+                    />
+                );
+                break;
+            
+            default:
+                break;
         }
 
             /*
@@ -143,8 +170,9 @@ export default function (props) {
                     <p>
                         {props.conteudo}<br />
                     </p>
-
-                    <img src={urlImages} />
+                    <div style={{width: 'inherit', height: 'inherit' }}>
+                        {media}
+                    </div>
                 </div>
                 <div className="div__info">
                     <div>

@@ -1,6 +1,5 @@
 import React, { useState, useContext } from 'react';
 import { HiPhotograph, HiVideoCamera, HiMenuAlt2 } from "react-icons/hi";
-import { BsCalendarDate } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import './feedForm.css'
 
@@ -12,97 +11,114 @@ import firebase from '../../config/firebase';
 import api from '../../config/api';
 import { isEmpty } from '../../helpers/helper';
 import NotyfContext from '../notyf-toast/NotyfContext';
+import loading from '../../resources/loading.gif';
 
 export default function (props) {
-    const [isTextPostOpen, openTextPost, closeTextPost] = useModalState();
-    const [isPhotoPostOpen, openPhotoPost, closePhotoPost] = useModalState();
-    const [isVideoPostOpen, openVideoPost, closeVideoPost] = useModalState();
+    const [isPostOpen, openPost, closePost] = useModalState();
 
+    const emailUser = useSelector(state => state.emailUser);
+    const storage = firebase.storage();
     const notyf = useContext(NotyfContext);
 
-    const [text, setText] = useState();
-    const [photo, setPhoto] = useState();
-    const [video, setVideo] = useState();
+    const [textField, setTextField] = useState('');
+    const [file, setFile] = useState();
     const [errorMessage, setErrorMessage] = useState(<></>);
-    const emailUser = useSelector(state => state.emailUser);
+    const [button, setButton] = useState(<button type="button" disabled={false} onClick={clickButtonHandle}>Postar</button>)
+    const [type, setType] = useState("text");
+    const [media, setMedia] = useState(<></>);
+    const [field, setField] = useState(<></>);
 
-    const storage = firebase.storage();
+    function clickButtonHandle(){
+        setField(<div><br/></div>);
+        console.log(type);
+        
+        let text;
+        try {
+            text = document.getElementById("textInpt").value.toString();
+        } catch{
+            text = ""
+        }
 
-    function postPhotoClick() {
+        let photo;
+        try {
+            photo = document.getElementById("imgInpt").files[0];
+        } catch{
+            photo = ""
+        }
+        
+        let link;
+        try {
+            link = document.getElementById("linkInpt").value.toString();
+        } catch{
+            link = ""
+        }
         
         if (!isEmpty(photo)){
+            console.log("POST_PHOTO");
+            setButton(<button type="button" disabled={true}> <img src={loading} style={{height: '25px', alignSelf: 'center', opacity: '0.75'}}/> </button>)
             setErrorMessage(<></>)
 
             let timestamp = new Date()
-            let fileName = emailUser + "_" + timestamp.getTime() + "." + photo.name.split(".").pop()
-           
-            api.post('/content/post-content', {
+            let fileName = emailUser + "_" + timestamp.getTime() + "." + photo.name.split(".").pop();           
+
+            storage.ref("images/"+ fileName).put(photo).then(()=>{
+                api.post('/content/post-content', {
                     userEmail: emailUser,
                     photoName: fileName,
                     text: text,
-                    title: photo.name,
+                    title: fileName,
                     views: 0,
                     hour: timestamp,
                     publicPost: true,
                     share:0,
                     typePost: "POST_PHOTO"
-                }
-            ).then((docRef) => {
-                console.log(docRef);
-                storage.ref(`images/`+ fileName).put(photo);
-                closePhotoPost();
-
-            }).catch((error) => {
-                console.error("Error adding document: ", error);
-                notyf.error("Opa, ocorreu um erro. Favor tentar novamente mais tarde");
+                    }
+                ).then((docRef) => {
+                    console.log(docRef);
+                    setButton(<button type="button" disabled={false} onClick={clickButtonHandle}>Postar</button>);
+                    closePost();
+    
+                }).catch((error) => {
+                    console.error("Error adding document: ", error);
+                    notyf.error("Opa, ocorreu um erro. Favor tentar novamente mais tarde");
+                    setButton(<button type="button" disabled={false} onClick={clickButtonHandle}>Postar</button>);
+                });
             });
-
         }
-        else{
-            setErrorMessage(<span style={{color: 'red'}}>Imagem não selecionada</span>)
-        }
-
-    }
-
-    function postVideoClick() {
         
-        if (!isEmpty(video)){
+        if (!isEmpty(link)){
+            console.log("POST_VIDEO");
+            setButton(<button type="button" disabled={true}> <img src={loading} style={{height: '25px', alignSelf: 'center', opacity: '0.75'}}/> </button>)
             setErrorMessage(<></>)
 
-            let timestamp = new Date()
-            let fileName = emailUser + "_" + timestamp.getTime() + "." + video.name.split(".").pop()
-           
             api.post('/content/post-content', {
-                    userEmail: emailUser,
-                    photoName: fileName,
-                    text: text,
-                    title: video.name,
-                    views: 0,
-                    hour: timestamp,
-                    publicPost: true,
-                    share:0,
-                    typePost: "POST_VIDEO"
-                }
+                userEmail: emailUser,
+                photoName: link,
+                text: text,
+                title: "video",
+                views: 0,
+                hour: new Date(),
+                publicPost: true,
+                share:0,
+                typePost: "POST_VIDEO"
+            }
             ).then((docRef) => {
                 console.log(docRef);
-                storage.ref(`images/`+ fileName).put(video);
-                closeVideoPost();
+                setButton(<button type="button" disabled={false} onClick={clickButtonHandle}>Postar</button>);
+                closePost();
 
             }).catch((error) => {
                 console.error("Error adding document: ", error);
                 notyf.error("Opa, ocorreu um erro. Favor tentar novamente mais tarde");
-            });
+                setButton(<button type="button" disabled={false} onClick={clickButtonHandle}>Postar</button>);
+            })
 
         }
-        else{
-            setErrorMessage(<span style={{color: 'red'}}>Imagem não selecionada</span>)
-        }
-
-    }
-
-    function postTextClick() {
         
-        api.post('/content/post-content', {
+        if( isEmpty(link) && isEmpty(photo) && !isEmpty(text)){
+            console.log("POST_TEXT");
+            setButton(<button type="button" disabled={true}> <img src={loading} style={{height: '25px', alignSelf: 'center', opacity: '0.75'}}/> </button>)
+            api.post('/content/post-content', {
                 userEmail: emailUser,
                 text: text,
                 views: 0,
@@ -111,22 +127,54 @@ export default function (props) {
                 share:0,
                 typePost: "POST_TEXT"
             }
-        ).then((docRef) => {
-            console.log(docRef);
-            closeTextPost();
+            ).then((docRef) => {
+                console.log(docRef);
+                setButton(<button type="button" disabled={false} onClick={clickButtonHandle}>Postar</button>);
+                closePost();
 
-        }).catch((error) => {
-            console.error("Error adding document: ", error);
-            notyf.error("Opa, ocorreu um erro. Favor tentar novamente mais tarde");
-        });
-
+            }).catch((error) => {
+                console.error("Error adding document: ", error);
+                notyf.error("Opa, ocorreu um erro. Favor tentar novamente mais tarde");
+                setButton(<button type="button" disabled={false} onClick={clickButtonHandle}>Postar</button>)   });
+        }
     }
 
     function showNotification(){
         notyf.open({
             type: 'info',
             message: 'Em desenvolvimento'
-          });
+        });
+    }
+
+    function typeHandler(type){
+        switch(type){
+            case "text":
+                setType("text");
+                setMedia(<></>);
+            break
+            
+            case "photo":
+                setType("photo");
+                setMedia(
+                    <div className="">
+                        <label>Carregar imagem</label>
+                        <input id="imgInpt" onChange={(e)=>{setFile(e.target.value[0])}} type="file" className="form-control" accept=".jpg, .png, .jpeg, .bmp"/>
+                        {errorMessage}
+                    </div>
+                )
+            break
+
+            case "video":
+                setType("video");
+                setMedia(
+                    <div className="">
+                        <label>Link do video</label>
+                        <input id="linkInpt" type="text" className="form-control" style={{width : "85vh"}}/>
+                        {errorMessage}
+                    </div>
+                )
+            break
+        }
     }
 
     return (
@@ -140,7 +188,7 @@ export default function (props) {
                             </Link>
                         </div>
                     </div>
-                    <div className="div__button" onClick={openTextPost}>
+                    <div className="div__button" onClick={openPost}>
                         <div style={{ textDecoration: 'none' }}>
                             <div className="div__span">
                                 <span>Nova publicação</span>
@@ -148,103 +196,69 @@ export default function (props) {
                         </div>
                     </div>
                 </div>
-                <div className="feedForm__icons">
-                    <div className="iconSingle img feedForm__reaction">
-                        <button onClick={openPhotoPost}>
-                            <HiPhotograph  className='feedForm_svg'/>
-                            <div className="feedForm__link">
-                                <span>Imagem</span>
-                            </div>
-                        </button>
-                    </div>
-                    <div className="iconSingle feedForm__reaction">
-                        <button onClick={openVideoPost}>
-                            <HiVideoCamera className='feedForm_svg'/>
-                            <div className="feedForm__link">
-                                <span>Video</span>
-                            </div>
-                        </button>
-                    </div>
-                    <div className="iconSingle evn feedForm__reaction">
-                            <button onClick={showNotification}>
-                                <HiMenuAlt2 className='feedForm_svg'/>
-                                <div className="feedForm__link">
-                                    <span>Artigo</span>
-                                </div>
-                            </button>
-                    </div>
-                </div>
             </div>
 
-            {/* Modal para postar foto  */}
-            <Modal title='Publicar' isOpen={isPhotoPostOpen} onClose={closePhotoPost}>
+            <Modal title='Publicar' isOpen={isPostOpen} onClose={closePost}>
                 <Modal.Content>
                     <form className="form">
                         <div className="row">
                             <div>
                                 <div className="div__description">
                                     <label>Descrição</label>
-                                    <textarea onChange={(e) => setText(e.target.value)} className="form-control" rows="30" placeholder="Ex.: tópicos, programa, etc." maxLength={300} style={{height:"100px"}}></textarea>
+                                    <textarea id="textInpt" onChange={()=>setTextField(document.getElementById("textInpt").value.toString())} className="form-control" height="auto" cols="20" spellCheck="true" wrap="hard" placeholder="Ex.: tópicos, programa, etc." maxLength={500} style={{height:"100px"}}></textarea>
+                                    <div style={{float:"right"}}>Caracteres restantes:
+                                        {isEmpty(textField) ? 500 : 500 - textField.length}
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div className="">
-                            <label>Carregar imagem</label>
-                            <input onChange={(e) => setPhoto(e.target.files[0])} type="file" className="form-control" accept=".jpg, .png, .jpeg, .bmp"/>
-                            {errorMessage}
-                        </div>
-                    </form>
-                </Modal.Content>
-                <Modal.Footer>
-                    <div className="div__btn_post">
-                        <button onClick={postPhotoClick} type="button" disabled={false}>Postar</button>
-                    </div>
-                </Modal.Footer>
-            </Modal>
+                        <div className="radioButtonsForm">
+                            <div className="form-check">
+                            <label>
+                                <input
+                                    type="radio"
+                                    name="react-tips"
+                                    value="text"
+                                    checked={type === "text"}
+                                    onChange={(e) => typeHandler(e.target.value)}
+                                    className="form-check-input"/>
+                                Texto
+                            </label>
+                            </div>
 
-            {/* Modal para postar vídeo  */}
-            <Modal title='Publicar' isOpen={isVideoPostOpen} onClose={closeVideoPost}>
-                <Modal.Content>
-                    <form className="form">
-                        <div className="row">
-                            <div>
-                                <div className="div__description">
-                                    <label>Descrição</label>
-                                    <textarea onChange={(e) => setText(e.target.value)} className="form-control" rows="30" placeholder="Ex.: tópicos, programa, etc." maxLength={300} style={{height:"100px"}}></textarea>
-                                </div>
+                            <div className="form-check">
+                            <label>
+                                <input
+                                    type="radio"
+                                    name="react-tips"
+                                    value="photo"
+                                    checked={type === "photo"}
+                                    onChange={(e) => typeHandler(e.target.value)}
+                                    className="form-check-input"/>
+                                Imagem
+                            </label>
                             </div>
-                        </div>
-                        <div className="">
-                            <label>Carregar vídeo</label>
-                            <input onChange={(e) => setPhoto(e.target.files[0])} type="file" className="form-control" accept=".mp4, .wmv, .flv, .mpeg"/>
-                            {errorMessage}
-                        </div>
-                    </form>
-                </Modal.Content>
-                <Modal.Footer>
-                    <div className="div__btn_post">
-                        <button onClick={postVideoClick} type="button" disabled={false}>Postar</button>
-                    </div>
-                </Modal.Footer>
-            </Modal>
 
-            {/* Modal para postar texto  */}
-            <Modal title='Publicar' isOpen={isTextPostOpen} onClose={closeTextPost}>
-                <Modal.Content>
-                    <form className="form">
-                        <div className="row">
-                            <div>
-                                <div className="div__description">
-                                    <label>Escreva aqui sua publicação</label>
-                                    <textarea onChange={(e) => setText(e.target.value)} className="form-control" rows="10" placeholder="Ex.: tópicos, programa, etc." maxLength={300} style={{height:"200px"}}></textarea>
-                                </div>
+                            <div className="form-check">
+                            <label>
+                                <input
+                                    type="radio"
+                                    name="react-tips"
+                                    value="video"
+                                    checked={type === "video"}
+                                    onChange={(e) => typeHandler(e.target.value)}
+                                    className="form-check-input"/>
+                                Video
+                            </label>
                             </div>
                         </div>
+                        {field}
+                        {media}
                     </form>
                 </Modal.Content>
                 <Modal.Footer>
                     <div className="div__btn_post">
-                        <button onClick={postTextClick} type="button" disabled={false}>Postar</button>
+                        {button}
                     </div>
                 </Modal.Footer>
             </Modal>
