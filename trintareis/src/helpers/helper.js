@@ -32,3 +32,32 @@ export function focusChangeOnEnter(event, ref){
     // usar em
     // onKeyDown={(e) => enterHandler(e, função)}
 }
+
+export function isURL(string) {
+    try {
+        let url = new URL(string)
+        return true
+    } 
+    catch(err) {
+        return false
+    }
+ }
+
+ export function getURL(text){
+    let result = [false, '']
+
+    if(typeof text === 'string'){
+
+        const words = text.split(' ');
+
+        for (let i = 0; i < words.length; i++){
+
+            if (isURL(words[i])){
+                result[0] = true;
+                result[1] = words[i];
+            }
+        }
+    }
+
+    return result
+ }

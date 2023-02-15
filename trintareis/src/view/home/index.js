@@ -45,7 +45,7 @@ export default function Home() {
         <div className="App">
             <Header firstLogin={location.state.firstLogin} profilePhoto={location.state.profilePhoto} coverPhoto={location.state.coverPhoto} userData={location.state.userData}/>
             <div className="feed_content">
-                <FeedForm profilePhoto={urlImageProfile} />
+                <FeedForm profilePhoto={urlImageProfile} stateFirstLogin={location.state.firstLogin} stateProfilePhoto={location.state.profilePhoto} stateCoverPhoto={location.state.coverPhoto} stateUserData={location.state.userData}/>
                 {
                 eventos.map(item => 
                     <FeedPost key={item.id}
