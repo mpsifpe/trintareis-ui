@@ -1,7 +1,7 @@
 import React from 'react';
-import { BrowserRouter as Router, Route} from "react-router-dom";
 import store from '../src/store/';
 import { Provider } from 'react-redux';
+import { BrowserRouter as Router, Route} from "react-router-dom";
 import 'notyf/notyf.min.css';
 
 /*Pages*/
@@ -15,6 +15,7 @@ import Profile from './view/profile/';
 import ExploreScreen from './view/explore-screen';
 import NotificationsScreen from './view/notifications-screen';
 import EditProfileScreen from './view/edit-profile-screen';
+import EditImagesScreen from './view/edit-images-screen';
 
 function App() {
   return (
@@ -31,8 +32,10 @@ function App() {
           <Route exact path='/profile/:id' component={Profile}/>
           <Route exact path='/editProfile' component={EditProfileScreen}/>
           <Route exact path='/editProfile/:id' component={EditProfileScreen}/>
+          <Route exact path='/editProfile' component={EditProfileScreen}/>
           <Route exact path='/explore' component={ExploreScreen}/>
           <Route exact path='/notifications-screen' component={NotificationsScreen}/>
+          <Route exact path='/editImages' component={EditImagesScreen}/>
         </Router>
       </Provider>
   );

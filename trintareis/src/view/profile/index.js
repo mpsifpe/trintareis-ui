@@ -1,9 +1,10 @@
 import './profile.css';
 import React, { useState, useEffect, useContext } from 'react';
-import { Link, useLocation, useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import { MdDone, MdClose } from "react-icons/md";
 import { Perfil, Content, Details, Dropdown } from './styles';
+import DropdownProfile from '../../components/dropdown-profile';
 
 import { isEmpty, formatDate, isURL } from '../../helpers/helper';
 import Header from '../../components/header/index';
@@ -15,8 +16,6 @@ import cover from '../../resources/cover.png';
 import firebase from '../../config/firebase';
 import NotyfContext from '../../components/notyf-toast/NotyfContext';
 import api from '../../config/api';
-
-import DropdownProfile from '../../components/dropdown-profile';
 
 
 function Profile(props) {
@@ -35,6 +34,7 @@ function Profile(props) {
     const [region, setRegion] = useState("");
     const [details, setDetails] = useState("");
     const [actionButton, setActionButton] = useState(<></>);
+    const [dropdown, setDropdown] = useState(<></>);
     
     let profileEmail, idConnection = "";
     let isFriend, inviter, pending = false;
@@ -47,8 +47,8 @@ function Profile(props) {
 
         async function fetch() { 
 
+            //------------------profile usuario logado----------------------------
             if(params.id === location.state.userData.id){
-
                 setUserName(location.state.userData.userName)   
                 setProfileInformation(location.state.userData.profileInformation)
                 setCity(location.state.userData.city)
@@ -60,25 +60,47 @@ function Profile(props) {
                     if(isURL(location.state.profilePhoto)){
                         setUrlImageProfile(location.state.profilePhoto)
                     } else {
-                        storage.ref("profile_images/" + location.state.profilePhoto).getDownloadURL().then(url => setUrlImageProfile(url))
+                        storage.ref("profile_images/" + location.state.profilePhoto).getDownloadURL().then(url => {
+                            setUrlImageProfile(url)
+                            updateProfileImageURL(url)
+                        })
                     }
                 }
                 else {
                     setUrlImageProfile(user)
+                    if(location.state.origin==="edit-images-screen-save"){ updateProfileImageURL("") }
                 }
                 
                 if(!isEmpty(location.state.coverPhoto)) {
                     if(isURL(location.state.coverPhoto)){
                         seturlImageCover(location.state.coverPhoto)
                     } else {
-                        storage.ref("profile_images/" + location.state.coverPhoto).getDownloadURL().then(url => seturlImageCover(url))
+                        storage.ref("profile_images/" + location.state.coverPhoto).getDownloadURL().then(url => {
+                            seturlImageCover(url)
+                            updateCoverImageURL(url)
+                        })
+                        
                     }
                 }
+                else{
+                    if(location.state.origin==="edit-images-screen-save"){ updateCoverImageURL("") }
+                }
                 
-                setActionButton(  <Link to={{pathname: '/editProfile', state: location.state}} style={{ textDecoration: 'none' }}>
-                                    <label className='action_button'>Editar</label>
-                                </Link>)
+                setDropdown(
+                    <Dropdown >
+                        <div className="div__dropdown">
+                            <DropdownProfile 
+                                firstLogin={location.state.firstLogin} 
+                                profilePhoto={location.state.profilePhoto} 
+                                coverPhoto={location.state.coverPhoto}
+                                userData={location.state.userData}
+                            />
+                        </div>
+                    </Dropdown>
+                )
             } 
+
+            //------------------profile usuario outro----------------------------
             else {
                 api.get('/profile/get-by-id/' + params.id)
                 .then((response) => {
@@ -90,13 +112,23 @@ function Profile(props) {
                     profileEmail = response.data.emailUser
     
                     if(!isEmpty(response.data.profilePhoto)) { 
-                        storage.ref("profile_images/" + response.data.profilePhoto).getDownloadURL()
-                        .then(url => setUrlImageProfile(url))}
+                        if (isURL(response.data.profilePhoto)) { 
+                            setUrlImageProfile(response.data.profilePhoto) }
+                        else {
+                            storage.ref("profile_images/" + response.data.profilePhoto).getDownloadURL()
+                            .then(url => setUrlImageProfile(url))}
+                        }
+
                     else {setUrlImageProfile(user)}
                     
                     if(!isEmpty(response.data.coverPhoto)) {  
-                        storage.ref("profile_images/" + response.data.coverPhoto).getDownloadURL()
-                        .then(url => seturlImageCover(url))}
+                        if (isURL(response.data.coverPhoto)) { 
+                            setUrlImageProfile(response.data.coverPhoto) }
+                        else {
+                            storage.ref("profile_images/" + response.data.coverPhoto).getDownloadURL()
+                            .then(url => seturlImageCover(url))
+                        }
+                    }
                 })
                 .catch((error) => {
                     console.log(error)
@@ -132,17 +164,6 @@ function Profile(props) {
                         }
                     })
                     .catch((error)=>{console.log(error)})
-
-                    events.where('emailUser', '==', profileEmail).orderBy("dataTime", "desc").get().then((events) => {
-                        events.forEach((event) => {       
-                            const date = new Date(event.data().dataTime);
-                            listEventos.push({
-                                id: event.id,
-                                timePublication: date.getHours() + ':' + date.getMinutes(),
-                                ...event.data()
-                            })  
-                        })
-                    })
                 })
                 
             }
@@ -157,6 +178,74 @@ function Profile(props) {
         }
     }, []);
 
+    return (
+        <div className="App">
+            <Header firstLogin={location.state.firstLogin} profilePhoto={location.state.profilePhoto} coverPhoto={location.state.coverPhoto} userData={location.state.userData} origin="profile-screen" hideTooltip={true} />
+            <div className="main">
+                <Perfil photo={urlImageCover}>
+                    <div />
+                </Perfil>
+                {dropdown}
+                <Content photoProfile={urlImageProfile}>
+                    <div>
+                        <form className="form">
+                            <div className="div__main_form" style={{width:"500px"}}>
+                                <div className="div__foto" />
+                                <span>{userName}</span>
+                                {actionButton}
+                                <div>
+                                    <p className="p__profileInformation">{profileInformation}</p>
+                                    <p className="p__region">{city}, {region}</p>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </Content>
+                <Details>
+                    <div>
+                        <div className="div__span">
+                            <span>Sobre</span>
+                        </div>
+                        <div className="div__p">
+                            <p>{details}</p>
+                        </div>
+                    </div>
+                </Details>
+                {props.match.params.id ? null
+                    :
+                    <div className='div__feedform'>
+                        <FeedForm profilePhoto={urlImageProfile} />
+                    </div>
+                }
+                <div className="div__timeline">
+                {/*
+                    eventos.map(item => 
+                        <TimeLine  key={item.id}
+                            id={item.id}
+                            img={item.photoName}
+                            profilePhoto={item.profilePhotoUrl}
+                            profileInformation={item.profileInformation}
+                            title={item.title}
+                            nome={item.userName}
+                            horario={formatDate(item.hour)}
+                            conteudo={item.text}
+                            emailUser={item.userEmail}
+                            profileId={item.profileId}
+                            like={item.views}
+                            share={item.share}
+                            coments={item.coments}
+                            tipo={item.typePost}
+                            stateFirstLogin={location.state.firstLogin}
+                            stateProfilePhoto={location.state.profilePhoto} 
+                            stateCoverPhoto={location.state.coverPhoto} 
+                            stateUserData={location.state.userData}/>)
+                    */}
+                </div>
+            </div>
+        </div>
+    )
+
+    //--------------------------------------profile action button handler--------------------
     function actionButtonClick(){
         if(isFriend){
             if(pending){
@@ -220,77 +309,39 @@ function Profile(props) {
         }
     }
 
+    //--------------------------------------update profile imagere ference--------------------
+    function updateProfileImageURL(to){
+        storage.ref("profile_images/" + to).getDownloadURL().then((url)=>{
+            api.put('/profile/update', {
+                "id": location.state.userData.id,
+                "city": location.state.userData.city,
+                "details": location.state.userData.details,
+                "coverPhoto": location.state.coverPhoto,
+                "profileInformation": location.state.userData.profileInformation,
+                "profilePhoto": url,
+                "emailUser": emailUser,
+                "region": location.state.userData.region,
+                "userName": location.state.userData.userName
+            })          
+        })
+    }
 
-    return (
-        <div className="App">
-            <Header firstLogin={location.state.firstLogin} profilePhoto={location.state.profilePhoto} coverPhoto={location.state.coverPhoto} userData={location.state.userData} hideTooltip={true} />
-            <div className="main">
-                <Perfil photo={urlImageCover}>
-                    <div />
-                </Perfil>
-                <Dropdown>
-                    <div className="div__dropdown">
-                        <DropdownProfile />
-                    </div>
-                </Dropdown>
-                <Content photoProfile={urlImageProfile}>
-                    <div>
-                        <form className="form">
-                            <div className="div__main_form">
-                                <div className="div__foto" />
-                                <span>{userName}</span>
-                                {actionButton}
-                                <div>
-                                    <p className="p__profileInformation">{profileInformation}</p>
-                                    <p className="p__region">{city}, {region}</p>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </Content>
-                <Details>
-                    <div>
-                        <div className="div__span">
-                            <span>Sobre</span>
-                        </div>
-                        <div className="div__p">
-                            <p>{details}</p>
-                        </div>
-                    </div>
-                </Details>
-                {props.match.params.id ? null
-                    :
-                    <div className='div__feedform'>
-                        <FeedForm profilePhoto={urlImageProfile} />
-                    </div>
-                }
-                <div className="div__timeline">
-                {
-                    eventos.map(item => 
-                        <TimeLine  key={item.id}
-                            id={item.id}
-                            img={item.photoName}
-                            profilePhoto={item.profilePhotoUrl}
-                            profileInformation={item.profileInformation}
-                            title={item.title}
-                            nome={item.userName}
-                            horario={formatDate(item.hour)}
-                            conteudo={item.text}
-                            emailUser={item.userEmail}
-                            profileId={item.profileId}
-                            like={item.views}
-                            share={item.share}
-                            coments={item.coments}
-                            tipo={item.typePost}
-                            stateFirstLogin={location.state.firstLogin}
-                            stateProfilePhoto={location.state.profilePhoto} 
-                            stateCoverPhoto={location.state.coverPhoto} 
-                            stateUserData={location.state.userData}/>)
-                }
-                </div>
-            </div>
-        </div>
-    )
+    //--------------------------------------update cover image reference--------------------
+    function updateCoverImageURL(to){
+        storage.ref("profile_images/" + to).getDownloadURL().then((url)=>{
+            api.put('/profile/update', {
+                "id": location.state.userData.id,
+                "city": location.state.userData.city,
+                "details": location.state.userData.details,
+                "coverPhoto": url,
+                "profileInformation": location.state.userData.profileInformation,
+                "profilePhoto": location.state.profilePhoto,
+                "emailUser": emailUser,
+                "region": location.state.userData.region,
+                "userName": location.state.userData.userName
+            })           
+        })
+    }
 }
 
 export default Profile;
