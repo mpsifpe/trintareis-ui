@@ -5,6 +5,7 @@ const ModalContent = styled.div`
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     flex-grow: 1;
     padding: 0 0.8rem;
+    opacity: 1;
     overflow-y: scroll;
     /* Scroll */
     &::-webkit-scrollbar {

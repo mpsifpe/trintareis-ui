@@ -32,10 +32,10 @@ function Login() {
 
             if(firstLogin){
                 notyf.success('Bem-vindo!')
-                setLoginRedirect(<Redirect to={{ pathname: '/editProfile', state: { firstLogin: true, profilePhoto: profilePhoto, coverPhoto: coverPhoto, userData: userData } }}/>)
+                setLoginRedirect(<Redirect to={{ pathname: '/editProfile', state: { firstLogin: true, profilePhoto: profilePhoto, coverPhoto: coverPhoto, userData: userData, origin:"login-screen" } }}/>)
             } else {
                 notyf.success('Bem-vindo de volta!')
-                setLoginRedirect(<Redirect to={{ pathname: '/home', state: { firstLogin: false, profilePhoto: profilePhoto, coverPhoto: coverPhoto, userData: userData } }}/>)
+                setLoginRedirect(<Redirect to={{ pathname: '/home', state: { firstLogin: false, profilePhoto: profilePhoto, coverPhoto: coverPhoto, userData: userData, origin:"login-screen" } }}/>)
             }
         }
     },[firstLogin]);
@@ -141,11 +141,11 @@ function Login() {
                         <p className="subtitle">Informe seu email e senha de cadastro para entrar</p>
                         <fieldset className="textfield">
                             <span className="textfield">E-mail</span>
-                            <input id="login2_email_npt" onChange={(e) => setEmail(e.target.value)} onKeyDown={(e) => focusChangeOnEnter(e, passwordRef)} type="email" className="form-control" placeholder="Digite seu e-mail"/>
+                            <input id="login2_email_npt" onChange={(e) => setEmail(e.target.value)} onKeyDown={(e) => focusChangeOnEnter(e, passwordRef)} type="email" className="form-control" placeholder="e-mail"/>
                         </fieldset>
                         <fieldset className="textfield">
                             <span className="textfield">Senha</span>
-                            <input id="login2_passw_npt" onChange={(e) => setSenha(e.target.value)} onKeyDown={(e) => enterHandler(e, singIn)} ref={passwordRef} type="password" className="form-control" placeholder="Digite sua Senha" />
+                            <input id="login2_passw_npt" onChange={(e) => setSenha(e.target.value)} onKeyDown={(e) => enterHandler(e, singIn)} ref={passwordRef} type="password" className="form-control" placeholder="senha" />
                         </fieldset>
                         <div className="link__recovery">
                             <Link to="/recoveryPassword" className=""><span>Esqueci minha senha</span></Link>
