@@ -1,7 +1,7 @@
 import './edit_images_screen.css';
 import React, { useEffect, useState, useContext } from 'react';
 import { useSelector } from 'react-redux';
-import { Redirect, useLocation } from 'react-router-dom';
+import { Redirect, useLocation, Link } from 'react-router-dom';
 
 import api from '../../config/api';
 import firebase from '../../config/firebase';
@@ -67,7 +67,15 @@ export default function EditImagesScreen(){
                         {imageField}
                         <div className="div_buttons_row">
                             <div className="div_buttons_center">
-                                <button type="button" className="w-50 btn btn-cancelar fw-bold bor" style={{height:"45px"}}>Cancelar</button> 
+                                <Link to={{ pathname: ('/profile/' + location.state.userData.id), 
+                                            state: {
+                                                firstLogin: false, 
+                                                profilePhoto: location.state.profilePhoto,
+                                                coverPhoto: location.state.coverPhoto, 
+                                                userData: location.state.userData,
+                                                origin: "edit-images-screen-cancel"}}}>
+                                    <button type="button" className="w-50 btn btn-cancelar fw-bold bor" style={{height:"45px"}}>Cancelar</button> 
+                                </Link>
                                 <button onClick={saveBtnClick} type="button" className="w-50 btn btn-salvar fw-bold bor" style={{height:"45px"}}>{saveButton}</button>
                             </div>
                         </div>
@@ -89,22 +97,6 @@ export default function EditImagesScreen(){
                 handleCoverPhotoChange();
             }
         }
-    }
-
-    //--------------------------------------cancel button--------------------
-    function cancelBtnClick(){
-        setRedirect(
-            <Redirect to={{ 
-                pathname: '/profile', 
-                state: {
-                    firstLogin: false, 
-                    profilePhoto: location.state.profilePhoto,
-                    coverPhoto: location.state.coverPhoto, 
-                    userData: location.state.userData,
-                    origin: "edit-images-screen-cancel"
-                }}}
-            />
-        )
     }
 
     //--------------------------------------delete button------------------
