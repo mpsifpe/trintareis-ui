@@ -77,8 +77,8 @@ export default function (props) {
                         origin= {window.location}
                         className='react-player'
                         config={{ youtube: { playerVars: { origin: 'https://www.youtube.com' } } }}
-                        width={'100%'}
-                        height={'562px'}
+                        width={'760px'}
+                        height={'421px'}
                     />
                 );
                 break;
@@ -134,7 +134,6 @@ export default function (props) {
             message: 'Em desenvolvimento'
           })
     }
-
     
     return (
         <div className="feedPost">
@@ -174,7 +173,7 @@ export default function (props) {
                     <p>
                         {props.conteudo}<br />
                     </p>
-                    <div style={{width: '100%'}}>
+                    <div style={{maxWidth: '760px'}}>
                         {media}
                     </div>
                 </div>
