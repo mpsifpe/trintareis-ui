@@ -11,7 +11,6 @@ import loading from '../../resources/loading.gif';
 import firebase from '../../config/firebase';
 import NotyfContext from '../notyf-toast/NotyfContext';
 import { isEmpty, isURL } from '../../helpers/helper';
-import ImageComponent from '../image-component';
 
 
 export default function (props) {
@@ -59,9 +58,9 @@ export default function (props) {
             
             case "POST_PHOTO":
                 if(isURL(props.img)){
-                    setMedia(<ImageComponent url={props.img}/>)
+                    setMedia(<img src={props.img}/>)
                 } else {
-                    firebase.storage().ref(`images/${props.img}`).getDownloadURL().then(url => {setMedia(<ImageComponent url={url}/>)});
+                    firebase.storage().ref(`images/${props.img}`).getDownloadURL().then(url => {setMedia(<img src={url}/>)});
                 }
                 break;
             
