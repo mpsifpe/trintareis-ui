@@ -74,6 +74,22 @@ export default function Home() {
             console.log(error)
         })
         
+        //update imagem cover
+        if(!isURL(location.state.coverPhoto)){
+            storage.ref("profile_images/" + location.state.coverPhoto).getDownloadURL().then(url => {                
+                api.put('/profile/update', {
+                    "id": location.state.userData.id,
+                    "city": location.state.userData.city,
+                    "details": location.state.userData.details,
+                    "coverPhoto": url,
+                    "profileInformation": location.state.userData.profileInformation,
+                    "profilePhoto": location.state.profilePhoto,
+                    "emailUser": emailUser,
+                    "region": location.state.userData.region,
+                    "userName": location.state.userData.userName
+                })          
+            })
+        }
 
         return function cleanup() {
             abortController.abort()

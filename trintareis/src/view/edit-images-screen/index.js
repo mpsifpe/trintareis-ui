@@ -28,6 +28,9 @@ export default function EditImagesScreen(){
     useEffect(() => {
         let abortController = new AbortController();
 
+        console.log("profile url>>> " + isURL(location.state.profilePhoto))
+        console.log("cover url>>> " + isURL(location.state.coverPhoto))
+
         if(location.state.image === "profile"){
             setTitleText("Editar foto do perfil");
             setImageField(
@@ -42,9 +45,9 @@ export default function EditImagesScreen(){
             setTitleText("Editar foto de capa");
             setImageField(
                 <div className="container">
-                    <input onChange={(e) => setNewCoverImage(e.target.files[0])} type="file" className="form-control" style={{height:"50px"}} accept=".jpg, .png, .jpeg, .bmp"/>
+                    <input onChange={(e) => setNewCoverImage(e.target.files[0])} type="file" className="w-60 form-control" style={{height:"40px"}} accept=".jpg, .png, .jpeg, .bmp"/>
                     { isEmpty(location.state.coverPhoto) ? <></> :
-                        <button onClick={()=>{deletePhotoClick("coverPhoto")}} type="button" className="w-75 h-50 btn btn-salvar fw-bold bor" style={{height:"50px"}}>Apagar</button> }
+                        <button onClick={()=>{deletePhotoClick("coverPhoto")}} type="button" className="btn btn-salvar fw-bold bor" style={{height:"40px", width:"90px", marginLeft:"5px", marginTop:"-1px"}}>Apagar</button> }
                 </div>
             );
          }
@@ -113,6 +116,19 @@ export default function EditImagesScreen(){
         if(type === "profilePhoto"){
             if(isURL(location.state.profilePhoto)){
                 storage.refFromURL(location.state.profilePhoto).delete()
+                .then(()=>{
+                    api.put('/profile/update', {
+                        "id": location.state.userData.id,
+                        "city": location.state.userData.city,
+                        "details": location.state.userData.details,
+                        "coverPhoto": location.state.coverPhoto,
+                        "profileInformation": location.state.userData.profileInformation,
+                        "profilePhoto": "",
+                        "emailUser": emailUser,
+                        "region": location.state.userData.region,
+                        "userName": location.state.userData.userName
+                    })
+                })
                 .catch(function (error) {
                     console.log(">>>Erro ao deletar profilePhoto");
                     console.log(error);
@@ -130,9 +146,67 @@ export default function EditImagesScreen(){
                         />
                     )
                 })
+                .finally(()=>{
+                    setRedirect(
+                        <Redirect to={{ 
+                            pathname: ("/profile/" + location.state.userData.id), 
+                            state: {
+                                firstLogin: false, 
+                                profilePhoto: "",
+                                coverPhoto: location.state.coverPhoto, 
+                                userData: location.state.userData,
+                                origin: "edit-images-screen-save"
+                            }}}
+                        />
+                    )
+                })
             }
             else {
                 storage.ref("profile_images/" + location.state.profilePhoto).delete()
+                .then(()=>{
+                    api.put('/profile/update', {
+                        "id": location.state.userData.id,
+                        "city": location.state.userData.city,
+                        "details": location.state.userData.details,
+                        "coverPhoto": location.state.coverPhoto,
+                        "profileInformation": location.state.userData.profileInformation,
+                        "profilePhoto": "",
+                        "emailUser": emailUser,
+                        "region": location.state.userData.region,
+                        "userName": location.state.userData.userName
+                    })
+                })
+                .catch(function (error) {
+                    console.log(">>>Erro ao deletar profilePhoto");
+                    console.log(error);
+                    notyf.error("Desculpe, ocorreu um erro ao apagar sua foto");
+                    setRedirect(
+                        <Redirect to={{ 
+                            pathname: '/profile', 
+                            state: {
+                                firstLogin: false, 
+                                profilePhoto: location.state.profilePhoto,
+                                coverPhoto: location.state.coverPhoto, 
+                                userData: location.state.userData,
+                                origin: "edit-images-screen-error"
+                            }}}
+                        />
+                    )
+                })
+                .finally(()=>{
+                    setRedirect(
+                        <Redirect to={{ 
+                            pathname: ("/profile/" + location.state.userData.id), 
+                            state: {
+                                firstLogin: false, 
+                                profilePhoto: "",
+                                coverPhoto: location.state.coverPhoto, 
+                                userData: location.state.userData,
+                                origin: "edit-images-screen-save"
+                            }}}
+                        />
+                    )
+                })
             }
         }
 
@@ -140,6 +214,19 @@ export default function EditImagesScreen(){
         else{
             if(isURL(location.state.coverPhoto)){
                 storage.refFromURL(location.state.coverPhoto).delete()
+                .then(()=>{
+                    api.put('/profile/update', {
+                        "id": location.state.userData.id,
+                        "city": location.state.userData.city,
+                        "details": location.state.userData.details,
+                        "coverPhoto": "",
+                        "profileInformation": location.state.userData.profileInformation,
+                        "profilePhoto": location.state.profilePhoto,
+                        "emailUser": emailUser,
+                        "region": location.state.userData.region,
+                        "userName": location.state.userData.userName
+                    })
+                })
                 .catch(function (error) {
                     console.log(">>>Erro ao deletar coverPhoto");
                     console.log(error);
@@ -157,9 +244,67 @@ export default function EditImagesScreen(){
                         />
                     )
                 })
+                .finally(()=>{
+                    setRedirect(
+                        <Redirect to={{ 
+                            pathname: ("/profile/" + location.state.userData.id), 
+                            state: {
+                                firstLogin: false, 
+                                profilePhoto: location.state.profilePhoto,
+                                coverPhoto: "", 
+                                userData: location.state.userData,
+                                origin: "edit-images-screen-save"
+                            }}}
+                        />
+                    )
+                })
             }
             else {
                 storage.ref("profile_images/" + location.state.coverPhoto).delete()
+                .then(()=>{
+                    api.put('/profile/update', {
+                        "id": location.state.userData.id,
+                        "city": location.state.userData.city,
+                        "details": location.state.userData.details,
+                        "coverPhoto": "",
+                        "profileInformation": location.state.userData.profileInformation,
+                        "profilePhoto": location.state.profilePhoto,
+                        "emailUser": emailUser,
+                        "region": location.state.userData.region,
+                        "userName": location.state.userData.userName
+                    })
+                })
+                .catch(function (error) {
+                    console.log(">>>Erro ao deletar profilePhoto");
+                    console.log(error);
+                    notyf.error("Desculpe, ocorreu um erro ao apagar sua foto");
+                    setRedirect(
+                        <Redirect to={{ 
+                            pathname: '/profile', 
+                            state: {
+                                firstLogin: false, 
+                                profilePhoto: location.state.profilePhoto,
+                                coverPhoto: location.state.coverPhoto, 
+                                userData: location.state.userData,
+                                origin: "edit-images-screen-error"
+                            }}}
+                        />
+                    )
+                })
+                .finally(()=>{
+                    setRedirect(
+                        <Redirect to={{ 
+                            pathname: ("/profile/" + location.state.userData.id), 
+                            state: {
+                                firstLogin: false, 
+                                profilePhoto: location.state.profilePhoto,
+                                coverPhoto: "", 
+                                userData: location.state.userData,
+                                origin: "edit-images-screen-save"
+                            }}}
+                        />
+                    )
+                })
             }
         }
     }
@@ -186,7 +331,7 @@ export default function EditImagesScreen(){
                         "userName": location.state.userData.userName
                     }).catch(()=>{
                         storage.ref("profile_images/" + profileImageName).delete();
-                        notyf.error("Desculpe, ocorreu um erro ao atualizar o perfil");
+                        notyf.error("Desculpe, ocorreu um erro ao atualizar a imagem");
                         setRedirect(
                             <Redirect to={{ 
                                 pathname: ("/profile/" + location.state.userData.id), 
@@ -204,7 +349,7 @@ export default function EditImagesScreen(){
                 .catch((error) => {
                     console.log("Erro ao carregar profilePhoto - ");
                     console.log(error);
-                    notyf.error("Desculpe, ocorreu um erro ao atualizar o perfil");
+                    notyf.error("Desculpe, ocorreu um erro ao atualizar a imagem");
                     setRedirect(
                         <Redirect to={{ 
                             pathname: ("/profile/" + location.state.userData.id), 
@@ -253,6 +398,164 @@ export default function EditImagesScreen(){
                         })
                         .catch(()=>{
                             storage.ref("profile_images/" + profileImageName).delete();
+                            notyf.error("Desculpe, ocorreu um erro ao atualizar sua imagem");
+                            setRedirect(
+                                <Redirect to={{ 
+                                    pathname: ("/profile/" + location.state.userData.id), 
+                                    state: {
+                                        firstLogin: false, 
+                                        profilePhoto: location.state.profilePhoto,
+                                        coverPhoto: location.state.coverPhoto, 
+                                        userData: location.state.userData,
+                                        origin: "edit-images-screen-error"
+                                    }}}
+                                />
+                            )
+                        }) 
+                        
+                    })
+                    .catch((error) => {
+                        console.log("Erro ao carregar profilePhoto - ");
+                        console.log(error);
+                        notyf.error("Desculpe, ocorreu um erro ao atualizar sua imagem");
+                        setRedirect(
+                            <Redirect to={{ 
+                                pathname: ("/profile/" + location.state.userData.id), 
+                                state: {
+                                    firstLogin: false, 
+                                    profilePhoto: location.state.profilePhoto,
+                                    coverPhoto: location.state.coverPhoto, 
+                                    userData: location.state.userData,
+                                    origin: "edit-images-screen-error"
+                                }}}
+                            />
+                        )
+                    })
+                    .finally(()=>{
+                        setRedirect(
+                            <Redirect to={{ 
+                                pathname: ("/profile/" + location.state.userData.id), 
+                                state: {
+                                    firstLogin: false, 
+                                    profilePhoto: profileImageName,
+                                    coverPhoto: location.state.coverPhoto, 
+                                    userData: location.state.userData,
+                                    origin: "edit-images-screen-save"
+                                }}}
+                            />
+                        )
+                    })
+
+            })
+            .catch(function (error) {
+                console.log(">>>Erro ao deletar profilePhoto");
+                console.log(error);
+                notyf.error("Desculpe, ocorreu um erro ao atualizar sua imagem");
+                setRedirect(
+                    <Redirect to={{ 
+                        pathname: ("/profile/" + location.state.userData.id), 
+                        state: {
+                            firstLogin: false, 
+                            profilePhoto: location.state.profilePhoto,
+                            coverPhoto: location.state.coverPhoto, 
+                            userData: location.state.userData,
+                            origin: "edit-images-screen-error"
+                        }}}
+                    />
+                )
+            })
+        }
+    }
+
+    //--------------------------------------change cover photo---------------------
+    function handleCoverPhotoChange(){      
+        
+        // perfil sem coverPhoto
+        if (isEmpty(location.state.coverPhoto)){
+
+            coverImageName = (emailUser + "_cover." + newCoverImage.name.split(".").pop());
+            
+            storage.ref("profile_images/" + coverImageName).put(newCoverImage)
+                .then(()=>{
+                    api.put('/profile/update', {
+                        "id": location.state.userData.id,
+                        "city": location.state.userData.city,
+                        "details": location.state.userData.details,
+                        "coverPhoto": coverImageName,
+                        "profileInformation": location.state.userData.profileInformation,
+                        "profilePhoto": location.state.profilePhoto,
+                        "emailUser": emailUser,
+                        "region": location.state.userData.region,
+                        "userName": location.state.userData.userName
+                    }).catch(()=>{
+                        storage.ref("profile_images/" + coverImageName).delete();
+                        notyf.error("Desculpe, ocorreu um erro ao atualizar a imagem");
+                        setRedirect(
+                            <Redirect to={{ 
+                                pathname: ("/profile/" + location.state.userData.id), 
+                                state: {
+                                    firstLogin: false, 
+                                    profilePhoto: location.state.profilePhoto,
+                                    coverPhoto: location.state.coverPhoto, 
+                                    userData: location.state.userData,
+                                    origin: "edit-images-screen-error"
+                                }}}
+                            />
+                        )
+                    })
+                })
+                .catch((error) => {
+                    console.log("Erro ao carregar profilePhoto - ");
+                    console.log(error);
+                    notyf.error("Desculpe, ocorreu um erro ao atualizar a imagem");
+                    setRedirect(
+                        <Redirect to={{ 
+                            pathname: ("/profile/" + location.state.userData.id), 
+                            state: {
+                                firstLogin: false, 
+                                profilePhoto: location.state.profilePhoto,
+                                coverPhoto: location.state.coverPhoto, 
+                                userData: location.state.userData,
+                                origin: "edit-images-screen-error"
+                            }}}
+                        />
+                    )
+                })
+                .finally(()=>{
+                    setRedirect(
+                        <Redirect to={{ 
+                            pathname: ("/profile/" + location.state.userData.id), 
+                            state: {
+                                firstLogin: false, 
+                                profilePhoto: location.state.profilePhoto,
+                                coverPhoto: coverImageName, 
+                                userData: location.state.userData,
+                                origin: "edit-images-screen-save"
+                            }}}
+                        />
+                    )
+                })
+
+        // perfil com coverPhoto
+        } else {
+            coverImageName = (emailUser + "_cover." + newCoverImage.name.split(".").pop())
+
+            storage.refFromURL(location.state.coverPhoto).delete().then(()=>{                
+                storage.ref("profile_images/" + coverImageName).put(newCoverImage)
+                    .then(()=>{
+                        api.put('/profile/update', {
+                            "id": location.state.userData.id,
+                            "city": location.state.userData.city,
+                            "details": location.state.userData.details,
+                            "coverPhoto": location.state.coverPhoto,
+                            "profileInformation": location.state.userData.profileInformation,
+                            "profilePhoto": coverImageName,
+                            "emailUser": emailUser,
+                            "region": location.state.userData.region,
+                            "userName": location.state.userData.userName
+                        })
+                        .catch(()=>{
+                            storage.ref("profile_images/" + coverImageName).delete();
                             notyf.error("Desculpe, ocorreu um erro ao atualizar sua foto do perfil");
                             setRedirect(
                                 <Redirect to={{ 
@@ -292,7 +595,7 @@ export default function EditImagesScreen(){
                                 pathname: ("/profile/" + location.state.userData.id), 
                                 state: {
                                     firstLogin: false, 
-                                    profilePhoto: profileImageName,
+                                    profilePhoto: coverImageName,
                                     coverPhoto: location.state.coverPhoto, 
                                     userData: location.state.userData,
                                     origin: "edit-images-screen-save"
@@ -304,164 +607,6 @@ export default function EditImagesScreen(){
             })
             .catch(function (error) {
                 console.log(">>>Erro ao deletar profilePhoto");
-                console.log(error);
-                notyf.error("Desculpe, ocorreu um erro ao atualizar sua foto do perfil");
-                setRedirect(
-                    <Redirect to={{ 
-                        pathname: ("/profile/" + location.state.userData.id), 
-                        state: {
-                            firstLogin: false, 
-                            profilePhoto: location.state.profilePhoto,
-                            coverPhoto: location.state.coverPhoto, 
-                            userData: location.state.userData,
-                            origin: "edit-images-screen-error"
-                        }}}
-                    />
-                )
-            })
-        }
-    }
-
-    //--------------------------------------change cover photo---------------------
-    function handleCoverPhotoChange(){      
-        
-        // perfil sem coverPhoto
-        if (isEmpty(location.state.coverPhoto)){
-
-            coverImageName = (emailUser + "_cover." + newCoverImage.name.split(".").pop());
-            
-            storage.ref("profile_images/" + coverImageName).put(newCoverImage)
-                .then(()=>{
-                    api.put('/profile/update', {
-                        "id": location.state.userData.id,
-                        "city": location.state.userData.city,
-                        "details": location.state.userData.details,
-                        "coverPhoto": coverImageName,
-                        "profileInformation": location.state.userData.profileInformation,
-                        "profilePhoto": location.state.profilePhoto,
-                        "emailUser": emailUser,
-                        "region": location.state.userData.region,
-                        "userName": location.state.userData.userName
-                    })
-                    .catch(()=>{
-                        storage.ref("profile_images/" + coverImageName).delete()
-                        notyf.error("Desculpe, ocorreu um erro ao atualizar o perfil");
-                        setRedirect(
-                            <Redirect to={{ 
-                                pathname: ("/profile/" + location.state.userData.id), 
-                                state: {
-                                    firstLogin: false, 
-                                    profilePhoto: location.state.profilePhoto,
-                                    coverPhoto: location.state.coverPhoto, 
-                                    userData: location.state.userData,
-                                    origin: "edit-images-screen-error"
-                                }}}
-                            />
-                        )
-                    })
-                })
-                .catch((error) => {
-                    console.log("Erro ao carregar coverPhoto - ");
-                    console.log(error);
-                    notyf.error("Desculpe, ocorreu um erro ao atualizar o perfil");
-                    setRedirect(
-                        <Redirect to={{ 
-                            pathname: ("/profile/" + location.state.userData.id), 
-                            state: {
-                                firstLogin: false, 
-                                profilePhoto: location.state.profilePhoto,
-                                coverPhoto: location.state.coverPhoto, 
-                                userData: location.state.userData,
-                                origin: "edit-images-screen-error"
-                            }}}
-                        />
-                    )
-                })
-                .finally(()=>{
-                    setRedirect(
-                        <Redirect to={{ 
-                            pathname: ("/profile/" + location.state.userData.id), 
-                            state: {
-                                firstLogin: false, 
-                                profilePhoto: location.state.profileImageName,
-                                coverPhoto: coverImageName, 
-                                userData: location.state.userData,
-                                origin: "edit-images-screen-save"
-                            }}}
-                        />
-                    )
-                })
-
-        // perfil com coverPhoto
-        } else {
-            coverImageName = (emailUser + "_cover." + newCoverImage.name.split(".").pop())
-
-            storage.refFromURL(location.state.coverPhoto).delete().then(()=>{                
-                storage.ref("profile_images/" + coverImageName).put(newCoverImage)
-                    .then(()=>{
-                        api.put('/profile/update', {
-                            "id": location.state.userData.id,
-                            "city": location.state.userData.city,
-                            "details": location.state.userData.details,
-                            "coverPhoto": coverImageName,
-                            "profileInformation": location.state.userData.profileInformation,
-                            "profilePhoto": location.state.profileImageName,
-                            "emailUser": emailUser,
-                            "region": location.state.userData.region,
-                            "userName": location.state.userData.userName
-                        })
-                        .catch(()=>{
-                            storage.ref("profile_images/" + coverImageName).delete();
-                            notyf.error("Desculpe, ocorreu um erro ao atualizar sua foto do perfil");
-                            setRedirect(
-                                <Redirect to={{ 
-                                    pathname: ("/profile/" + location.state.userData.id), 
-                                    state: {
-                                        firstLogin: false, 
-                                        profilePhoto: location.state.profilePhoto,
-                                        coverPhoto: location.state.coverPhoto, 
-                                        userData: location.state.userData,
-                                        origin: "edit-images-screen-error"
-                                    }}}
-                                />
-                            )
-                        })
-                    })
-                    .catch((error) => {
-                        console.log("Erro ao carregar coverPhoto - ");
-                        console.log(error);
-                        notyf.error("Desculpe, ocorreu um erro ao atualizar sua foto do perfil");
-                        setRedirect(
-                            <Redirect to={{ 
-                                pathname: ("/profile/" + location.state.userData.id), 
-                                state: {
-                                    firstLogin: false, 
-                                    profilePhoto: location.state.profilePhoto,
-                                    coverPhoto: location.state.coverPhoto, 
-                                    userData: location.state.userData,
-                                    origin: "edit-images-screen-error"
-                                }}}
-                            />
-                        )
-                    })
-                    .finally(()=>{
-                        setRedirect(
-                            <Redirect to={{ 
-                                pathname: ("/profile/" + location.state.userData.id), 
-                                state: {
-                                    firstLogin: false, 
-                                    profilePhoto: location.state.profilePhoto,
-                                    coverPhoto: coverImageName, 
-                                    userData: location.state.userData,
-                                    origin: "edit-images-screen-save"
-                                }}}
-                            />
-                        )
-                    })
-
-            })
-            .catch(function (error) {
-                console.log(">>>Erro ao deletar coverPhoto");
                 console.log(error);
                 notyf.error("Desculpe, ocorreu um erro ao atualizar sua foto do perfil");
                 setRedirect(
