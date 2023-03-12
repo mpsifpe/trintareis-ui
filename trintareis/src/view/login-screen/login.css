@@ -107,7 +107,7 @@
     font-size: large;
     align-content: center;
     display: grid;
-    margin-top: 5px;
+    margin-top: 0px;
     margin-bottom: 0px;
     height: 50px;
     text-align: center;
@@ -124,6 +124,7 @@
 .textfield input::placeholder {
     color: #f21667;
     font-size: large;
+    text-align: left;
   }
 .textfield label{
     display: block;
@@ -132,6 +133,11 @@
     color: #696969;
     font-size: large;
     padding-top: -2;
+}
+.textfield span{
+    position: static;
+    text-align: left;
+    font-weight: 500;
 }
 .form__signin h3{
     color: #363636;
@@ -146,7 +152,7 @@
     font-size: medium;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-weight: 400;
-    height: 40px;   
+    height: 40px;
 }
 .btn-lg{
     background-color: #007900;
@@ -219,8 +225,8 @@
     display: flex;
     text-decoration: underline;
     justify-content: end;
-    color: blue;
-    margin-top: 3px;
+    color: mediumblue;
+    margin-top: 1px;
     margin-bottom: 10px;
     font-size: medium;
 }

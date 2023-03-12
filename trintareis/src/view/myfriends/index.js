@@ -65,7 +65,7 @@ export default function MyFriends() {
     return (
         <div className="App">
             {redirect}
-            <Header firstLogin={location.state.firstLogin} profilePhoto={location.state.profilePhoto} coverPhoto={location.state.coverPhoto} userData={location.state.userData}/>
+            <Header firstLogin={location.state.firstLogin} profilePhoto={location.state.profilePhoto} coverPhoto={location.state.coverPhoto} userData={location.state.userData} origin="my-friends-screen"/>
                 <div className="div__main_myfriends">
                     <div className="div__title_myfriends">
                         <span>Meus amigos</span>

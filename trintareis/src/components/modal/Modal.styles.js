@@ -70,6 +70,7 @@ export const Wrapper = styled.div`
     flex-direction: column;
     ${!!size && wrapperModifiers[size]()}
     animation: ${fadeInUp} 0.2s ease-in;
+    opacity: 1;
   `}
 `;
 
@@ -82,6 +83,7 @@ export const Header = styled.div`
     padding-top: 0.75rem;
     padding-bottom: 0.25rem;
     position: relative;
+    opacity: 1;
     .title {
       font-size: 1.5rem;
       color: #333;

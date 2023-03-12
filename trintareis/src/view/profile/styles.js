@@ -8,6 +8,7 @@ export const Perfil = styled.div`
     background-size: cover;
     position: relative;
     width: 80%;
+    height: 400px;
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
     padding: 135px;
@@ -57,7 +58,7 @@ export const Content = styled.div`
         background-position: 50% 50%;
         border-color: #aaa !important;
         border: 0px;
-        margin-top: -100px;
+        margin-top: -150px;
     }
 
     .div__main_form{

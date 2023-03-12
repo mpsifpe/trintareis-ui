@@ -1,28 +1,46 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { IoNotificationsOutline, IoHomeOutline, IoPeopleOutline, IoCompassOutline, IoChatbubblesOutline, IoLogOutOutline } from "react-icons/io5";
-import { GiHummingbird } from "react-icons/gi";
-import { useSelector, useDispatch } from 'react-redux';
-
 import './header.css';
-import '../stories/stories.css'
-import { Link, Redirect } from 'react-router-dom';
-import loading from '../../resources/loading.gif';
-import user from '../../resources/user.png';
-import { isEmpty } from '../../helpers/helper';
-import NotyfContext from '../notyf-toast/NotyfContext';
-import { Tooltip } from 'react-tooltip'
+import '../stories/stories.css';
 import 'react-tooltip/dist/react-tooltip.css';
 
+import React, { useState, useEffect, useContext } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { Link, Redirect } from 'react-router-dom';
+import { IoNotificationsOutline, IoHomeOutline, IoPeopleOutline, IoCompassOutline, IoChatbubblesOutline, IoLogOutOutline } from "react-icons/io5";
+import { GiHummingbird } from "react-icons/gi";
+
+import { isEmpty, isURL } from '../../helpers/helper';
+import { Tooltip } from 'react-tooltip'
+
+import firebase from '../../config/firebase';
+import user from '../../resources/user.png';
+import loading from '../../resources/loading.gif';
+import NotyfContext from '../notyf-toast/NotyfContext';
+
 function Header(props) {
+    
     const dispatch = useDispatch();
-    const [urlImageProfile, setUrlImageProfile] = useState(<img src={loading} style={{opacity: '0.75'}} alt="loading"/>);
     const notyf = useContext(NotyfContext);
+    const storage = firebase.storage();
+
     const [showTooltip, setShowTooltip] = useState(<Tooltip anchorId="profile_img" place="bottom" style={{opacity:0.35, color:'white'}} positionStrategy="absolute"/>)
+    const [urlImageProfile, setUrlImageProfile] = useState(<img src={loading} style={{opacity: '0.75'}} alt="loading"/>);
 
     useEffect(() => {
         const abortController = new AbortController()
         
-        !isEmpty(props.profilePhoto) ? setUrlImageProfile(props.profilePhoto) : setUrlImageProfile(user);
+        if (isEmpty(props.profilePhoto)){
+            setUrlImageProfile(<img src={user}/>);
+        } 
+        else {
+            if(isURL(props.profilePhoto)){
+                setUrlImageProfile(<img src={props.profilePhoto}/>);
+            }
+            else {
+                storage.ref("profile_images/" + props.profilePhoto).getDownloadURL().then(url => {
+                    setUrlImageProfile(<img src={url}/>);
+                })
+            }
+        }
 
         if(!isEmpty(props.hideTooltip)){
             if (props.hideTooltip){ setShowTooltip(<></>)}
@@ -51,7 +69,8 @@ function Header(props) {
                                         firstLogin: props.firstLogin, 
                                         profilePhoto: props.profilePhoto, 
                                         coverPhoto: props.coverPhoto, 
-                                        userData: props.userData }}}>
+                                        userData: props.userData,
+                                        origin: props.origin }}}>
                             <div className="logo__fb">
                                 <GiHummingbird />
                             </div>
@@ -67,7 +86,8 @@ function Header(props) {
                                                         firstLogin: props.firstLogin, 
                                                         profilePhoto: props.profilePhoto, 
                                                         coverPhoto: props.coverPhoto, 
-                                                        userData: props.userData }}} className='headerLinkStyle'>
+                                                        userData: props.userData,
+                                                        origin: props.origin }}} className='headerLinkStyle'>
                             <div className="header_button">
                                 <IoHomeOutline className='icon_button' />
                                 <span hidden={true}>Início</span>
@@ -77,7 +97,8 @@ function Header(props) {
                                                             firstLogin: props.firstLogin, 
                                                             profilePhoto: props.profilePhoto, 
                                                             coverPhoto: props.coverPhoto, 
-                                                            userData: props.userData }}} className='headerLinkStyle'>
+                                                            userData: props.userData,
+                                                            origin: props.origin }}} className='headerLinkStyle'>
                             <div className="header_button">
                                 <IoCompassOutline className='icon_button'/>
                                 <span hidden={true}>Explorar</span>
@@ -87,19 +108,13 @@ function Header(props) {
                                                             firstLogin: props.firstLogin, 
                                                             profilePhoto: props.profilePhoto, 
                                                             coverPhoto: props.coverPhoto, 
-                                                            userData: props.userData }}} className='headerLinkStyle'>
+                                                            userData: props.userData,
+                                                            origin: props.origin }}} className='headerLinkStyle'>
                             <div className="header_button">
                                 <IoPeopleOutline className='icon_button'/>
                                 <span hidden={true}>Amigos</span>
                             </div>
                         </Link>
-                        {/*
-                        <Link to="" className='headerLinkStyle'>
-                            <div className="header_button" >
-                                <MdEventNote />
-                                <span>Eventos</span>
-                            </div>
-                        </Link>*/}
                         
                         <div className='headerLinkStyle'>
                             <div className="header_button" onClick={notifyBuilding}>
@@ -124,10 +139,11 @@ function Header(props) {
                                     firstLogin: props.firstLogin, 
                                     profilePhoto: props.profilePhoto, 
                                     coverPhoto: props.coverPhoto, 
-                                    userData: props.userData }}}>
+                                    userData: props.userData,
+                                    origin: props.origin }}}>
                         
                         <div className="img_profile" id="profile_img" data-tooltip-content="Meu perfil">
-                            <img src={urlImageProfile}/>
+                            {urlImageProfile}
                         </div>
                         
                     </Link>

@@ -77,6 +77,8 @@ export default function (props) {
                         origin= {window.location}
                         className='react-player'
                         config={{ youtube: { playerVars: { origin: 'https://www.youtube.com' } } }}
+                        width={'100%'}
+                        height={'562px'}
                     />
                 );
                 break;
@@ -144,7 +146,8 @@ export default function (props) {
                                         firstLogin: props.stateFirstLogin, 
                                         profilePhoto: props.stateProfilePhoto, 
                                         coverPhoto: props.stateCoverPhoto, 
-                                        userData: props.stateUserData }
+                                        userData: props.stateUserData,
+                                        origin: ("post."+props.id) }
                                 }} style={{ textDecoration: 'none' }}>
                             <img src={profilePhoto} />
                         </Link>
@@ -155,7 +158,8 @@ export default function (props) {
                                         firstLogin: props.stateFirstLogin, 
                                         profilePhoto: props.stateProfilePhoto, 
                                         coverPhoto: props.stateCoverPhoto, 
-                                        userData: props.stateUserData }
+                                        userData: props.stateUserData,
+                                        origin: ("post."+props.id) }
                                 }} style={{ textDecoration: 'none' }}>
                             <div>
                                 <span>{props.nome}</span>
@@ -170,7 +174,7 @@ export default function (props) {
                     <p>
                         {props.conteudo}<br />
                     </p>
-                    <div style={{width: 'inherit', height: 'inherit' }}>
+                    <div style={{width: '100%'}}>
                         {media}
                     </div>
                 </div>

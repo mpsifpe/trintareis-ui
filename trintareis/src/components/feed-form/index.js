@@ -1,14 +1,16 @@
-import React, { useState, useContext } from 'react';
-import { HiPhotograph, HiVideoCamera, HiMenuAlt2 } from "react-icons/hi";
-import { Link } from "react-router-dom";
-import './feedForm.css'
+import './feedForm.css';
 
+import React, { useState, useContext } from 'react';
+import { Link } from "react-router-dom";
 import { useSelector } from 'react-redux';
+
+import { HiPhotograph, HiVideoCamera, HiMenuAlt2 } from "react-icons/hi";
+
 import Modal from "../modal/Modal";
 import useModalState from "../../hooks/useModalState";
 
-import firebase from '../../config/firebase';
 import api from '../../config/api';
+import firebase from '../../config/firebase';
 import { isEmpty } from '../../helpers/helper';
 import NotyfContext from '../notyf-toast/NotyfContext';
 import loading from '../../resources/loading.gif';

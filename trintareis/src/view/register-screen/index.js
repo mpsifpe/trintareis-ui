@@ -67,11 +67,11 @@ function RegisterScreen() {
                         </fieldset>
                         <span className="span__agreement">
                             Ao clicar em Aceite e cadastre-se, você aceita o
-                            <a id="homescreen_contract_link"href="">Contrato do Usuário</a>
+                            <a id="homescreen_contract_link">Contrato do Usuário</a>
                             , a
-                            <a id="homescreen_privacy_link"href="">Política de Privacidade</a>
+                            <a id="homescreen_privacy_link">Política de Privacidade</a>
                             e a
-                            <a id="homescreen__cookies_link" href="">Política de Cookies</a>
+                            <a id="homescreen__cookies_link">Política de Cookies</a>
                             do Trinta Reis.
                         </span>
                         <div className="div__register_btn">

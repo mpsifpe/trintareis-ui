@@ -4,7 +4,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Redirect, useLocation } from 'react-router-dom';
 
 import api from '../../config/api';
-import firebase from '../../config/firebase';
 import { delay, isEmpty } from '../../helpers/helper';
 import CountrySelector from '../../components/country-selector/countrySelector';
 import loading from '../../resources/loading.gif';
@@ -24,21 +23,13 @@ export default function EditProfileScreen(){
             city: location.state.userData.city,
             coverPhoto: location.state.coverPhoto,
             profilePhoto: location.state.profilePhoto   });
-    
-    const [profilePhotoNew, setProfilePhotoNew] = useState("");
-    const [coverPhotoNew, setCoverPhotoNew] = useState("");
 
     const [redirect, setRedirect] = useState(null);
     const [saveButton, setSaveButton] = useState("Salvar");    
     const [cancelButton, setCancelButton] = useState(<button type="button" className="w-100 btn btn-cancelar fw-bold bor"/>);
-    const [deleteProfilePhotoButton, setDeleteProfilePhotoButton] = useState(<></>)
     const [titleText, setTitleText] = useState( <div><h3>Carregando...</h3></div> );
-    const [photoText, setPhotoText] = useState("Carregar foto de perfil");
-    const [coverText, setCoverText] = useState("Carregar imagem de capa");
 
     const emailUser = useSelector(state => state.emailUser);
-    const storage = firebase.storage();
-    let profileImageName, coverImageName = ""
 
     useEffect(() => {
         let abortController = new AbortController();
@@ -55,24 +46,14 @@ export default function EditProfileScreen(){
                                             firstLogin: location.state.firstLogin, 
                                             profilePhoto: location.state.profilePhoto, 
                                             coverPhoto: location.state.coverPhoto, 
-                                            userData: location.state.userData 
+                                            userData: location.state.userData,
+                                            origin:"edit-profile-screen" 
                                         }}}/>)}>Cancelar
                 </button>);
             
             api.get('/profile/' + emailUser)
             .then(function (response) {
                 console.log(response)
-                console.log("profile foto>>>", response.data.profilePhoto)
-
-                if (!isEmpty(response.data.profilePhoto)){
-                    setPhotoText("Trocar foto de perfil");
-                    setDeleteProfilePhotoButton(<button onClick={()=>{deletePhotoClick("profilePhoto")}} type="button" className="w-100 btn btn-salvar fw-bold bor">Apagar</button>);
-                }
-                
-                if (!isEmpty(response.data.coverPhoto)){
-                    setCoverText("Trocar imagem de capa");
-                    //setDeleteProfilePhotoButton(<button onClick={()=>{deletePhoto("profilePhoto")}} type="button" className="w-100 btn btn-salvar fw-bold bor">Apagar</button>);
-                }
 
                 setUserData({
                     id: response.data.id,
@@ -94,7 +75,8 @@ export default function EditProfileScreen(){
                             firstLogin: location.state.firstLogin, 
                             profilePhoto: location.state.profilePhoto, 
                             coverPhoto: location.state.coverPhoto, 
-                            userData: location.state.userData 
+                            userData: location.state.userData,
+                            origin:"edit-profile-screen"
                         }}}
                     />)
             })
@@ -117,119 +99,6 @@ export default function EditProfileScreen(){
         }
     },[]);
    
-    function handleProfilePhotoChange(image){ 
-
-        if(!location.state.firstLogin){    
-            
-            // perfil sem profilePhoto
-            if (isEmpty(userData.profilePhoto)){
-
-                profileImageName = (emailUser + "_profile." + image.name.split(".").pop());
-                
-                storage.ref("profile_images/" + profileImageName).put(image)
-                    .then(()=>{
-                        storage.ref("profile_images/" + profileImageName).getDownloadURL()
-                            .then((url)=>{
-                                setUserData({ ...userData, profilePhoto: url });
-                            });
-
-                    })
-                    .catch((error) => {
-                        console.log("Erro ao carregar profilePhoto - ");
-                        console.log(error);
-                        notyf.error("Desculpe, ocorreu um erro ao atualizar sua foto do perfil");
-                    })
-
-            // perfil com profilePhoto
-            } else {
-                
-                //----nova foto selecionada, exclui a antiga primeiro para depois subir a nova
-                //----para deletar a foto será exibido um botão específico
-                profileImageName = (emailUser + "_profile." + image.name.split(".").pop())
-
-                storage.refFromURL(userData.profilePhoto).delete().then(()=>{
-                    
-                    //----se delete com sucesso, url é apagada do userData e nova imagem é carregada
-                    setUserData({ ...userData, profilePhoto: "" });
-                    
-                    storage.ref("profile_images/" + profileImageName).put(image)
-                        .then(()=>{
-                            storage.ref("profile_images/" + profileImageName).getDownloadURL()
-                                .then((url)=>{
-                                    setUserData({ ...userData, profilePhoto: url });
-                                });
-                        })
-                        .catch((error) => {
-                            console.log("Erro ao carregar profilePhoto - ");
-                            console.log(error);
-                            notyf.error("Desculpe, ocorreu um erro ao atualizar sua foto do perfil");
-                        })
-
-                })
-                .catch(function (error) {
-                    //----caso ocorra erro no delete, a url permanecerá no userData
-                    console.log(">>>Erro ao deletar profilePhoto");
-                    console.log(error);
-                    notyf.error("Desculpe, ocorreu um erro ao atualizar sua foto do perfil");
-                })
-            }
-        }
-    }
-
-    function handleCoverPhotoChange(){      
-        /*
-        if(location.state.firstLogin){  
-        //----esse bloco insere as fotos na criação do perfil----
-            if (!isEmpty(coverPhotoNew)){
-
-                coverImageName = (emailUser + "_cover." + coverPhotoNew.name.split(".").pop())
-
-                setUserData({ ...userData, coverPhoto: coverImageName })
-
-                storage.ref("profile_images/" + coverImageName).put(coverPhotoNew)
-                .then(()=>{ updateRef("coverPhoto", coverImageName) })
-
-            } else { 
-                setUserData({ ...userData, coverPhoto: "" })  }
-
-        } else {
-        //----esse bloco insere as fotos na edição do perfil----
-            //----se já existe foto de cover, exclui a antiga primeiro---
-            if (!isEmpty(userData.coverPhoto)){
-                if (!isEmpty(coverPhotoNew)){
-
-                    coverImageName = (emailUser + "_cover." + coverPhotoNew.name.split(".").pop())
-
-                    storage.ref("profile_images/" + userData.coverPhoto).delete().then(()=>{
-
-                        setUserData({ ...userData, coverPhoto: coverImageName });
-
-                        storage.ref("profile_images/" + coverImageName).put(coverPhotoNew)
-                        .then(()=>{ updateRef("coverPhoto", coverImageName) })
-
-                    }).catch(function (error) {
-                        console.log(error);
-                        setUserData({ ...userData, coverPhoto: "" });
-                        coverImageName=""
-                    })
-                } else {
-                    coverImageName = userData.coverPhoto
-                }   
-            } else {
-                if (!isEmpty(coverPhotoNew)){
-
-                    coverImageName = (emailUser + "_cover." + coverPhotoNew.name.split(".").pop())
-
-                    setUserData({ ...userData, coverPhoto: coverImageName })
-
-                    storage.ref("profile_images/" + coverImageName).put(coverPhotoNew)
-                    .then(()=>{ updateRef("coverPhoto", coverImageName) })
-                }
-            }
-        }
-        */
-    }
-
     function putUpdateProfile(){
         console.log("put update");
         delay(3000);
@@ -246,7 +115,7 @@ export default function EditProfileScreen(){
             "userName": userData.userName
         })
         .then(function (response) {
-            console.log(response)
+            console.log("sucesso")
 
             if (response.status === 201){
                 notyf.success("Perfil editado com sucesso!")
@@ -257,14 +126,15 @@ export default function EditProfileScreen(){
                             firstLogin: false, 
                             profilePhoto: userData.profilePhoto,
                             coverPhoto: userData.coverPhoto, 
-                            userData: userData 
+                            userData: userData,
+                            origin:"edit-profile-screen"
                         }}}
                     />
                 )
             }
         })
         .catch(function (error) {
-            console.log(error)
+            console.log(error.status)
             notyf.error("Ocorreu um erro, favor tente novamente")
             setSaveButton("Salvar");
         })
@@ -272,7 +142,8 @@ export default function EditProfileScreen(){
 
     function postCreateProfile() {
         console.log("post create")
-
+        console.log(userData)
+        
         api.post('/profile/create', {
             "city": userData.city,
             "details": userData.details,
@@ -284,7 +155,7 @@ export default function EditProfileScreen(){
             "userName": userData.userName
         })
         .then(function (response) {  
-            console.log(response)
+            console.log("sucesso")
 
             if (response.status === 201){
                 delay(5000);
@@ -295,16 +166,17 @@ export default function EditProfileScreen(){
                         pathname: '/home', 
                         state: {
                                 firstLogin: false,
-                                profilePhoto: userData.profilePhoto, 
-                                coverPhoto: userData.coverPhoto, 
-                                userData: userData 
+                                profilePhoto: "", 
+                                coverPhoto: "", 
+                                userData: userData,
+                                origin:"edit-profile-screen"
                                }}}
                     />
                 )
             }
         })
         .catch(function (error) {
-            console.log(error)
+            console.log(error.status)
             notyf.error("Ocorreu um erro, favor tente novamente");
             setSaveButton("Salvar");
         })
@@ -316,9 +188,6 @@ export default function EditProfileScreen(){
                 notyf.error("Favor preencher os campos obrigatórios"); }
             else {
                 setSaveButton(<img src={loading} style={{height: '25px', alignSelf: 'center', opacity: '0.75'}} alt="loading"/>);
-
-                handleProfilePhotoChange();
-                //handleCoverPhotoChange();
                 
                 if(location.state.firstLogin){ 
                     postCreateProfile() } 
@@ -326,24 +195,6 @@ export default function EditProfileScreen(){
                     putUpdateProfile() }
                 
             }
-        }
-    }
-
-    function deletePhotoClick(type){
-        
-        if(type === "profilePhoto"){
-            setDeleteProfilePhotoButton(<button type="button" className="w-100 btn btn-salvar fw-bold bor"><img src={loading} style={{height: '25px', alignSelf: 'center', opacity: '0.75'}} alt="loading"/></button>);
-                
-            storage.refFromURL(userData.profilePhoto).delete().then(()=>{
-                setDeleteProfilePhotoButton(<></>);
-                notyf.success("Foto de perfil apagada com sucesso");
-            })
-            .catch(function (error) {
-                console.log(">>>Erro ao deletar coverPhoto");
-                console.log(error);
-                notyf.error("Desculpe, ocorreu um erro ao apagar sua foto");
-                setDeleteProfilePhotoButton(<button onClick={()=>{deletePhotoClick("profilePhoto")}} type="button" className="w-100 btn btn-salvar fw-bold bor">Apagar</button>);
-            })
         }
     }
 
@@ -355,7 +206,7 @@ export default function EditProfileScreen(){
                 <div>
                     <form className="form">
                         <div className="form-title">
-                            <label className="field_title_label">Nome completo<span style={{color: 'red'}}>*</span></label>
+                            <label className="field_title_label">Nome<span style={{color: 'red'}}>*</span></label>
                             <input onChange={handleFieldChange} name="userName" value={getValue(userData.userName)} type="text" className="form-control" placeholder="Nome completo"/>
                         </div>
                         <div className="row">
@@ -377,15 +228,6 @@ export default function EditProfileScreen(){
                                     <input onChange={handleFieldChange} name="city" value={getValue(userData.city)} type="text" className="form-control" rows="1"/>
                                 </div>
                             </div>
-                        </div>
-                        <div className="form">
-                            <label className="field_title_label">{photoText}</label>
-                            <input onChange={(e) => handleProfilePhotoChange(e.target.files[0])} type="file" className="form-control" accept=".jpg, .png, .jpeg, .bmp"/>
-                            {deleteProfilePhotoButton}
-                        </div>
-                        <div className="form">
-                            <label className="field_title_label">{coverText}</label>
-                            <input onChange={(e) => setCoverPhotoNew(e.target.files[0])} type="file" className="form-control" accept=".jpg, .png, .jpeg, .bmp"/>
                         </div>
                         <div className="div_buttons_row">
                             <div className="div_buttons_center">
