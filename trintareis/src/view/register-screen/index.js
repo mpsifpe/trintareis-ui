@@ -52,7 +52,7 @@ function RegisterScreen() {
                         notyf.error('O e-mail inserido é inválido');
                         break;
                     case 'auth/weak-password':
-                        notyf.error('A senha informada é muito fraca');
+                        notyf.error('A senha precisa ter pelo menos 6 caracteres');
                         break;
                     default:
                         notyf.error("Desculpe, ocorreu um erro ao fazer seu cadastro");
