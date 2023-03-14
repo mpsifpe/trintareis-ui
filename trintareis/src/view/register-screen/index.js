@@ -41,9 +41,23 @@ function RegisterScreen() {
                                 city: "" }}}}/>)
 
             })
-            .catch(erro => {
-                console.log(erro);
-                notyf.error("Desculpe, ocorreu um erro ao fazer seu cadastro");
+            .catch(error => {
+                console.log(error);
+
+                switch(error.code) {
+                    case 'auth/email-already-in-use':
+                        notyf.error('Já existe uma conta associada a este email, deseja fazer login?');
+                        break;
+                    case 'auth/invalid-email':
+                        notyf.error('O e-mail inserido é inválido');
+                        break;
+                    case 'auth/weak-password':
+                        notyf.error('A senha precisa ter pelo menos 6 caracteres');
+                        break;
+                    default:
+                        notyf.error("Desculpe, ocorreu um erro ao fazer seu cadastro");
+                        break;
+                }
             })
         }
     }
