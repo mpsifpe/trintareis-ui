@@ -1,11 +1,13 @@
 import './career.css';
 import React, {useEffect, useContext, useState} from 'react';
-import Header from '../../components/header/index';
+
 import { useSelector } from 'react-redux';
-import api from '../../config/api';
-import NotyfContext from '../../components/notyf-toast/NotyfContext';
 import { useLocation, Redirect } from 'react-router-dom';
 
+import api from '../../config/api';
+import Header from '../../components/header/index';
+import CourseCard from '../../components/course-card';
+import NotyfContext from '../../components/notyf-toast/NotyfContext';
 
 export default function Career() {
     
@@ -20,19 +22,21 @@ export default function Career() {
     useEffect(()=>{
         let abortController = new AbortController();
         
-        api.get('/friends/',{
-            params : {
-                userEmail: emailUser,
-                page: 0,
-                size: 10
-            }
-        })
+        api.get('/course')
         .then(function (response) {
-            setCardList (   <span className='cards-display'>
-                                
-                            </span>
-            );
-            //console.log( response.data.content);
+            
+            setCardList (   
+                <span className='cards-display'>
+                    {response.data.map((u, i) => (
+                                                    <CourseCard 
+                                                        key={u.id}
+                                                        title={u.title}
+                                                        description={u.description}
+                                                    /> 
+                                                ))}                
+                </span>
+            )
+            console.log(response.data);
         })
         .catch(function (error) {
             console.log(error);
