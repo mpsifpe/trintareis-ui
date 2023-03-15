@@ -32,7 +32,6 @@ function App() {
           <Route exact path='/profile/:id' component={Profile}/>
           <Route exact path='/editProfile' component={EditProfileScreen}/>
           <Route exact path='/editProfile/:id' component={EditProfileScreen}/>
-          <Route exact path='/editProfile' component={EditProfileScreen}/>
           <Route exact path='/explore' component={ExploreScreen}/>
           <Route exact path='/notifications-screen' component={NotificationsScreen}/>
           <Route exact path='/editImages' component={EditImagesScreen}/>
