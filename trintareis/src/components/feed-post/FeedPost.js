@@ -158,7 +158,7 @@ export default function (props) {
                                         profilePhoto: props.stateProfilePhoto, 
                                         coverPhoto: props.stateCoverPhoto, 
                                         userData: props.stateUserData,
-                                        origin: ("post."+props.id) }
+                                        origin: ("post."+ props.id) }
                                 }} style={{ textDecoration: 'none' }}>
                             <div>
                                 <span>{props.nome}</span>
