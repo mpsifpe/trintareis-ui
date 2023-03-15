@@ -1,0 +1,64 @@
+import './career.css';
+import React, {useEffect, useContext, useState} from 'react';
+import Header from '../../components/header/index';
+import { useSelector } from 'react-redux';
+import api from '../../config/api';
+import NotyfContext from '../../components/notyf-toast/NotyfContext';
+import { useLocation, Redirect } from 'react-router-dom';
+
+
+export default function Career() {
+    
+    const [cardList, setCardList] = useState(<span> </span>);
+    const [redirect, setRedirect] = useState(<></>);
+
+    const emailUser = useSelector(state => state.emailUser);
+    const notyf = useContext(NotyfContext);
+
+    let location = useLocation();
+
+    useEffect(()=>{
+        let abortController = new AbortController();
+        
+        api.get('/friends/',{
+            params : {
+                userEmail: emailUser,
+                page: 0,
+                size: 10
+            }
+        })
+        .then(function (response) {
+            setCardList (   <span className='cards-display'>
+                                
+                            </span>
+            );
+            //console.log( response.data.content);
+        })
+        .catch(function (error) {
+            console.log(error);
+            notyf.error("Desculpe, ocorreu um erro")
+            setRedirect(<Redirect to={{ pathname: '/home', state: { firstLogin: location.state.firstLogin, profilePhoto: location.state.profilePhoto, coverPhoto: location.state.coverPhoto, userData: location.state.userData } }}/>)
+        })
+        
+        return function cleanup() {
+            abortController.abort();
+        }  
+    },[]);
+
+    return (
+        <div className="App">
+            {redirect}
+            <Header firstLogin={location.state.firstLogin} profilePhoto={location.state.profilePhoto} coverPhoto={location.state.coverPhoto} userData={location.state.userData} origin="career"/>
+                <div className="div__main_myfriends">
+                    <div className="div__title_myfriends">
+                        <span>Carreira</span>
+                    </div>
+                    
+                    <section className="section_friends_list" id="sec-bd5e">
+                        {cardList}
+                    </section>
+                </div>
+        </div>
+    )
+
+};

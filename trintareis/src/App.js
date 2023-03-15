@@ -16,6 +16,7 @@ import ExploreScreen from './view/explore-screen';
 import NotificationsScreen from './view/notifications-screen';
 import EditProfileScreen from './view/edit-profile-screen';
 import EditImagesScreen from './view/edit-images-screen';
+import Career from './view/career';
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
           <Route exact path='/explore' component={ExploreScreen}/>
           <Route exact path='/notifications-screen' component={NotificationsScreen}/>
           <Route exact path='/editImages' component={EditImagesScreen}/>
+          <Route exact path='/career' component={Career}/>
         </Router>
       </Provider>
   );

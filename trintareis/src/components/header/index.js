@@ -5,7 +5,7 @@ import 'react-tooltip/dist/react-tooltip.css';
 import React, { useState, useEffect, useContext } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
-import { IoNotificationsOutline, IoHomeOutline, IoPeopleOutline, IoCompassOutline, IoChatbubblesOutline, IoLogOutOutline } from "react-icons/io5";
+import { IoNotificationsOutline, IoHomeOutline, IoPeopleOutline, IoCompassOutline, IoChatbubblesOutline, IoLogOutOutline, IoSchoolOutline } from "react-icons/io5";
 import { GiHummingbird } from "react-icons/gi";
 
 import { isEmpty, isURL } from '../../helpers/helper';
@@ -113,6 +113,17 @@ function Header(props) {
                             <div className="header_button">
                                 <IoPeopleOutline className='icon_button'/>
                                 <span hidden={true}>Amigos</span>
+                            </div>
+                        </Link>
+                        <Link to={{pathname: "/career", state: {
+                                                            firstLogin: props.firstLogin, 
+                                                            profilePhoto: props.profilePhoto, 
+                                                            coverPhoto: props.coverPhoto, 
+                                                            userData: props.userData,
+                                                            origin: props.origin }}} className='headerLinkStyle'>
+                            <div className="header_button">
+                                <IoSchoolOutline className='icon_button'/>
+                                <span hidden={true}>Carreira</span>
                             </div>
                         </Link>
                         
