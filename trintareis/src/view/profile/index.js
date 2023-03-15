@@ -104,6 +104,7 @@ function Profile(props) {
             else {
                 api.get('/profile/get-by-id/' + params.id)
                 .then((response) => {
+                    console.log("outro profile > " + response)
                     setUserName(response.data.userName)
                     setProfileInformation(response.data.profileInformation)
                     setDetails(response.data.details)
@@ -118,12 +119,11 @@ function Profile(props) {
                             storage.ref("profile_images/" + response.data.profilePhoto).getDownloadURL()
                             .then(url => setUrlImageProfile(url))}
                         }
-
                     else {setUrlImageProfile(user)}
                     
                     if(!isEmpty(response.data.coverPhoto)) {  
                         if (isURL(response.data.coverPhoto)) { 
-                            setUrlImageProfile(response.data.coverPhoto) }
+                            seturlImageCover(response.data.coverPhoto) }
                         else {
                             storage.ref("profile_images/" + response.data.coverPhoto).getDownloadURL()
                             .then(url => seturlImageCover(url))

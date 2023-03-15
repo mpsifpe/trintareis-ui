@@ -6,7 +6,7 @@ import loading from '../../resources/loading.gif';
 import user from '../../resources/user.png';
 import firebase from '../../config/firebase';
 //import { notifyFriendInvite, findAndUpdateInviteNotification, notifyAcceptInvite, deleteFriendInviteNotifications } from '../../helpers/notification-helper';
-import { isEmpty } from '../../helpers/helper';
+import { isEmpty, isURL } from '../../helpers/helper';
 import api from '../../config/api';
 import NotyfContext from '../notyf-toast/NotyfContext';
 
@@ -34,11 +34,19 @@ export default function FriendCard(props) {
     async function updateInfo(){ //método chamado na div principal ao montar componente
         setName(<span className='friendcardLinkStyle'>{props.nome}</span>)    
 
-        if(!isEmpty(props.profilePhoto)) { 
-            storage.ref("profile_images/" + props.profilePhoto).getDownloadURL()
-            .then(url => setCardImage(url))
-            .catch(()=>{setCardImage(user)})}
-        else {setCardImage(user)}
+        if(isEmpty(props.profilePhoto)) {
+            setCardImage(user)
+        }
+        else {
+            if(isURL(props.profilePhoto)){
+                setCardImage(props.profilePhoto)
+            }
+            else{
+                storage.ref("profile_images/" + props.profilePhoto).getDownloadURL()
+                .then(url => setCardImage(url))
+                .catch(()=>{setCardImage(user)})
+            }  
+        }
         
         setIdConnection(props.idConnection)
         setCity(props.city)
@@ -73,7 +81,7 @@ export default function FriendCard(props) {
     return(
         <div onLoad={updateInfo}>         
             <div className="friend-card">
-                    <Link to={{ pathname: '/profile/' + profileId, state: { firstLogin: location.state.firstLogin, profilePhoto: location.state.profilePhoto, coverPhoto: location.state.coverPhoto, userData: location.state.userData } }} style={{textDecoration: "none"}}>
+                    <Link to={{ pathname: '/profile/' + profileId, state: { firstLogin: location.state.firstLogin, profilePhoto: location.state.profilePhoto, coverPhoto: location.state.coverPhoto, userData: location.state.userData, origin:"friend-card" } }} style={{textDecoration: "none"}}>
                         <span className="friend-content">
                             <img className="friend-img" src={cardImage} alt="user image"/>
                             <div>{name}</div>
