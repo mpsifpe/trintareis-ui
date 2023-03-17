@@ -59,7 +59,7 @@ function Login() {
                         notyf.error('Email e senha não conferem');
                         break;
                     case 'auth/invalid-email':
-                        notyf.error('Email e senha não conferem');
+                        notyf.error('Email inserido inválido, verifiqe');
                         break;
                     case 'auth/user-not-found':
                         notyf.error('Usuário não cadastrado');
@@ -70,6 +70,7 @@ function Login() {
                     default:
                         notyf.error(error.message);
                 }
+                setLoginRedirect(<Redirect to={{ pathname: '/login'}}/>)
             })
             .finally(()=>{
                 let loginExists = []
