@@ -1,5 +1,5 @@
 .friend-card{
-    background-color: rgb(240, 250, 240);
+    background-color: rgb(243, 243, 243);
     width: 190px;
     height: 360px;
     margin-bottom: 5px;
@@ -54,15 +54,15 @@
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    color: black;
+    color: rgb(243, 243, 243);
     height: 35px;
     width: 175px;
-    background-color: rgb(241, 241, 241);
+    background-color: #45bd62;
 }
 
 .card-button:hover {
     border: 1px;
-    color: white;
+    color: rgb(243, 243, 243);
     background-color: #206130;
     border-color: #206130;
 }
