@@ -5,9 +5,10 @@ import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import ReactPlayer from 'react-player';
 import { HiHeart, HiOutlineHeart, HiOutlineAnnotation, HiOutlineShare, HiOutlinePencilAlt, HiOutlineTrash, HiDotsVertical, HiOutlineArrowCircleLeft } from "react-icons/hi";
+import * as AlertDialog from '@radix-ui/react-alert-dialog';
 
+import api from '../../config/api';
 import user from '../../resources/user.png';
-import loading from '../../resources/loading.gif';
 import firebase from '../../config/firebase';
 import NotyfContext from '../notyf-toast/NotyfContext';
 import { isEmpty, isURL } from '../../helpers/helper';
@@ -33,6 +34,7 @@ export default function (props) {
     const [profileData, setProfileData] = useState({});
     const [profilePhoto, setProfilePhoto] = useState(user);
     const [profileLink, setProfileLink] = useState("");
+    const [postOptions, setPostOptions] = useState(<></>);
 
     useEffect(() => {
         const abortController = new AbortController();
@@ -53,6 +55,36 @@ export default function (props) {
         
         if (!isEmpty(props.profilePhoto)){
             setProfilePhoto(props.profilePhoto)}
+
+        if(props.emailUser === loggedUser){
+            setPostOptions(
+                <div className="options_div">
+                    {/*<HiOutlinePencilAlt className="options_button"/>*/}
+                    <AlertDialog.Root>
+                        <AlertDialog.Trigger asChild>
+                            <HiOutlineTrash className="options_button"/>
+                        </AlertDialog.Trigger>
+                        <AlertDialog.Portal>
+                        <AlertDialog.Overlay className="AlertDialogOverlay" />
+                        <AlertDialog.Content className="AlertDialogContent">
+                            <AlertDialog.Title className="AlertDialogTitle">Excluir</AlertDialog.Title>
+                            <AlertDialog.Description className="AlertDialogDescription">
+                            Você quer mesmo excluir esta postagem?
+                            </AlertDialog.Description>
+                            <div style={{ display: 'flex', gap: 25, justifyContent: 'flex-end' }}>
+                            <AlertDialog.Cancel asChild>
+                                <button className="DialogButton mauve">Cancelar</button>
+                            </AlertDialog.Cancel>
+                            <AlertDialog.Action asChild>
+                                <button className="DialogButton red" onClick={deletePost}>Excluir</button>
+                            </AlertDialog.Action>
+                            </div>
+                        </AlertDialog.Content>
+                        </AlertDialog.Portal>
+                    </AlertDialog.Root>
+                </div>
+            )
+        }
 
         switch(props.tipo){
             
@@ -168,6 +200,7 @@ export default function (props) {
                             <span>{props.horario}</span>
                         </div>
                     </div>
+                    {postOptions}
                 </div>
                 <div className="feedPost__content">
                     <p>
@@ -204,6 +237,21 @@ export default function (props) {
             </div>
         </div>
     )
+
+    function deletePost(){
+        api.delete('/content', {
+            params : {
+                id : props.id
+            }
+        })
+        .then(()=>{
+            notyf.success("Sua postagem foi excluída");
+        })
+        .catch(function (error) {
+            console.log(error);
+            notyf.error("Desculpe, ocorreu um erro");
+        })
+    }
 
     function exibirComentario(props, idEvento) {
         let listItems2 = [];

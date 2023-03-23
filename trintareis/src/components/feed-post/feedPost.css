@@ -1,3 +1,100 @@
+@import '@radix-ui/colors/blackA.css';
+@import '@radix-ui/colors/mauve.css';
+@import '@radix-ui/colors/red.css';
+@import '@radix-ui/colors/green.css';
+
+ 
+  .AlertDialogOverlay {
+    background-color: var(--blackA9);
+    position: fixed;
+    inset: 0;
+    animation: overlayShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  
+  .AlertDialogContent {
+    background-color: white;
+    border-radius: 6px;
+    box-shadow: hsl(206 22% 7% / 35%) 0px 10px 38px -10px, hsl(206 22% 7% / 20%) 0px 10px 20px -15px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 90vw;
+    max-width: 500px;
+    max-height: 85vh;
+    padding: 25px;
+    animation: contentShow 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .AlertDialogContent:focus {
+    outline: none;
+  }
+  
+  .AlertDialogTitle {
+    margin: 0;
+    color: var(--mauve12);
+    font-size: 17px;
+    font-weight: 500;
+  }
+  
+  .AlertDialogDescription {
+    margin-bottom: 20px;
+    color: var(--mauve11);
+    font-size: 15px;
+    line-height: 1.5;
+  }
+  
+  .DialogButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    padding: 0 15px;
+    font-size: 15px;
+    line-height: 1;
+    font-weight: 500;
+    height: 35px;
+  }
+  .DialogButton.red {
+    background-color: var(--red4);
+    color: var(--red11);
+  }
+  .DialogButton.red:hover {
+    background-color: var(--red5);
+  }
+  .DialogButton.red:focus {
+    box-shadow: 0 0 0 2px var(--red7);
+  }
+  .DialogButton.mauve {
+    background-color: var(--mauve4);
+    color: var(--mauve11);
+  }
+  .DialogButton.mauve:hover {
+    background-color: var(--mauve5);
+  }
+  .DialogButton.mauve:focus {
+    box-shadow: 0 0 0 2px var(--mauve7);
+  }
+  
+  @keyframes overlayShow {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes contentShow {
+    from {
+      opacity: 0;
+      transform: translate(-50%, -48%) scale(0.96);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+  }
+
 .feedPost__profile{
     display: flex;
 }
@@ -131,4 +228,14 @@
 }
 .feedPost__content{
     width: 106.5vh;
+}
+.options_div{
+    padding-left: 55%;
+    padding-top: 15px;
+}
+.options_button{
+    margin-right: 0px;
+    font-size: larger;
+    width: 25px;
+    height: 25px;
 }

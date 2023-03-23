@@ -1,14 +1,15 @@
 import styled from 'styled-components';
 
 export const Perfil = styled.div`
-    margin-left: 10%;
-    background-color: white;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #45bd62;
     background-repeat: no-repeat;
     background-image: url(${props => `${props.photo}`});
     background-size: cover;
     position: relative;
-    width: 80%;
-    height: 400px;
+    width: inherit;
+    height: 30vh;
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
     padding: 135px;
@@ -34,14 +35,15 @@ export const Perfil = styled.div`
 
 export const Content = styled.div`
     background: white;
-    margin-left: 10%;
+    margin-left: auto;
+    margin-right: auto;
     background-color: white;
     background-repeat: no-repeat;
     background-size: cover;
     position: relative;
     border-bottom-left-radius: 15px;
     border-bottom-right-radius: 15px;
-    width: 80%;
+    width: 100%;
     padding-left: 50px;
     display: flex;
 
@@ -96,13 +98,14 @@ export const Content = styled.div`
 `;
 
 export const Details = styled.div`
-    margin-left: 10%;
+    margin-left: auto;
+    margin-right: auto;
     background-color: white;
     background-repeat: no-repeat;
     background-size: cover;
     position: relative;
     border-radius: 15px;
-    width: 80%;
+    width: 100%;
     padding-left: 50px;
     padding-bottom: 10px;
     margin-top: 10px;

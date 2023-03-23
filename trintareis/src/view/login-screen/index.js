@@ -151,11 +151,13 @@ function Login() {
                         <div className="link__recovery">
                             <Link to="/recoveryPassword" className=""><span>Esqueci minha senha</span></Link>
                         </div>
-                        <button id="login2_enter_btn" onClick={singIn} className="btn__login" type="button">{enterBtn}</button>
-                        <span className="invite">Não tem conta?</span>
-                        <Link to="/register">
-                            <button id="login2_reg_btn" className="w-100 btn btn-rg fw-bold bor" type="button">Cadastre-se</button>
-                        </Link>
+                        <div className='div_buttons_login'>
+                            <button id="login2_enter_btn" onClick={singIn} className="btn btn-lg" type="button">{enterBtn}</button>
+                            <span className="invite"/>
+                            <Link to="/register">
+                                <button id="login2_reg_btn" className="btn btn-rg" type="button">Cadastre-se</button>
+                            </Link>
+                        </div>
                         {loginRedirect}
                     </form>
                 </div>
