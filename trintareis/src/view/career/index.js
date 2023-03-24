@@ -24,19 +24,18 @@ export default function Career() {
         
         api.get('/course')
         .then(function (response) {
-            
-            setCardList (   
-                <span className='cards-display'>
-                    {response.data.map((u, i) => (
-                                                    <CourseCard 
-                                                        key={u.id}
-                                                        title={u.title}
-                                                        description={u.description}
-                                                    /> 
-                                                ))}                
-                </span>
+            console.log(response.data)
+            setCardList(
+                response.data.map((u, i) => (
+                    <CourseCard 
+                        key={i}
+                        num={i}
+                        id={u.id}
+                        title={u.title}
+                        description={u.description}
+                    />
+                ))
             )
-            console.log(response.data);
         })
         .catch(function (error) {
             console.log(error);

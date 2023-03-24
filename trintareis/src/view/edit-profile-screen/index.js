@@ -112,7 +112,8 @@ export default function EditProfileScreen(){
             "profilePhoto": userData.profilePhoto,
             "emailUser": emailUser,
             "region": userData.region,
-            "userName": userData.userName
+            "userName": userData.userName,
+            "profileType":"PERSONAL"
         })
         .then(function (response) {
             console.log("sucesso")
@@ -152,7 +153,8 @@ export default function EditProfileScreen(){
             "profilePhoto": "",
             "emailUser": emailUser,
             "region": userData.region,
-            "userName": userData.userName
+            "userName": userData.userName,
+            "profileType":"PERSONAL"
         })
         .then(function (response) {  
             console.log("sucesso")
