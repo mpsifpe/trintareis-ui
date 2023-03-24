@@ -26,7 +26,7 @@ export default function EditProfileScreen(){
 
     const [redirect, setRedirect] = useState(null);
     const [saveButton, setSaveButton] = useState("Salvar");    
-    const [cancelButton, setCancelButton] = useState(<button type="button" className="w-100 btn btn-cancelar fw-bold bor"/>);
+    const [cancelButton, setCancelButton] = useState(<button type="button" className="w-50 btn btn-cancelar fw-bold bor"/>);
     const [titleText, setTitleText] = useState( <div><h3>Carregando...</h3></div> );
 
     const emailUser = useSelector(state => state.emailUser);
@@ -37,7 +37,7 @@ export default function EditProfileScreen(){
         if(!location.state.firstLogin){
             setTitleText("Editar perfil")
             setCancelButton(
-                <button  type="button" className="w-100 btn btn-cancelar fw-bold bor" 
+                <button  type="button" className="w-50 btn btn-cancelar fw-bold bor"
                         onClick={() => 
                             setRedirect(
                                     <Redirect to={{ 
@@ -82,7 +82,7 @@ export default function EditProfileScreen(){
             })
         
         } else {
-            setCancelButton(<button onClick={logoutBtnClick} className="w-100 btn btn-cancelar fw-bold bor">Sair</button>)
+            setCancelButton(<button onClick={logoutBtnClick} className="w-50 btn btn-cancelar fw-bold bor" >Sair</button>)
             setTitleText("Por favor nos informe alguns dados para prosseguir")
             setUserData({
                 userName: "",
@@ -112,7 +112,8 @@ export default function EditProfileScreen(){
             "profilePhoto": userData.profilePhoto,
             "emailUser": emailUser,
             "region": userData.region,
-            "userName": userData.userName
+            "userName": userData.userName,
+            "profileType":"PERSONAL"
         })
         .then(function (response) {
             console.log("sucesso")
@@ -152,7 +153,8 @@ export default function EditProfileScreen(){
             "profilePhoto": "",
             "emailUser": emailUser,
             "region": userData.region,
-            "userName": userData.userName
+            "userName": userData.userName,
+            "profileType":"PERSONAL"
         })
         .then(function (response) {  
             console.log("sucesso")
@@ -232,7 +234,7 @@ export default function EditProfileScreen(){
                         <div className="div_buttons_row">
                             <div className="div_buttons_center">
                                 {cancelButton}
-                                <button onClick={saveBtnClick} type="button" className="w-100 btn btn-salvar fw-bold bor">{saveButton}</button>
+                                <button onClick={saveBtnClick} type="button" className="w-50 btn btn-salvar fw-bold bor">{saveButton}</button>
                             </div>
                         </div>
                     </form>

@@ -5,11 +5,11 @@ import 'react-tooltip/dist/react-tooltip.css';
 import React, { useState, useEffect, useContext } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
-import { IoNotificationsOutline, IoHomeOutline, IoPeopleOutline, IoCompassOutline, IoChatbubblesOutline, IoLogOutOutline } from "react-icons/io5";
+import { IoNotificationsOutline, IoHomeOutline, IoPeopleOutline, IoCompassOutline, IoChatbubblesOutline, IoLogOutOutline, IoSchoolOutline } from "react-icons/io5";
 import { GiHummingbird } from "react-icons/gi";
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 
 import { isEmpty, isURL } from '../../helpers/helper';
-import { Tooltip } from 'react-tooltip'
 
 import firebase from '../../config/firebase';
 import user from '../../resources/user.png';
@@ -22,7 +22,6 @@ function Header(props) {
     const notyf = useContext(NotyfContext);
     const storage = firebase.storage();
 
-    const [showTooltip, setShowTooltip] = useState(<Tooltip anchorId="profile_img" place="bottom" style={{opacity:0.35, color:'white'}} positionStrategy="absolute"/>)
     const [urlImageProfile, setUrlImageProfile] = useState(<img src={loading} style={{opacity: '0.75'}} alt="loading"/>);
 
     useEffect(() => {
@@ -40,10 +39,6 @@ function Header(props) {
                     setUrlImageProfile(<img src={url}/>);
                 })
             }
-        }
-
-        if(!isEmpty(props.hideTooltip)){
-            if (props.hideTooltip){ setShowTooltip(<></>)}
         }
 
         return function cleanup() {
@@ -115,6 +110,17 @@ function Header(props) {
                                 <span hidden={true}>Amigos</span>
                             </div>
                         </Link>
+                        <Link to={{pathname: "/career", state: {
+                                                            firstLogin: props.firstLogin, 
+                                                            profilePhoto: props.profilePhoto, 
+                                                            coverPhoto: props.coverPhoto, 
+                                                            userData: props.userData,
+                                                            origin: props.origin }}} className='headerLinkStyle'>
+                            <div className="header_button">
+                                <IoSchoolOutline className='icon_button'/>
+                                <span hidden={true}>Carreira</span>
+                            </div>
+                        </Link>
                         
                         <div className='headerLinkStyle'>
                             <div className="header_button" onClick={notifyBuilding}>
@@ -134,27 +140,61 @@ function Header(props) {
                 </div>
                 <div className="header__right">
                     {useSelector(state => state.loggedUSer) === 0 ? <Redirect to='/'/> : null}
-                    <Link to={{ pathname: "/profile/" + props.userData.id, 
-                                state: {
-                                    firstLogin: props.firstLogin, 
-                                    profilePhoto: props.profilePhoto, 
-                                    coverPhoto: props.coverPhoto, 
-                                    userData: props.userData,
-                                    origin: props.origin }}}>
-                        
-                        <div className="img_profile" id="profile_img" data-tooltip-content="Meu perfil">
-                            {urlImageProfile}
-                        </div>
-                        
-                    </Link>
-                    <div className="header_button">
-                        <span onClick={() => dispatch({ type: 'LOG_OUT' })}>
-                            <IoLogOutOutline className='icon_button'/>
-                        </span>
-                    </div>
+                    <DropdownMenu.Root>
+                        <DropdownMenu.Trigger asChild>
+                            <div className="img_profile" id="profile_img">
+                                {urlImageProfile}
+                            </div>
+                        </DropdownMenu.Trigger>
+
+                        <DropdownMenu.Portal>
+                            <DropdownMenu.Content className="DropdownMenuContent" sideOffset={5}>
+                                <Link to={{ pathname: "/profile/" + props.userData.id, 
+                                    state: {
+                                        firstLogin: props.firstLogin, 
+                                        profilePhoto: props.profilePhoto, 
+                                        coverPhoto: props.coverPhoto, 
+                                        userData: props.userData,
+                                        origin: props.origin }}} className='headerLinkStyle'>
+                                    <DropdownMenu.Item className="DropdownMenuItem">Meu perfil</DropdownMenu.Item>
+                                </Link>
+                                <DropdownMenu.Separator className="DropdownMenuSeparator" />
+                                <Link to={{ pathname: "/editProfile", 
+                                    state: {
+                                        firstLogin: props.firstLogin, 
+                                        profilePhoto: props.profilePhoto, 
+                                        coverPhoto: props.coverPhoto, 
+                                        userData: props.userData,
+                                        origin: props.origin  }}} className='headerLinkStyle'>
+                                    <DropdownMenu.Item className="DropdownMenuItem">Editar perfil</DropdownMenu.Item>
+                                </Link>
+                                <Link to={{ pathname: "/editImages", 
+                                    state: {
+                                        firstLogin: props.firstLogin, 
+                                        profilePhoto: props.profilePhoto, 
+                                        coverPhoto: props.coverPhoto, 
+                                        userData: props.userData,
+                                        image: "profile" ,
+                                        origin: props.origin  }}} className='headerLinkStyle'>
+                                    <DropdownMenu.Item className="DropdownMenuItem">Editar foto do perfil</DropdownMenu.Item>
+                                </Link>
+                                <Link to={{ pathname: "/editImages", 
+                                    state: {
+                                        firstLogin: props.firstLogin, 
+                                        profilePhoto: props.profilePhoto, 
+                                        coverPhoto: props.coverPhoto, 
+                                        userData: props.userData,
+                                        image: "cover"  ,
+                                        origin: props.origin  }}} className='headerLinkStyle'>
+                                    <DropdownMenu.Item className="DropdownMenuItem">Editar imagem de capa</DropdownMenu.Item>
+                                </Link>
+                                <DropdownMenu.Separator className="DropdownMenuSeparator" />
+                                <DropdownMenu.Item className="DropdownMenuItem" onClick={() => dispatch({ type: 'LOG_OUT' })}>Sair</DropdownMenu.Item>
+                            </DropdownMenu.Content>
+                        </DropdownMenu.Portal>
+                    </DropdownMenu.Root>
                 </div>
             </div>
-            {showTooltip}
         </div>
     )
 }

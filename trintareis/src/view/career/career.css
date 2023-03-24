@@ -1,0 +1,48 @@
+.cards-display{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.div__main_myfriends{
+    width: 90%;
+    margin-left: 5%;
+    margin-right: 5%;
+    background-color: white;
+    border-radius: 15px;
+    padding: 10px;
+    margin-top: 15px; 
+  }
+  
+  .div__title_myfriends{
+    margin-left: 0px;
+    font-size: 28px;
+    font-style: bold;
+  }
+  
+  .div__title_myfriends span{
+    margin-left: 5px;
+    margin-bottom: 5px;
+    font-size: 28px;
+    font-style: bold;
+  }
+  
+  .section_friends_list{
+    width: 100%;
+    display: block;
+    width: inherit;
+    padding: 0;
+    justify-content: flex-start
+    
+  }
+  
+  base {
+    display: none;
+  }
+  /* ESSA PROPRIEDADE ESTÁ INTERFERINDO NO SPAN DO HEADER, VERIFICAR DEPOIS*/
+  a {
+    color: black;
+  }
+  a:hover {
+    color: black;
+  }

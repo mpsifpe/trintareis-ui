@@ -4,7 +4,6 @@ import { useLocation, useParams } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import { MdDone, MdClose } from "react-icons/md";
 import { Perfil, Content, Details, Dropdown } from './styles';
-import DropdownProfile from '../../components/dropdown-profile';
 
 import { isEmpty, formatDate, isURL } from '../../helpers/helper';
 import Header from '../../components/header/index';
@@ -34,7 +33,6 @@ function Profile(props) {
     const [region, setRegion] = useState("");
     const [details, setDetails] = useState("");
     const [actionButton, setActionButton] = useState(<></>);
-    const [dropdown, setDropdown] = useState(<></>);
     
     let profileEmail, idConnection = "";
     let isFriend, inviter, pending = false;
@@ -85,19 +83,6 @@ function Profile(props) {
                 else{
                     if(location.state.origin==="edit-images-screen-save"){ updateCoverImageURL("") }
                 }
-                
-                setDropdown(
-                    <Dropdown >
-                        <div className="div__dropdown">
-                            <DropdownProfile 
-                                firstLogin={location.state.firstLogin} 
-                                profilePhoto={location.state.profilePhoto} 
-                                coverPhoto={location.state.coverPhoto}
-                                userData={location.state.userData}
-                            />
-                        </div>
-                    </Dropdown>
-                )
             } 
 
             //------------------profile usuario outro----------------------------
@@ -182,10 +167,7 @@ function Profile(props) {
         <div className="App">
             <Header firstLogin={location.state.firstLogin} profilePhoto={location.state.profilePhoto} coverPhoto={location.state.coverPhoto} userData={location.state.userData} origin="profile-screen" hideTooltip={true} />
             <div className="main">
-                <Perfil photo={urlImageCover}>
-                    <div />
-                </Perfil>
-                {dropdown}
+                <Perfil photo={urlImageCover}/>
                 <Content photoProfile={urlImageProfile}>
                     <div>
                         <form className="form">
