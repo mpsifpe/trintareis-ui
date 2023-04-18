@@ -12,6 +12,7 @@ import user from '../../resources/user.png';
 import firebase from '../../config/firebase';
 import NotyfContext from '../notyf-toast/NotyfContext';
 import { isEmpty, isURL } from '../../helpers/helper';
+import { refreshContext } from '../../view/home';
 
 
 export default function (props) {
@@ -19,6 +20,7 @@ export default function (props) {
     const notyf = useContext(NotyfContext);
     const loggedUser = useSelector(state => state.emailUser);
     const date = new Date();
+    const {refresh, setRefresh} = useContext(refreshContext);
 
     const [media, setMedia] = useState(<></>);
     const [curtir, setCurti] = useState('');
@@ -246,10 +248,12 @@ export default function (props) {
         })
         .then(()=>{
             notyf.success("Sua postagem foi excluída");
+            setRefresh(true);
         })
         .catch(function (error) {
             console.log(error);
             notyf.error("Desculpe, ocorreu um erro");
+            setRefresh(true);
         })
     }
 
