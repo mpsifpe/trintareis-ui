@@ -23,10 +23,13 @@ function Header(props) {
     const storage = firebase.storage();
 
     const [urlImageProfile, setUrlImageProfile] = useState(<img src={loading} style={{opacity: '0.75'}} alt="loading"/>);
+    const [profileID, setProfileID] = useState("");
 
     useEffect(() => {
         const abortController = new AbortController()
-        
+
+        setProfileID(props.userData.id);
+
         if (isEmpty(props.profilePhoto)){
             setUrlImageProfile(<img src={user}/>);
         } 
@@ -149,7 +152,7 @@ function Header(props) {
 
                         <DropdownMenu.Portal>
                             <DropdownMenu.Content className="DropdownMenuContent" sideOffset={5}>
-                                <Link to={{ pathname: "/profile/" + props.userData.id, 
+                                <Link to={{ pathname: "/profile/" + profileID, 
                                     state: {
                                         firstLogin: props.firstLogin, 
                                         profilePhoto: props.profilePhoto, 
