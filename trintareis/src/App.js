@@ -18,6 +18,7 @@ import EditProfileScreen from './view/edit-profile-screen';
 import EditImagesScreen from './view/edit-images-screen';
 import Career from './view/career';
 import CareerDetail from './view/career-detail-screen';
+import DataRegistryScreen from './view/data-reg-screen';
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
           <Route exact path='/editImages' component={EditImagesScreen}/>
           <Route exact path='/career' component={Career}/>
           <Route exact path='/careerDetail/:id' component={CareerDetail}/>
+          <Route exact path='/dataReg' component={DataRegistryScreen}/>
         </Router>
       </Provider>
   );
