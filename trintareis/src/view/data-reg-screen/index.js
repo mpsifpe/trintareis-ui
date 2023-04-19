@@ -10,7 +10,6 @@ export default function DataRegistryScreen(){
         chooseFields(e.target.value);
     }
 
-    const [category, setCategory] = useState("");
     const [message, setMessage] = useState("");
     // const [institutions, setInstittutions] = useState({});
     const [courseList, setCourseList] = useState([{}]);
@@ -96,14 +95,10 @@ export default function DataRegistryScreen(){
     }
 
     function cadastraCurso(){
-        console.log(courseDesc);
-        console.log(courseTitle);
-        console.log(category);
-
         api.post('/course', {
             "description": courseDesc,
             "title": courseTitle,
-            "category": category
+            "category": document.getElementById('category-selector').value
         }).
         then((()=>{
             setMessage("cadastrado com sucesso")
@@ -144,7 +139,6 @@ export default function DataRegistryScreen(){
     function clearAll(){
         setMessage("");
         chooseFields("clear");
-        setCategory("");
         setRegistry("");
         setCourseDesc("");
         setCourseTitle("");
@@ -206,8 +200,8 @@ export default function DataRegistryScreen(){
 
         return(
             <div>
-                <select className="formInst" name="institution" value={category} onChange={(e) => setCategory(e.target.value)}>
-                    {categoryList.map((cat, i) => <option key={i} value={cat} >{cat}</option>)}
+                <select className="formInst" id="category-selector">
+                    {categoryList.map((cat, i) => <option key={i} value={cat}>{cat}</option>)}
                 </select>
             </div>
         )
