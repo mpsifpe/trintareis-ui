@@ -13,7 +13,8 @@ import { enterHandler, focusChangeOnEnter } from "../../helpers/helper";
 function RegisterScreen() {
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
-    const [redirect, setRedirect] = useState(<></>)
+    const [redirect, setRedirect] = useState(<></>);
+    const [visible, setVisible] = useState(true);
 
     const notyf = useContext(NotyfContext);
     const passwordRef = useRef(null);
@@ -62,6 +63,11 @@ function RegisterScreen() {
         }
     }
 
+    function openDataRegistryScreen(){
+        setRedirect(
+            <Redirect to={{pathname: '/dataReg'}}/>)
+    }
+
     return (
         <div className="div__main">
             <Header/>
@@ -90,6 +96,10 @@ function RegisterScreen() {
                         </span>
                         <div className="div__register_btn">
                             <button id="homescreen_accept_btn" onClick={cadastrar} type="button">Aceitar e cadastrar</button>
+                            {visible &&
+
+                                <button id="homescreen_accept_btn" onClick={openDataRegistryScreen} type="button">Registro de cursos</button>
+                            }
                         </div>
                     </form>
                 </div>
