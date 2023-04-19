@@ -14,6 +14,7 @@ import firebase from '../../config/firebase';
 import { isEmpty } from '../../helpers/helper';
 import NotyfContext from '../notyf-toast/NotyfContext';
 import loading from '../../resources/loading.gif';
+import { refreshContext } from '../../view/home';
 
 export default function (props) {
     const [isPostOpen, openPost, closePost] = useModalState();
@@ -21,6 +22,7 @@ export default function (props) {
     const emailUser = useSelector(state => state.emailUser);
     const storage = firebase.storage();
     const notyf = useContext(NotyfContext);
+    const {refresh, setRefresh} = useContext(refreshContext);
 
     const [textField, setTextField] = useState('');
     const [file, setFile] = useState();
@@ -79,11 +81,13 @@ export default function (props) {
                     console.log(docRef);
                     setButton(<button type="button" disabled={false} onClick={clickButtonHandle}>Postar</button>);
                     closePost();
+                    setRefresh(true);
     
                 }).catch((error) => {
                     console.error("Error adding document: ", error);
                     notyf.error("Opa, ocorreu um erro. Favor tentar novamente mais tarde");
                     setButton(<button type="button" disabled={false} onClick={clickButtonHandle}>Postar</button>);
+                    setRefresh(true);
                 });
             });
         }
@@ -108,11 +112,13 @@ export default function (props) {
                 console.log(docRef);
                 setButton(<button type="button" disabled={false} onClick={clickButtonHandle}>Postar</button>);
                 closePost();
+                setRefresh(true);
 
             }).catch((error) => {
                 console.error("Error adding document: ", error);
                 notyf.error("Opa, ocorreu um erro. Favor tentar novamente mais tarde");
                 setButton(<button type="button" disabled={false} onClick={clickButtonHandle}>Postar</button>);
+                setRefresh(true);
             })
 
         }
@@ -133,11 +139,13 @@ export default function (props) {
                 console.log(docRef);
                 setButton(<button type="button" disabled={false} onClick={clickButtonHandle}>Postar</button>);
                 closePost();
+                setRefresh(true);
 
             }).catch((error) => {
                 console.error("Error adding document: ", error);
                 notyf.error("Opa, ocorreu um erro. Favor tentar novamente mais tarde");
                 setButton(<button type="button" disabled={false} onClick={clickButtonHandle}>Postar</button>)   });
+                setRefresh(true);
         }
     }
 

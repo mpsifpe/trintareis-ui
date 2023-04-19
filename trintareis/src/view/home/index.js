@@ -1,5 +1,5 @@
 import './home.css';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext, createContext } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
@@ -13,16 +13,19 @@ import api from '../../config/api';
 import firebase from '../../config/firebase';
 import { isEmpty, formatDate, isURL } from '../../helpers/helper';
 
+export const refreshContext = createContext();
+
 export default function Home() {
     
     let location = useLocation();
     const storage = firebase.storage();
     const emailUser = useSelector(state => state.emailUser);
 
-    const [eventos, setEventos] = useState([]);
+    const [posts, setPosts] = useState([]);
     const [urlImageProfile, setUrlImageProfile] = useState(loading);
     const [data, setData] = useState({});
     const [urlUpdated, setUrlUpdated] = useState(false);
+    const [refresh, setRefresh] = useState(false);
 
     useEffect(() => {
         const abortController = new AbortController()       
@@ -61,18 +64,7 @@ export default function Home() {
             }
         }
 
-        api.get('/content/getContent/',{
-            params : {
-                page: 0,
-                size: 10
-            }
-        })
-        .then((posts)=>{
-            setEventos(posts.data.content);
-        })
-        .catch((error)=>{
-            console.log(error)
-        })
+        fetch();
         
         //update imagem cover
         if(!isURL(location.state.coverPhoto)){
@@ -94,7 +86,42 @@ export default function Home() {
         return function cleanup() {
             abortController.abort()
         }
-    }, []);
+    }, [refresh]);
+
+    function fetch(){
+        api.get('/content/getContent/',{
+            params : {
+                page: 0,
+                size: 10
+            }
+        })
+        .then((response)=>{
+            setPosts(response.data.content.map(item => 
+                <FeedPost key={item.id}
+                    id={item.id}
+                    img={item.photoName}
+                    profilePhoto={item.profilePhotoUrl}
+                    profileInformation={item.profileInformation}
+                    title={item.title}
+                    nome={item.userName}
+                    horario={formatDate(item.hour)}
+                    conteudo={item.text}
+                    emailUser={item.userEmail}
+                    profileId={item.profileId}
+                    like={item.views}
+                    share={item.share}
+                    coments={item.coments}
+                    tipo={item.typePost}
+                    stateFirstLogin={location.state.firstLogin}
+                    stateProfilePhoto={location.state.profilePhoto} 
+                    stateCoverPhoto={location.state.coverPhoto} 
+                    stateUserData={location.state.userData}/>));
+            setRefresh(false);
+        })
+        .catch((error)=>{
+            console.log(error)
+        })
+    }
 
     return (
         <div className="App">
@@ -103,32 +130,14 @@ export default function Home() {
                 profilePhoto={urlUpdated ? urlImageProfile : location.state.profilePhoto} 
                 coverPhoto={location.state.coverPhoto} 
                 userData={location.state.userData}
+                id={location.state.userData.id}
                 origin="home"/>
-            <div className="feed_content">
-                <FeedForm profilePhoto={urlImageProfile} stateFirstLogin={location.state.firstLogin} stateProfilePhoto={location.state.profilePhoto} stateCoverPhoto={location.state.coverPhoto} stateUserData={location.state.userData}/>
-                {
-                eventos.map(item => 
-                    <FeedPost key={item.id}
-                        id={item.id}
-                        img={item.photoName}
-                        profilePhoto={item.profilePhotoUrl}
-                        profileInformation={item.profileInformation}
-                        title={item.title}
-                        nome={item.userName}
-                        horario={formatDate(item.hour)}
-                        conteudo={item.text}
-                        emailUser={item.userEmail}
-                        profileId={item.profileId}
-                        like={item.views}
-                        share={item.share}
-                        coments={item.coments}
-                        tipo={item.typePost}
-                        stateFirstLogin={location.state.firstLogin}
-                        stateProfilePhoto={location.state.profilePhoto} 
-                        stateCoverPhoto={location.state.coverPhoto} 
-                        stateUserData={location.state.userData}/>)
-                }
-            </div>
+            <refreshContext.Provider value={{refresh, setRefresh}}>
+                <div className="feed_content">
+                    <FeedForm profilePhoto={urlImageProfile} stateFirstLogin={location.state.firstLogin} stateProfilePhoto={location.state.profilePhoto} stateCoverPhoto={location.state.coverPhoto} stateUserData={location.state.userData}/>
+                    {posts}
+                </div>
+            </refreshContext.Provider>
         </div>
     )
 }
