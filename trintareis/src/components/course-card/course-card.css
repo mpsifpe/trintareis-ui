@@ -3,11 +3,13 @@
 @import '@radix-ui/colors/green.css';
 
 .AccordionRoot {
+  flex: 1;
   border-radius: 20px;
-  width: 75%;
+  width: 97%;
+  background-color: ghostwhite;
+  margin-top: 10px;
   margin-left: 2%;
-  background-color: var(--mauve6);
-  margin-bottom: 5px;
+  margin-right: 2%;
 }
 
 .AccordionItem {
@@ -29,7 +31,7 @@
 .AccordionItem:focus-within {
   position: relative;
   z-index: 1;
-  box-shadow: 0 0 0 0px var(--mauve12);
+  box-shadow: 0 0 0 0px ghostwhite;
 }
 
 .AccordionHeader {
@@ -37,7 +39,7 @@
 }
 
 .AccordionTrigger {
-  font-family: inherit;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: transparent;
   padding: 0 20px;
   height: 45px;
@@ -45,24 +47,26 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 15px;
+  font-size: 17px;
   line-height: 0;
-  color: var(--green9);
-  background-color: white;
+  color: black;
+  background-color: ghostwhite;
   border-color: var(--green9) white white var(--green9);
   border-width: 2px 0px 0px 2px;
   border-radius: 15px;
 }
 
 .AccordionTrigger:hover {
-  background-color: var(--mauve2);
+  background-color: ghostwhite;
+  box-shadow: 1px 1px 1px var(--green9);
 }
 
 .AccordionContent {
   overflow: hidden;
   font-size: 15px;
-  color: var(--mauve11);
-  background-color: var(--mauve6);
+  color: black;
+  background-color: ghostwhite;
+  border-radius: 15px;  
 }
 .AccordionContent[data-state='open'] {
   animation: slideDown 300ms ;
@@ -73,6 +77,7 @@
 
 .AccordionContentText {
   padding: 15px 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .AccordionChevron {
@@ -99,4 +104,21 @@
   to {
     height: 0;
   }
+}
+
+.more_button{
+  font-size: 15px;
+  color: black;
+  background-color: mintcream;
+  border-width: 1px;
+  border-color: var(--green8);
+  border-radius: 10px;
+  margin-top: 5px;
+}
+
+.button_label{
+  margin: 5px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: 500;
+  font-size: small;
 }

@@ -1,10 +1,10 @@
-.cards-display{
+  .cards-display{
     display: flex;
     flex-direction: row;
     width: 100%;
 }
 
-.div__main_myfriends{
+.div__main_career{
     width: 90%;
     margin-left: 5%;
     margin-right: 5%;
@@ -14,26 +14,27 @@
     margin-top: 15px; 
   }
   
-  .div__title_myfriends{
+  .div__title_career{
     margin-left: 0px;
     font-size: 28px;
     font-style: bold;
   }
   
-  .div__title_myfriends span{
+  .div__title_career span{
     margin-left: 5px;
     margin-bottom: 5px;
     font-size: 28px;
     font-style: bold;
   }
   
-  .section_friends_list{
+  .section_course_list{
     width: 100%;
-    display: block;
-    width: inherit;
-    padding: 0;
-    justify-content: flex-start
-    
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .course_div{
+    position: relative;
   }
   
   base {

@@ -40,7 +40,7 @@ function CourseCard(props) {
                         courseID: props.id,
                         courseTitle: title,
                         courseDesc: description }}}>
-            <button>Saiba mais</button>
+            <button className="more_button"> <label className='button_label'>SAIBA MAIS</label> </button>
           </Link>
         </AccordionContent>
       </Accordion.Item>
