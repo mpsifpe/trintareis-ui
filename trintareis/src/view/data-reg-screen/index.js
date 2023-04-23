@@ -1,20 +1,28 @@
 import './data-reg-screen.css'
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
+
 import api from '../../config/api';
+import firebase from '../../config/firebase';
+import NotyfContext from '../../components/notyf-toast/NotyfContext';
+import { isEmpty } from '../../helpers/helper';
+
 
 export default function DataRegistryScreen(){
+    
+    const storage = firebase.storage();
+    const notyf = useContext(NotyfContext);
 
+    const [courseData, setCourseData] = useState([]);
+    const [institutions, setInstitutions] = useState([]);
+
+    const [message, setMessage] = useState("");
     const [registry, setRegistry] = useState("");
     const onRegistryOptionChange = e => {
         setRegistry(e.target.value);
         chooseFields(e.target.value);
     }
 
-    const [message, setMessage] = useState("");
-    // const [institutions, setInstittutions] = useState({});
-    const [courseList, setCourseList] = useState([{}]);
-    const [instCourse, setInstCourse] = useState({});
-
+    // visibilidade
     const [courseRegVisible, setCourseRegVisible] = useState(false);
     const [instRegVisible, setInstRegVisible] = useState(false);
     const [personalizRegVisible, setPersonalizRegVisible] = useState(false);
@@ -30,22 +38,40 @@ export default function DataRegistryScreen(){
     const [personalizationLink, setPersonalizationLink] = useState("");
 
     //cadastro de instituicao
+    const [instSigla, setInstSigla] = useState("");
     const [instName, setInstName] = useState("");
+    const [instImage, setInstImage] = useState();
 
     useEffect(() => {
         const abortController = new AbortController()       
-        
+    
         api.get('/course')
         .then((response) => {
-            console.log(response.data)
-            setCourseList(
-                response.data.map(course => <option value={course.id}>{course.title}</option>)
-            )
+            setCourseData(response.data)
         })
-        .catch((error)=>{
-            console.log(error);
-            setMessage("erro ao buscar cursos")
+        .catch((error)=>{ console.log(error) })
+        //----------------------------------------------------
+        api.get('/friends/has-not-connection', {
+            params : {
+                userEmail: "jonathancastroam@gmail.com",
+                page: 0,
+                size: 100
+            }
         })
+        .then((profiles) => {
+            
+            let list = []
+            profiles.data.content.forEach((profile)=>{
+                if (profile.profileType === "INSTITUTIONAL"){
+                    list.push([profile.id, profile.userName])
+                }
+            });
+            setInstitutions(list);
+        })
+        .catch((error) => { console.log(error) })
+
+        //--------------------------------------------------
+        notyf.success('carga finalizada');
 
         return function cleanup() {
             abortController.abort()
@@ -92,60 +118,6 @@ export default function DataRegistryScreen(){
                 setInstRegVisible(true);
                 break;
         }
-    }
-
-    function cadastraCurso(){
-        api.post('/course', {
-            "description": courseDesc,
-            "title": courseTitle,
-            "category": document.getElementById('category-selector').value
-        }).
-        then((()=>{
-            setMessage("cadastrado com sucesso")
-        }))
-        .catch(()=>{
-            setMessage("erro")
-        })
-    }
-
-    function cadastraPersonalizacao(){
-        api.post('/customization', {
-            "institutionId": instiID,
-            "courseId": courseID,
-            "courseDescriptionCustomization": personalizationDesc,
-            "descriptionLink": personalizationLink
-        })
-        .then((()=>{
-            setMessage("cadastrado com sucesso")
-        }))
-        .catch(()=>{
-            setMessage("erro")
-        })
-    }
-
-    function cadastraInstituicao(){
-        api.post('/profile/create', {
-            userName: instName,
-            profileType: "INSTITUTIONAL"
-        })
-        .then((()=>{
-            setMessage("cadastrado com sucesso")
-        }))
-        .catch(()=>{
-            setMessage("erro")
-        })
-    }
-
-    function clearAll(){
-        setMessage("");
-        chooseFields("clear");
-        setRegistry("");
-        setCourseDesc("");
-        setCourseTitle("");
-        setInstID("");
-        setCourseID("");
-        setPersonalizationDesc("");
-        setPersonalizationLink("");
     }
 
     function registrySelector(){
@@ -229,17 +201,38 @@ export default function DataRegistryScreen(){
         )
     }
 
-    function personalizationForm(){
+    function cadastraCurso(){
+        api.post('/course', {
+            "description": courseDesc,
+            "title": courseTitle,
+            "category": document.getElementById('category-selector').value
+        }).
+        then((()=>{
+            setMessage("cadastrado com sucesso")
+        }))
+        .catch(()=>{
+            setMessage("erro")
+        })
+    }
+
+    function personalizationForm(){        
         return(
             personalizRegVisible &&
             <div>
                 <form>
                     <p><strong>Cadastro de personalização de curso para instituições</strong></p>
                     <div>
+                        <label>Curso</label><br/>
+                        <select className="formInst" name="courses" placeholder="Selecione" defaultValue="Selecione">
+                            <option value="Selecione">Selecione</option>
+                            {courseData.map((course, index) => <option key={index} value={course.id}>{course.title}</option>)}
+                        </select>
+                    </div>
+                    <div>
                         <label>Instituição</label><br/>
                         <select className="formInst" name="courses" placeholder="Selecione" defaultValue="Selecione">
                             <option value="Selecione">Selecione</option>
-                            {courseList}
+                            { institutions.map( (i, index) => <option key={index} value={i[0]}> {i[1]} </option> )}
                         </select>
                     </div>
                     <fieldset>
@@ -256,6 +249,21 @@ export default function DataRegistryScreen(){
         )
     }
 
+    function cadastraPersonalizacao(){
+        api.post('/customization', {
+            "institutionId": instiID,
+            "courseId": courseID,
+            "courseDescriptionCustomization": personalizationDesc,
+            "descriptionLink": personalizationLink
+        })
+        .then((()=>{
+            setMessage("cadastrado com sucesso")
+        }))
+        .catch(()=>{
+            setMessage("erro")
+        })
+    }
+
     function institutionForm(){
         return(
             instRegVisible &&
@@ -265,22 +273,61 @@ export default function DataRegistryScreen(){
                         <label>Sigla ou nome</label><br/>
                         <input className='formInput' onChange={(e) => setInstName(e.target.value)} value={instName} type="text"/>
                 </form><br/>
-                <button onClick={cadastraInstituicao}>CADASTRAR</button><br/>
+                <div>
+                    <label>Imagem</label><br/>
+                    <input onChange={(e) => setInstImage(e.target.files[0])} type="file" style={{height:"40px"}} accept=".jpg, .png, .jpeg, .bmp"/>
+                </div>
+                <br/>
+                <br/>
+                <button onClick={cadastraInstituicao}>CADASTRAR</button>
             </div>
         )
     }
-}
 
-/*
-<div>
-                        <select className="formInst" name="institution" placeholder="Selecione">
-                            <option onClick={()=>{setInstID("641d02e37b01cb5c26d78353")}}>UFPE</option>
-                            <option onClick={()=>{setInstID("641d03457b01cb5c26d78354")}}>UFRPE</option>
-                            <option onClick={()=>{setInstID("641d03967b01cb5c26d78355")}}>IFPE</option>
-                            <option onClick={()=>{setInstID("641d03b47b01cb5c26d78356")}}>IFPE-JAB</option>
-                            <option onClick={()=>{setInstID("641d03de7b01cb5c26d78357")}}>IFPE-AFI</option>
-                            <option onClick={()=>{setInstID("641d04077b01cb5c26d78358")}}>UPE</option>
-                            <option onClick={()=>{setInstID("641d04bc7b01cb5c26d78359")}}>UFRPE-UAST</option>
-                        </select>
-                    </div>
-                    */
+    function cadastraInstituicao(){
+        if (!isEmpty(instImage)){
+
+            let name = (instName + "_profile." + instImage.name.split(".").pop());
+            
+            storage.ref("profile_images/" + name).put(instImage)
+                .then(()=>{
+                    api.post('/profile/create', {
+                        userName: instName,
+                        profileImage: name,
+                        profileType: "INSTITUTIONAL"
+                    })
+                    .then((()=>{
+                        setMessage("cadastrado com sucesso")
+                    }))
+                    .catch(()=>{
+                        setMessage("erro")
+                    })
+                })
+        }
+        else{
+            api.post('/profile/create', {
+                userName: instName,
+                profileType: "INSTITUTIONAL"
+            })
+            .then((()=>{
+                setMessage("cadastrado com sucesso")
+            }))
+            .catch(()=>{
+                setMessage("erro")
+            })
+        }
+        
+    }
+    
+    function clearAll(){
+        setMessage("");
+        chooseFields("clear");
+        setRegistry("");
+        setCourseDesc("");
+        setCourseTitle("");
+        setInstID("");
+        setCourseID("");
+        setPersonalizationDesc("");
+        setPersonalizationLink("");
+    }
+}
