@@ -1,7 +1,9 @@
 import './home.css';
-import React, { useState, useEffect, useContext, createContext } from 'react';
+import React, { useState, useEffect, createContext } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { IoChevronDownCircleOutline } from "react-icons/io5";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 import Header from '../../components/header/index'
 import FeedForm from '../../components/feed-form/index';
@@ -13,19 +15,20 @@ import api from '../../config/api';
 import firebase from '../../config/firebase';
 import { isEmpty, formatDate, isURL } from '../../helpers/helper';
 
-export const refreshContext = createContext();
-
 export default function Home() {
     
     let location = useLocation();
     const storage = firebase.storage();
     const emailUser = useSelector(state => state.emailUser);
 
+    const [visible, setVisible] = useState(false);
+    const [page, setPage] = useState(0);
     const [posts, setPosts] = useState([]);
+    const [hasMore, setHasMore] = useState(true);
     const [urlImageProfile, setUrlImageProfile] = useState(loading);
     const [data, setData] = useState({});
     const [urlUpdated, setUrlUpdated] = useState(false);
-    const [refresh, setRefresh] = useState(false);
+    const [homeRefresh, setHomeRefresh] = useState(false);
 
     useEffect(() => {
         const abortController = new AbortController()       
@@ -86,17 +89,23 @@ export default function Home() {
         return function cleanup() {
             abortController.abort()
         }
-    }, [refresh]);
+    }, [homeRefresh]);
 
     function fetch(){
         api.get('/content/getContent/',{
             params : {
-                page: 0,
+                page: page,
                 size: 10
             }
         })
         .then((response)=>{
-            setPosts(response.data.content.map(item => 
+            /*
+            console.log("page ", page);
+            console.log("lenght ", response.data.content.length);
+            console.log("more ", hasMore);*/
+
+            setPosts(response.data.content.map((item) => (
+                            
                 <FeedPost key={item.id}
                     id={item.id}
                     img={item.photoName}
@@ -115,8 +124,15 @@ export default function Home() {
                     stateFirstLogin={location.state.firstLogin}
                     stateProfilePhoto={location.state.profilePhoto} 
                     stateCoverPhoto={location.state.coverPhoto} 
-                    stateUserData={location.state.userData}/>));
-            setRefresh(false);
+                    stateUserData={location.state.userData}/>
+            )));
+
+            (response.data.content.length < 10) ? setHasMore(false) : setHasMore(true);
+            //isEmpty(posts) ? setPosts(response.data.content) : setPosts([...posts, response.data.content]);
+            //setPosts(response.data.content)
+            setHomeRefresh(false);
+            setPage(page+1);
+            setVisible(true);
         })
         .catch((error)=>{
             console.log(error)
@@ -125,19 +141,56 @@ export default function Home() {
 
     return (
         <div className="App">
-            <Header 
-                firstLogin={location.state.firstLogin} 
-                profilePhoto={urlUpdated ? urlImageProfile : location.state.profilePhoto} 
-                coverPhoto={location.state.coverPhoto} 
-                userData={location.state.userData}
-                id={location.state.userData.id}
-                origin="home"/>
-            <refreshContext.Provider value={{refresh, setRefresh}}>
+                <Header 
+                    firstLogin={location.state.firstLogin} 
+                    profilePhoto={urlUpdated ? urlImageProfile : location.state.profilePhoto} 
+                    coverPhoto={location.state.coverPhoto} 
+                    userData={location.state.userData}
+                    id={location.state.userData.id}
+                    origin="home"/>
+            <homeRefreshContext.Provider value={{homeRefresh, setHomeRefresh}}>
                 <div className="feed_content">
                     <FeedForm profilePhoto={urlImageProfile} stateFirstLogin={location.state.firstLogin} stateProfilePhoto={location.state.profilePhoto} stateCoverPhoto={location.state.coverPhoto} stateUserData={location.state.userData}/>
-                    {posts}
+                    {posts
+                    }
+                    {/*visible && 
+                    <InfiniteScroll
+                        dataLength={posts.length}
+                        next={fetch}
+                        hasMore={hasMore}
+                        loader={<h4>Loading...</h4>}>
+
+                        {posts.map((item, index) => (
+                            
+                            <FeedPost key={item.id}
+                                id={item.id}
+                                img={item.photoName}
+                                profilePhoto={item.profilePhotoUrl}
+                                profileInformation={item.profileInformation}
+                                title={item.title}
+                                nome={item.userName}
+                                horario={formatDate(item.hour)}
+                                conteudo={item.text}
+                                emailUser={item.userEmail}
+                                profileId={item.profileId}
+                                like={item.views}
+                                share={item.share}
+                                coments={item.coments}
+                                tipo={item.typePost}
+                                stateFirstLogin={location.state.firstLogin}
+                                stateProfilePhoto={location.state.profilePhoto} 
+                                stateCoverPhoto={location.state.coverPhoto} 
+                                stateUserData={location.state.userData}/>
+                        ))}
+                    </InfiniteScroll>
+                        */}
+                    <div className='more_button'>
+                        <IoChevronDownCircleOutline className='more_button_icon'/>
+                    </div>
                 </div>
-            </refreshContext.Provider>
+            </homeRefreshContext.Provider>
         </div>
     )
 }
+
+export const homeRefreshContext = createContext();

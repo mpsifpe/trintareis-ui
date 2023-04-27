@@ -1,14 +1,12 @@
 import styled from 'styled-components';
 
 export const Perfil = styled.div`
-    margin-left: auto;
-    margin-right: auto;
     background-color: #45bd62;
     background-repeat: no-repeat;
-    background-image: url(${props => `${props.photo}`});
+    background-image: url(${props => `${props.cover}`});
     background-size: cover;
     position: relative;
-    width: inherit;
+    width: 100%;
     height: 30vh;
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;

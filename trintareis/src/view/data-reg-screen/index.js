@@ -51,20 +51,11 @@ export default function DataRegistryScreen(){
         })
         .catch((error)=>{ console.log(error) })
         //----------------------------------------------------
-        api.get('/friends/has-not-connection', {
-            params : {
-                userEmail: "jonathancastroam@gmail.com",
-                page: 0,
-                size: 100
-            }
-        })
+        api.get('/profile/get-by-profile-type?profileType=INSTITUTIONAL')
         .then((profiles) => {
-            
             let list = []
-            profiles.data.content.forEach((profile)=>{
-                if (profile.profileType === "INSTITUTIONAL"){
-                    list.push([profile.id, profile.userName])
-                }
+            profiles.data.forEach((profile)=>{
+                list.push([profile.id, profile.userName])
             });
             setInstitutions(list);
         })
@@ -179,6 +170,24 @@ export default function DataRegistryScreen(){
         )
     }
 
+    function levelSelector(){
+        let levelList = [
+            "BACHARELADO", 
+            "LICENCIATURA",
+            "ESPECIALIZACAO",
+            "MESTRADO",
+            "DOUTORADO"
+        ]
+
+        return(
+            <div>
+                <select className="formInst" id="category-selector">
+                    {levelList.map((level, i) => <option key={i} value={level}>{level}</option>)}
+                </select>
+            </div>
+        )
+    }
+
     function courseForm(){
         return(
             courseRegVisible &&
@@ -194,6 +203,7 @@ export default function DataRegistryScreen(){
                         <textarea onChange={(e) => setCourseDesc(e.target.value)} value={courseDesc} rows='10' cols='100'/>
                     </fieldset>
                     {categorySelector()}
+                    {levelSelector()}
                 </form>
                 <br/>
                 <button onClick={cadastraCurso}>CADASTRAR</button><br/>
@@ -202,6 +212,7 @@ export default function DataRegistryScreen(){
     }
 
     function cadastraCurso(){
+        setMessage("")
         api.post('/course', {
             "description": courseDesc,
             "title": courseTitle,
@@ -225,14 +236,14 @@ export default function DataRegistryScreen(){
                         <label>Curso</label><br/>
                         <select className="formInst" name="courses" placeholder="Selecione" defaultValue="Selecione">
                             <option value="Selecione">Selecione</option>
-                            {courseData.map((course, index) => <option key={index} value={course.id}>{course.title}</option>)}
+                            {courseData.map((course, index) => <option key={index} value={course.id} onChange={(e) => setCourseID(course.id)}>{course.title}</option>)}
                         </select>
                     </div>
                     <div>
                         <label>Instituição</label><br/>
                         <select className="formInst" name="courses" placeholder="Selecione" defaultValue="Selecione">
                             <option value="Selecione">Selecione</option>
-                            { institutions.map( (i, index) => <option key={index} value={i[0]}> {i[1]} </option> )}
+                            { institutions.map( (i, index) => <option key={index} value={i[0]} onChange={(e) => setInstID(i[0])}> {i[1]} </option> )}
                         </select>
                     </div>
                     <fieldset>
@@ -241,7 +252,7 @@ export default function DataRegistryScreen(){
                     </fieldset>
                     <fieldset>
                         <label>Descrição personalizada</label><br/>
-                        <textarea onChange={(e) => setPersonalizationDesc(e.target.value)} value={courseDesc} rows='10' cols='100'/>
+                        <textarea onChange={(e) => setPersonalizationDesc(e.target.value)} value={personalizationDesc} rows='10' cols='100'/>
                     </fieldset>
                 </form>
                 <button onClick={cadastraPersonalizacao}>CADASTRAR</button><br/>
@@ -250,6 +261,7 @@ export default function DataRegistryScreen(){
     }
 
     function cadastraPersonalizacao(){
+        setMessage("")
         api.post('/customization', {
             "institutionId": instiID,
             "courseId": courseID,
@@ -285,6 +297,7 @@ export default function DataRegistryScreen(){
     }
 
     function cadastraInstituicao(){
+        setMessage("")
         if (!isEmpty(instImage)){
 
             let name = (instName + "_profile." + instImage.name.split(".").pop());

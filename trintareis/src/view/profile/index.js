@@ -1,5 +1,5 @@
 import './profile.css';
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, createContext } from 'react';
 import { useLocation, useParams } from "react-router-dom";
 import { useSelector } from 'react-redux';
 import { MdDone, MdClose } from "react-icons/md";
@@ -8,7 +8,7 @@ import { Perfil, Content, Details, Dropdown } from './styles';
 import { isEmpty, formatDate, isURL } from '../../helpers/helper';
 import Header from '../../components/header/index';
 import FeedForm from '../../components/feed-form/index';
-import TimeLine from '../../components/timeline_profile/index';
+import TimelineProfile from '../../components/timeline_profile';
 import loading from '../../resources/loading.gif';
 import user from '../../resources/user.png';
 import cover from '../../resources/cover.png';
@@ -33,11 +33,11 @@ function Profile(props) {
     const [region, setRegion] = useState("");
     const [details, setDetails] = useState("");
     const [actionButton, setActionButton] = useState(<></>);
+    const [profileRefresh, setProfileRefresh] = useState(false);
     
     let profileEmail, idConnection = "";
     let isFriend, inviter, pending = false;
     let location = useLocation();
-    let listEventos = [];
     let params = useParams();
 
     useEffect(() => {
@@ -152,78 +152,91 @@ function Profile(props) {
                 })
                 
             }
+
+            api.get('/content/getContent/by-user-id/' + params.id)
+            .then((response)=>{    
+                let list = [];
+                console.log(response)
+                response.data.forEach(post => {
+                    if(post.profileId === params.id){
+                        list.push(post)
+                    }
+                });
+    
+                setEventos(list);
+            })
         }
 
-        fetch().then(() => {
-            setEventos(listEventos);
-            })
+        fetch()
 
         return function cleanup() {
             abortController.abort()
         }
-    }, []);
+    }, [profileRefresh]);
 
     return (
-        <div className="App">
+        <div className="app">
             <Header firstLogin={location.state.firstLogin} profilePhoto={location.state.profilePhoto} coverPhoto={location.state.coverPhoto} userData={location.state.userData} origin="profile-screen" hideTooltip={true} />
-            <div className="main">
-                <Perfil photo={urlImageCover}/>
-                <Content photoProfile={urlImageProfile}>
-                    <div>
-                        <form className="form">
-                            <div className="div__main_form" style={{width:"500px"}}>
-                                <div className="div__foto" />
-                                <span>{userName}</span>
-                                {actionButton}
-                                <div>
-                                    <p className="p__profileInformation">{profileInformation}</p>
-                                    <p className="p__region">{city}, {region}</p>
+            <profileRefreshContext.Provider value={{profileRefresh, setProfileRefresh}}>
+                <div className="main_div">
+                    <Perfil cover={urlImageCover}/>
+                    <Content photoProfile={urlImageProfile}>
+                        <div>
+                            <form className="form">
+                                <div className="div__main_form" style={{width:"500px"}}>
+                                    <div className="div__foto" />
+                                    <span>{userName}</span>
+                                    {actionButton}
+                                    <div>
+                                        <p className="p__profileInformation">{profileInformation}</p>
+                                        <p className="p__region">{city}, {region}</p>
+                                    </div>
                                 </div>
+                            </form>
+                        </div>
+                    </Content>
+                    <Details>
+                        <div>
+                            <div className="div__span">
+                                <span>Sobre</span>
                             </div>
-                        </form>
-                    </div>
-                </Content>
-                <Details>
-                    <div>
-                        <div className="div__span">
-                            <span>Sobre</span>
+                            <div className="div__p">
+                                <p>{details}</p>
+                            </div>
                         </div>
-                        <div className="div__p">
-                            <p>{details}</p>
+                    </Details>
+                    {props.match.params.id ? null
+                        :
+                        <div className='div__feedform'>
+                            <FeedForm profilePhoto={urlImageProfile} />
                         </div>
+                    }
+                    <div className="div__timeline">
+                    {
+                        eventos.map(item => 
+                            <TimelineProfile key={item.id}
+                                id={item.id}
+                                img={item.photoName}
+                                profilePhoto={item.profilePhotoUrl}
+                                profileInformation={item.profileInformation}
+                                title={item.title}
+                                nome={item.userName}
+                                horario={formatDate(item.hour)}
+                                conteudo={item.text}
+                                emailUser={item.userEmail}
+                                profileId={item.profileId}
+                                like={item.views}
+                                share={item.share}
+                                coments={item.coments}
+                                tipo={item.typePost}
+                                stateFirstLogin={location.state.firstLogin}
+                                stateProfilePhoto={location.state.profilePhoto} 
+                                stateCoverPhoto={location.state.coverPhoto} 
+                                stateUserData={location.state.userData}/>)
+                    }
                     </div>
-                </Details>
-                {props.match.params.id ? null
-                    :
-                    <div className='div__feedform'>
-                        <FeedForm profilePhoto={urlImageProfile} />
-                    </div>
-                }
-                <div className="div__timeline">
-                {/*
-                    eventos.map(item => 
-                        <TimeLine  key={item.id}
-                            id={item.id}
-                            img={item.photoName}
-                            profilePhoto={item.profilePhotoUrl}
-                            profileInformation={item.profileInformation}
-                            title={item.title}
-                            nome={item.userName}
-                            horario={formatDate(item.hour)}
-                            conteudo={item.text}
-                            emailUser={item.userEmail}
-                            profileId={item.profileId}
-                            like={item.views}
-                            share={item.share}
-                            coments={item.coments}
-                            tipo={item.typePost}
-                            stateFirstLogin={location.state.firstLogin}
-                            stateProfilePhoto={location.state.profilePhoto} 
-                            stateCoverPhoto={location.state.coverPhoto} 
-                            stateUserData={location.state.userData}/>)
-                    */}
                 </div>
-            </div>
+            </profileRefreshContext.Provider>
         </div>
     )
 
@@ -327,3 +340,5 @@ function Profile(props) {
 }
 
 export default Profile;
+
+export const profileRefreshContext = createContext();

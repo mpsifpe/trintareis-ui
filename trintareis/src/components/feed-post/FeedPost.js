@@ -12,7 +12,7 @@ import user from '../../resources/user.png';
 import firebase from '../../config/firebase';
 import NotyfContext from '../notyf-toast/NotyfContext';
 import { isEmpty, isURL } from '../../helpers/helper';
-import { refreshContext } from '../../view/home';
+import { homeRefreshContext } from '../../view/home';
 
 
 export default function (props) {
@@ -20,8 +20,8 @@ export default function (props) {
     const notyf = useContext(NotyfContext);
     const loggedUser = useSelector(state => state.emailUser);
     const date = new Date();
-    const {refresh, setRefresh} = useContext(refreshContext);
-
+    const {homeRefresh, setHomeRefresh} = useContext(homeRefreshContext);
+    
     const [media, setMedia] = useState(<></>);
     const [curtir, setCurti] = useState('');
     const [curtiu, setCurtiu] = useState(0);
@@ -111,8 +111,8 @@ export default function (props) {
                         origin= {window.location}
                         className='react-player'
                         config={{ youtube: { playerVars: { origin: 'https://www.youtube.com' } } }}
-                        width={'760px'}
-                        height={'421px'}
+                        width={'100%'}
+                        height={'500px'}
                     />
                 );
                 break;
@@ -208,7 +208,7 @@ export default function (props) {
                     <p>
                         {props.conteudo}<br />
                     </p>
-                    <div style={{maxWidth: '760px'}}>
+                    <div className='media'>
                         {media}
                     </div>
                 </div>
@@ -248,12 +248,12 @@ export default function (props) {
         })
         .then(()=>{
             notyf.success("Sua postagem foi excluída");
-            setRefresh(true);
+            setHomeRefresh(true);
         })
         .catch(function (error) {
             console.log(error);
             notyf.error("Desculpe, ocorreu um erro");
-            setRefresh(true);
+            setHomeRefresh(true);
         })
     }
 
