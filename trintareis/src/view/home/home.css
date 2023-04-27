@@ -1,5 +1,23 @@
 .feed_content {
-    max-width: 960px;
-    margin: 0 auto;
-    margin-bottom: 2rem;
+    max-width: 1000px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0;
+    margin-bottom: 0;
+    padding: 0;
+}
+
+.more_button{
+    width: 30px;
+    height: 30px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.more_button_icon{
+    width: 100%;
+    height: 100%;
+    color: #f8f8f8;
+    background-color: #45bd62;
+    border-radius: 15px;
 }

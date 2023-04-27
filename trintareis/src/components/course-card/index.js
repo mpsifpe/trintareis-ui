@@ -39,8 +39,9 @@ function CourseCard(props) {
                         origin: "career",
                         courseID: props.id,
                         courseTitle: title,
-                        courseDesc: description }}}>
-            <button>Saiba mais</button>
+                        courseDesc: description,
+                        institutions: props.institutions }}}>
+            <button className="more_button"> <label className='button_label'>SAIBA MAIS</label> </button>
           </Link>
         </AccordionContent>
       </Accordion.Item>

@@ -12,7 +12,7 @@ import user from '../../resources/user.png';
 import firebase from '../../config/firebase';
 import NotyfContext from '../notyf-toast/NotyfContext';
 import { isEmpty, isURL } from '../../helpers/helper';
-import { refreshContext } from '../../view/home';
+import { homeRefreshContext } from '../../view/home';
 
 
 export default function (props) {
@@ -20,7 +20,7 @@ export default function (props) {
     const notyf = useContext(NotyfContext);
     const loggedUser = useSelector(state => state.emailUser);
     const date = new Date();
-    const { refresh, setRefresh } = useContext(refreshContext);
+    const {homeRefresh, setHomeRefresh} = useContext(homeRefreshContext);
 
     const [media, setMedia] = useState(<></>);
     const [curtir, setCurti] = useState('');
@@ -114,8 +114,8 @@ export default function (props) {
                         origin={window.location}
                         className='react-player'
                         config={{ youtube: { playerVars: { origin: 'https://www.youtube.com' } } }}
-                        width={'760px'}
-                        height={'421px'}
+                        width={'100%'}
+                        height={'500px'}
                     />
                 );
                 break;
@@ -180,7 +180,7 @@ export default function (props) {
                     <p>
                         {props.conteudo}<br />
                     </p>
-                    <div style={{ maxWidth: '760px' }}>
+                    <div className='media'>
                         {media}
                     </div>
                 </div>
@@ -221,12 +221,10 @@ export default function (props) {
         })
             .then(() => {
                 notyf.success("Sua postagem foi excluída");
-                setRefresh(true);
             })
             .catch(function (error) {
                 console.log(error);
                 notyf.error("Desculpe, ocorreu um erro");
-                setRefresh(true);
             })
     }
 
@@ -237,14 +235,11 @@ export default function (props) {
         })
         .then(()=>{
             let size = curtir.length;
-            
             setCurti(size++);
-            setRefresh(true);
         })
         .catch(function (error) {
             console.log(error);
             notyf.error("Desculpe, ocorreu um erro");
-            setRefresh(true);
         })
     }
 
@@ -257,14 +252,11 @@ export default function (props) {
         })
         .then(()=>{
             let size = curtir.length;
-            
             setCurti(size--);
-            setRefresh(true);
         })
         .catch(function (error) {
             console.log(error);
             notyf.error("Desculpe, ocorreu um erro");
-            setRefresh(true);
         })
     }
 
@@ -289,14 +281,7 @@ export default function (props) {
             }).catch(function (error) {
                 console.log(error);
                 notyf.error("Desculpe, ocorreu um erro");
-                setRefresh(true);
             })
-
-        // setBotaoGostei(
-        //     <div>
-        //         <HiHeart style={{ color: 'cornflowerblue' }} />
-        //         <span onClick={() => funcDesgostei({ id: props.id })} id={props.id + '_botao'} className="feed-comentario-gostei">Gostei</span>
-        //     </div>);
     }
 
     function exibirComentario(props, idEvento) {
@@ -590,85 +575,6 @@ export default function (props) {
             coments: ''
         })
         return false;
-    }
-
-    function limparGostei(obj) {
-        // alert('limpou curtidas.');
-
-        // setCurti(curtir - 1);
-        // let evento = firebase.firestore().collection('events');
-        // evento.doc(obj.id).update({
-        //     like: 'dfasdf@adfasdf'
-        // })
-        return false;
-    }
-
-    function funcDesgostei(obj) {
-        // setBotaoGostei(<div className='feed-content-bt-gostei'>
-        //     <HiOutlineHeart />
-        //     <div onClick={() => funcGostei({ id: props.id })} id={props.id + '_botao'} className="">Gostei</div>
-        // </div>);
-
-        // let evento = firebase.firestore().collection('events');
-        // var likes = [];
-        // evento.get().then(async (result) => {
-        //     await result.docs.forEach(doc => {
-
-        //         if (doc.id == obj.id) {
-        //             console.log(doc.data().like);
-        //             doc.data().like.forEach(function (like) {
-        //                 if (like == loggedUser) {
-        //                     retorno = false;
-        //                 } else {
-        //                     likes.push(like)
-        //                 }
-        //             })
-        //             setCurti(parseInt(likes.length))
-        //             if (likes != "") {
-        //                 evento.doc(obj.id).update({
-        //                     like: likes
-        //                 })
-        //             }
-
-        //             console.log(likes);
-        //             console.log('aaaaaaaaaaaa');
-
-        //             var retorno = true;
-
-        //         }
-        //     })
-        // })
-    }
-
-    function funcCompartilhar(obj) {
-        sendNotificationToast()
-        /*
-        let evento = firebase.firestore().collection('events');
-        var shares = [];
-        evento.get().then(async (result) => {
-            await result.docs.forEach(doc => {
-                if (doc.id == obj.id) {
-                    if (doc.data().share == '') {
-                        evento.doc(obj.id).update({
-                            share: emailUser
-                        })
-                    } else if (doc.data().share != '' && !Array.isArray(doc.data().share)) {
-                        shares.push(doc.data().share);
-                        shares.push(emailUser);
-                        evento.doc(obj.id).update({
-                            share: shares
-                        })
-                    } else {
-                        shares = doc.data().share;
-                        shares.push(emailUser);
-                        evento.doc(obj.id).update({
-                            share: shares
-                        })
-                    }
-                    //  window.location.reload(false);
-                }
-            })
-        })*/
     }
 
     function calcularHoras(tempo, tipo) {

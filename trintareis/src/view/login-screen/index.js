@@ -142,7 +142,7 @@ function Login() {
                         <p className="subtitle">Informe seu email e senha de cadastro para entrar</p>
                         <fieldset className="textfield">
                             <span className="textfield">E-mail</span>
-                            <input id="login2_email_npt" onChange={(e) => setEmail(e.target.value)} onKeyDown={(e) => focusChangeOnEnter(e, passwordRef)} type="email" className="form-control" placeholder="e-mail"/>
+                            <input id="login2_email_npt" onChange={(e) => setEmail(e.target.value)} onKeyDown={(e) => focusChangeOnEnter(e, passwordRef)} type="email" className="form-control" placeholder="e-mail" autoFocus/>
                         </fieldset>
                         <fieldset className="textfield">
                             <span className="textfield">Senha</span>

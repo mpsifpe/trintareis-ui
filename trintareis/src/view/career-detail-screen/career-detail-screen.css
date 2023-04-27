@@ -46,3 +46,10 @@
   a:hover {
     color: black;
   }
+
+  .desc{
+    max-width: 75%;
+    margin-top: 10px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: justify;
+  }
