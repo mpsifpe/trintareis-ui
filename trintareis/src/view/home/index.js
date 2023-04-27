@@ -117,7 +117,7 @@ export default function Home() {
                     conteudo={item.text}
                     emailUser={item.userEmail}
                     profileId={item.profileId}
-                    like={item.views}
+                    like={item.likes}
                     share={item.share}
                     coments={item.coments}
                     tipo={item.typePost}

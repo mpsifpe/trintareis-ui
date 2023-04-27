@@ -21,7 +21,7 @@ export default function (props) {
     const loggedUser = useSelector(state => state.emailUser);
     const date = new Date();
     const {homeRefresh, setHomeRefresh} = useContext(homeRefreshContext);
-    
+
     const [media, setMedia] = useState(<></>);
     const [curtir, setCurti] = useState('');
     const [curtiu, setCurtiu] = useState(0);
@@ -44,71 +44,74 @@ export default function (props) {
         setBotaoGostei(
             <div className='feed-content-bt-gostei'>
                 <HiOutlineHeart />
-                {/*<span onClick={() => funcGostei({ id: props.id })} id={props.id + '_botao'} className="">Gostei</span>*/}
-                <span onClick={sendNotificationToast} className="">Gostei</span>
+                <span onClick={() => funcGostei({ id: props.id })} id={props.id + '_botao'} className="">Gostei</span>
             </div>
         );
-        
-        if (!isEmpty(props.like)) {
-            setCurti(props.like)}
-        
-        if (!isEmpty(props.share)) {
-            setTotalComentario(props.share)}
-        
-        if (!isEmpty(props.profilePhoto)){
-            setProfilePhoto(props.profilePhoto)}
 
-        if(props.emailUser === loggedUser){
+
+        if (!isEmpty(props.like)) {
+            setCurti(props.like)
+        }
+
+        if (!isEmpty(props.share)) {
+            setTotalComentario(props.share)
+        }
+
+        if (!isEmpty(props.profilePhoto)) {
+            setProfilePhoto(props.profilePhoto)
+        }
+
+        if (props.emailUser === loggedUser) {
             setPostOptions(
                 <div className="options_div">
                     {/*<HiOutlinePencilAlt className="options_button"/>*/}
                     <AlertDialog.Root>
                         <AlertDialog.Trigger asChild>
-                            <HiOutlineTrash className="options_button"/>
+                            <HiOutlineTrash className="options_button" />
                         </AlertDialog.Trigger>
                         <AlertDialog.Portal>
-                        <AlertDialog.Overlay className="AlertDialogOverlay" />
-                        <AlertDialog.Content className="AlertDialogContent">
-                            <AlertDialog.Title className="AlertDialogTitle">Excluir</AlertDialog.Title>
-                            <AlertDialog.Description className="AlertDialogDescription">
-                            Você quer mesmo excluir esta postagem?
-                            </AlertDialog.Description>
-                            <div style={{ display: 'flex', gap: 25, justifyContent: 'flex-end' }}>
-                            <AlertDialog.Cancel asChild>
-                                <button className="DialogButton mauve">Cancelar</button>
-                            </AlertDialog.Cancel>
-                            <AlertDialog.Action asChild>
-                                <button className="DialogButton red" onClick={deletePost}>Excluir</button>
-                            </AlertDialog.Action>
-                            </div>
-                        </AlertDialog.Content>
+                            <AlertDialog.Overlay className="AlertDialogOverlay" />
+                            <AlertDialog.Content className="AlertDialogContent">
+                                <AlertDialog.Title className="AlertDialogTitle">Excluir</AlertDialog.Title>
+                                <AlertDialog.Description className="AlertDialogDescription">
+                                    Você quer mesmo excluir esta postagem?
+                                </AlertDialog.Description>
+                                <div style={{ display: 'flex', gap: 25, justifyContent: 'flex-end' }}>
+                                    <AlertDialog.Cancel asChild>
+                                        <button className="DialogButton mauve">Cancelar</button>
+                                    </AlertDialog.Cancel>
+                                    <AlertDialog.Action asChild>
+                                        <button className="DialogButton red" onClick={deletePost}>Excluir</button>
+                                    </AlertDialog.Action>
+                                </div>
+                            </AlertDialog.Content>
                         </AlertDialog.Portal>
                     </AlertDialog.Root>
                 </div>
             )
         }
 
-        switch(props.tipo){
-            
+        switch (props.tipo) {
+
             case "POST_PHOTO":
-                if(isURL(props.img)){
-                    setMedia(<img src={props.img}/>)
+                if (isURL(props.img)) {
+                    setMedia(<img src={props.img} />)
                 } else {
-                    firebase.storage().ref(`images/${props.img}`).getDownloadURL().then(url => {setMedia(<img src={url}/>)});
+                    firebase.storage().ref(`images/${props.img}`).getDownloadURL().then(url => { setMedia(<img src={url} />) });
                 }
                 break;
-            
+
             case "POST_VIDEO":
                 let link = props.img
                 setMedia(
-                    <ReactPlayer 
+                    <ReactPlayer
                         url={
                             link.includes("/watch?v=")
-                            ? link.replace("/watch?v=", "/embed/")
-                            : link
-                        } 
-                        controls={true} 
-                        origin= {window.location}
+                                ? link.replace("/watch?v=", "/embed/")
+                                : link
+                        }
+                        controls={true}
+                        origin={window.location}
                         className='react-player'
                         config={{ youtube: { playerVars: { origin: 'https://www.youtube.com' } } }}
                         width={'100%'}
@@ -116,84 +119,53 @@ export default function (props) {
                     />
                 );
                 break;
-            
+
             default:
                 break;
         }
 
-            /*
-        if (Array.isArray(props.like) && props.like.length > 0) {
-            setCurti(props.like.length);
-            setTotalComentario(props.coments.length);
-            
-            /*
-            props.like.forEach(function (like) {
-                if (like == loggedUser) {
-                    setCurtiu(1);
-                    setBotaoGostei(
-                        <div className='feed-content-bt-gostei'>
-                            <HiHeart style={{ color: 'cornflowerblue' }} />
-                            <div onClick={() => funcDesgostei({ id: props.id })} id={props.id + '_botao'} className="feed-comentario-gostei">Gostei</div>
-                        </div>);
-                }
-            }) 
-
-        } else {
-            setCurti(0);
-            setCurtiu(0);
-        } */
-
-        /*
-        if (Array.isArray(props.share) && props.share.length > 0) {
-            setCompartilhar(props.share.length);
-            props.share.forEach(function (share) {
-                if (share == loggedUser) {
-                    setCompartilhou(1);
-                }
-            })
-        } else {
-            setCompartilhar(0);
-            setCompartilhou(0);
-        }
-
-        */
         return function cleanup() {
             abortController.abort()
         }
     }, []);
-    
-    function sendNotificationToast(){
+
+
+    function sendNotificationToast() {
         notyf.open({
             type: 'info',
             message: 'Em desenvolvimento'
-          })
+        })
     }
-    
+
     return (
         <div className="feedPost">
             <div className="feedPostSingle">
                 <div className="feedPost__profile">
                     <div>
-                        <Link to={{ pathname: ("/profile/" + props.profileId), 
-                                    state: {
-                                        firstLogin: props.stateFirstLogin, 
-                                        profilePhoto: props.stateProfilePhoto, 
-                                        coverPhoto: props.stateCoverPhoto, 
-                                        userData: props.stateUserData,
-                                        origin: ("post."+props.id) }
-                                }} style={{ textDecoration: 'none' }}>
+                        <Link to={{
+                            pathname: ("/profile/" + props.profileId),
+                            state: {
+                                firstLogin: props.stateFirstLogin,
+                                profilePhoto: props.stateProfilePhoto,
+                                coverPhoto: props.stateCoverPhoto,
+                                userData: props.stateUserData,
+                                origin: ("post." + props.id)
+                            }
+                        }} style={{ textDecoration: 'none' }}>
                             <img src={profilePhoto} />
                         </Link>
                     </div>
                     <div className="div__info">
-                        <Link to={{ pathname: ("/profile/" + props.profileId), 
-                                    state: {
-                                        firstLogin: props.stateFirstLogin, 
-                                        profilePhoto: props.stateProfilePhoto, 
-                                        coverPhoto: props.stateCoverPhoto, 
-                                        userData: props.stateUserData,
-                                        origin: ("post."+ props.id) }
-                                }} style={{ textDecoration: 'none' }}>
+                        <Link to={{
+                            pathname: ("/profile/" + props.profileId),
+                            state: {
+                                firstLogin: props.stateFirstLogin,
+                                profilePhoto: props.stateProfilePhoto,
+                                coverPhoto: props.stateCoverPhoto,
+                                userData: props.stateUserData,
+                                origin: ("post." + props.id)
+                            }
+                        }} style={{ textDecoration: 'none' }}>
                             <div>
                                 <span>{props.nome}</span>
                             </div>
@@ -218,8 +190,9 @@ export default function (props) {
                 </div>
                 <hr />
                 <div className="feedPost__util">
+
                     <div className="feedPost__reaction">
-                        {botaoGostei}({curtir})
+                        {botaoGostei}{curtir}
                     </div>
 
                     <div className="feedPost__reaction">
@@ -240,14 +213,31 @@ export default function (props) {
         </div>
     )
 
-    function deletePost(){
+    function deletePost() {
         api.delete('/content', {
-            params : {
-                id : props.id
+            params: {
+                id: props.id
             }
         })
+            .then(() => {
+                notyf.success("Sua postagem foi excluída");
+                setRefresh(true);
+            })
+            .catch(function (error) {
+                console.log(error);
+                notyf.error("Desculpe, ocorreu um erro");
+                setRefresh(true);
+            })
+    }
+
+    function postLike(obj){        
+        api.post('/likes', {
+            postId: obj.id,
+            userEmail: loggedUser
+        })
         .then(()=>{
-            notyf.success("Sua postagem foi excluída");
+            let size = curtir.length;
+            setCurti(size++);
             setHomeRefresh(true);
         })
         .catch(function (error) {
@@ -255,6 +245,57 @@ export default function (props) {
             notyf.error("Desculpe, ocorreu um erro");
             setHomeRefresh(true);
         })
+    }
+
+    function deletetLike(obj){        
+        api.delete('/likes', {
+            params : {
+                userEmail: loggedUser,
+                postId: obj.id
+            }
+        })
+        .then(()=>{
+            let size = curtir.length;
+            
+            setCurti(size--);
+            setRefresh(true);
+        })
+        .catch(function (error) {
+            console.log(error);
+            notyf.error("Desculpe, ocorreu um erro");
+            setRefresh(true);
+        })
+    }
+
+    function funcGostei(obj) {
+        api.get('/likes/', { params: { postId: obj.id } })
+            .then((response) => {
+                let flag = false;
+
+                response.data.map(item => {
+                    if(item.userEmail == loggedUser){
+                        flag = true;
+                    }
+                });
+
+                if(flag){
+                    deletetLike({ id: props.id });
+                }
+
+                if(!flag){
+                    postLike({ id: props.id });
+                }
+            }).catch(function (error) {
+                console.log(error);
+                notyf.error("Desculpe, ocorreu um erro");
+                setRefresh(true);
+            })
+
+        // setBotaoGostei(
+        //     <div>
+        //         <HiHeart style={{ color: 'cornflowerblue' }} />
+        //         <span onClick={() => funcDesgostei({ id: props.id })} id={props.id + '_botao'} className="feed-comentario-gostei">Gostei</span>
+        //     </div>);
     }
 
     function exibirComentario(props, idEvento) {
@@ -402,141 +443,141 @@ export default function (props) {
     }
 
     function salvarComentario(obj) {
-        obj.preventDefault();
-        let evento = firebase.firestore().collection('events');
-        var comentarios = [];
-        evento.get().then(async (result) => {
-            await result.docs.forEach(doc => {
-                if (doc.id == obj.target[1].value) {
-                    try {
-                        if (doc.data().coments != "") {
-                            comentarios = doc.data().coments;
-                        }
-                        comentarios.push({ data: date.getTime(), tipo_comentario: 'c', autor: userName, email: loggedUser, content: obj.target[0].value });
-                        console.log('Comentario Criado: ' + obj.target[0].value);
-                        evento.doc(obj.target[1].value).update({
-                            coments: comentarios
-                        })
-                        document.getElementById(obj.target[1].value + '_texto').value = '';
-                        setTotalComentario(comentarios.length);
-                    } catch (e) {
-                        console.log('erro ao salvar comentario: ' + comentarios);
-                    }
-                    exibirComentario(comentarios, doc.id);
-                }
-            });
-        });
+        // obj.preventDefault();
+        // let evento = firebase.firestore().collection('events');
+        // var comentarios = [];
+        // evento.get().then(async (result) => {
+        //     await result.docs.forEach(doc => {
+        //         if (doc.id == obj.target[1].value) {
+        //             try {
+        //                 if (doc.data().coments != "") {
+        //                     comentarios = doc.data().coments;
+        //                 }
+        //                 comentarios.push({ data: date.getTime(), tipo_comentario: 'c', autor: userName, email: loggedUser, content: obj.target[0].value });
+        //                 console.log('Comentario Criado: ' + obj.target[0].value);
+        //                 evento.doc(obj.target[1].value).update({
+        //                     coments: comentarios
+        //                 })
+        //                 document.getElementById(obj.target[1].value + '_texto').value = '';
+        //                 setTotalComentario(comentarios.length);
+        //             } catch (e) {
+        //                 console.log('erro ao salvar comentario: ' + comentarios);
+        //             }
+        //             exibirComentario(comentarios, doc.id);
+        //         }
+        //     });
+        // });
     }
 
     function apagarComentario(lista, posiaco, idEvento) {
-        let evento = firebase.firestore().collection('events');
-        var comentarios = [];
-        console.log('lista 1: ' + lista)
-        let reordenar = [];
-        var i = lista.length;
-        lista.forEach(function (coment) {
-            if (posiaco != i) {
-                reordenar.unshift(coment);
-            }
-            coment.order = i--;
-        })
+        // let evento = firebase.firestore().collection('events');
+        // var comentarios = [];
+        // console.log('lista 1: ' + lista)
+        // let reordenar = [];
+        // var i = lista.length;
+        // lista.forEach(function (coment) {
+        //     if (posiaco != i) {
+        //         reordenar.unshift(coment);
+        //     }
+        //     coment.order = i--;
+        // })
 
-        let ordenar = [];
-        reordenar.forEach(function (coment) {
-            ordenar.unshift(coment)
-        })
-        setTotalComentario(reordenar.length);
-        evento.get().then(async (result) => {
-            await result.docs.forEach(doc => {
-                if (doc.id == idEvento) {
-                    try {
-                        evento.doc(idEvento).update({
-                            coments: ordenar
-                        })
-                    } catch (e) {
-                        console.log('erro ao salvar comentario');
-                    }
-                    exibirComentario(ordenar, doc.id);
-                }
-            });
-        });
+        // let ordenar = [];
+        // reordenar.forEach(function (coment) {
+        //     ordenar.unshift(coment)
+        // })
+        // setTotalComentario(reordenar.length);
+        // evento.get().then(async (result) => {
+        //     await result.docs.forEach(doc => {
+        //         if (doc.id == idEvento) {
+        //             try {
+        //                 evento.doc(idEvento).update({
+        //                     coments: ordenar
+        //                 })
+        //             } catch (e) {
+        //                 console.log('erro ao salvar comentario');
+        //             }
+        //             exibirComentario(ordenar, doc.id);
+        //         }
+        //     });
+        // });
     }
 
     function editarComentario(obj) {
-        obj.preventDefault();
-        let evento = firebase.firestore().collection('events');
-        var comentarios = [];
+        // obj.preventDefault();
+        // let evento = firebase.firestore().collection('events');
+        // var comentarios = [];
 
-        let lista = obj.target[3].value;
-        lista = JSON.parse(lista);
+        // let lista = obj.target[3].value;
+        // lista = JSON.parse(lista);
 
-        let reordenar = [];
-        var i = lista.length;
-        lista.forEach(function (coment) {
-            if (i == obj.target[1].value) {
-                reordenar.unshift({ id: i, data: date.getTime(), tipo_comentario: 'e', autor: userName, email: loggedUser, content: obj.target[0].value });
-                console.log('Comentario Editado: ' + obj.target[0].value);
-            } else {
-                reordenar.unshift(coment);
-            }
-            coment.order = i--;
-        })
+        // let reordenar = [];
+        // var i = lista.length;
+        // lista.forEach(function (coment) {
+        //     if (i == obj.target[1].value) {
+        //         reordenar.unshift({ id: i, data: date.getTime(), tipo_comentario: 'e', autor: userName, email: loggedUser, content: obj.target[0].value });
+        //         console.log('Comentario Editado: ' + obj.target[0].value);
+        //     } else {
+        //         reordenar.unshift(coment);
+        //     }
+        //     coment.order = i--;
+        // })
 
-        let ordenar = [];
-        reordenar.forEach(function (coment) {
-            ordenar.unshift(coment)
-        })
-
-
-        console.log('reordenar: ultimo comentario primeiro');
-        console.log(reordenar);
-        console.log(ordenar);
+        // let ordenar = [];
+        // reordenar.forEach(function (coment) {
+        //     ordenar.unshift(coment)
+        // })
 
 
-        evento.get().then(async (result) => {
-            await result.docs.forEach(doc => {
-                if (doc.id == obj.target[2].value) {
-                    try {
-                        evento.doc(obj.target[2].value).update({
-                            coments: ordenar
-                        })
-                    } catch (e) {
-                        console.log('erro ao salvar comentario: ' + comentarios);
-                    }
-                    exibirComentario(ordenar, doc.id);
-                }
-            });
-        });
+        // console.log('reordenar: ultimo comentario primeiro');
+        // console.log(reordenar);
+        // console.log(ordenar);
+
+
+        // evento.get().then(async (result) => {
+        //     await result.docs.forEach(doc => {
+        //         if (doc.id == obj.target[2].value) {
+        //             try {
+        //                 evento.doc(obj.target[2].value).update({
+        //                     coments: ordenar
+        //                 })
+        //             } catch (e) {
+        //                 console.log('erro ao salvar comentario: ' + comentarios);
+        //             }
+        //             exibirComentario(ordenar, doc.id);
+        //         }
+        //     });
+        // });
     }
 
     function comentarios(obj, comentarios) {
 
         sendNotificationToast()
-        
-          /*
-        let listaFoto = [];
-        firebase.firestore().collection('profiles').get().then(async (result) => {
-            await result.docs.forEach(doc => {
-                listaFoto.push({ email: doc.data().emailUser, foto: doc.data().profilePhoto });
-            })
-        })
-        setListaFotos(<div>listaFoto</div>);
-        if (comentarios.comentario != null) {
-            exibirComentario(comentarios, obj.id);
-        }
-        setElement(
-            <form onSubmit={salvarComentario}>
-                <div>
-                    <h5>Comentários</h5>
-                    <div className='feedPost__util feed__coments'>
-                        <input type="textComent" className="form-control my-2" defaultValue="" id={obj.id + '_texto'} placeholder="Comentário" />
-                        <input type="hidden" value={obj.id} />
-                        <input type="submit" value="Salvar" className="w-10 btn btn-coments fw-bold bor" />
-                    </div>
-                </div>
-            </form>
-        );
-        */
+
+        /*
+      let listaFoto = [];
+      firebase.firestore().collection('profiles').get().then(async (result) => {
+          await result.docs.forEach(doc => {
+              listaFoto.push({ email: doc.data().emailUser, foto: doc.data().profilePhoto });
+          })
+      })
+      setListaFotos(<div>listaFoto</div>);
+      if (comentarios.comentario != null) {
+          exibirComentario(comentarios, obj.id);
+      }
+      setElement(
+          <form onSubmit={salvarComentario}>
+              <div>
+                  <h5>Comentários</h5>
+                  <div className='feedPost__util feed__coments'>
+                      <input type="textComent" className="form-control my-2" defaultValue="" id={obj.id + '_texto'} placeholder="Comentário" />
+                      <input type="hidden" value={obj.id} />
+                      <input type="submit" value="Salvar" className="w-10 btn btn-coments fw-bold bor" />
+                  </div>
+              </div>
+          </form>
+      );
+      */
     }
 
     function limparComentario(obj) {
@@ -551,103 +592,51 @@ export default function (props) {
     }
 
     function limparGostei(obj) {
-        alert('limpou curtidas.');
+        // alert('limpou curtidas.');
 
-        setCurti(curtir - 1);
-        let evento = firebase.firestore().collection('events');
-        evento.doc(obj.id).update({
-            like: 'dfasdf@adfasdf'
-        })
+        // setCurti(curtir - 1);
+        // let evento = firebase.firestore().collection('events');
+        // evento.doc(obj.id).update({
+        //     like: 'dfasdf@adfasdf'
+        // })
         return false;
     }
 
     function funcDesgostei(obj) {
-        setBotaoGostei(<div className='feed-content-bt-gostei'>
-            <HiOutlineHeart />
-            <div onClick={() => funcGostei({ id: props.id })} id={props.id + '_botao'} className="">Gostei</div>
-        </div>);
+        // setBotaoGostei(<div className='feed-content-bt-gostei'>
+        //     <HiOutlineHeart />
+        //     <div onClick={() => funcGostei({ id: props.id })} id={props.id + '_botao'} className="">Gostei</div>
+        // </div>);
 
-        let evento = firebase.firestore().collection('events');
-        var likes = [];
-        evento.get().then(async (result) => {
-            await result.docs.forEach(doc => {
+        // let evento = firebase.firestore().collection('events');
+        // var likes = [];
+        // evento.get().then(async (result) => {
+        //     await result.docs.forEach(doc => {
 
-                if (doc.id == obj.id) {
-                    console.log(doc.data().like);
-                    doc.data().like.forEach(function (like) {
-                        if (like == loggedUser) {
-                            retorno = false;
-                        } else {
-                            likes.push(like)
-                        }
-                    })
-                    setCurti(parseInt(likes.length))
-                    if (likes != "") {
-                        evento.doc(obj.id).update({
-                            like: likes
-                        })
-                    }
+        //         if (doc.id == obj.id) {
+        //             console.log(doc.data().like);
+        //             doc.data().like.forEach(function (like) {
+        //                 if (like == loggedUser) {
+        //                     retorno = false;
+        //                 } else {
+        //                     likes.push(like)
+        //                 }
+        //             })
+        //             setCurti(parseInt(likes.length))
+        //             if (likes != "") {
+        //                 evento.doc(obj.id).update({
+        //                     like: likes
+        //                 })
+        //             }
 
-                    console.log(likes);
-                    console.log('aaaaaaaaaaaa');
+        //             console.log(likes);
+        //             console.log('aaaaaaaaaaaa');
 
-                    var retorno = true;
+        //             var retorno = true;
 
-                }
-            })
-        })
-    }
-
-    function funcGostei(obj) {
-        setBotaoGostei(
-            <div>
-                <HiHeart style={{ color: 'cornflowerblue' }} />
-                <span onClick={() => funcDesgostei({ id: props.id })} id={props.id + '_botao'} className="feed-comentario-gostei">Gostei</span>
-            </div>);
-
-        let evento = firebase.firestore().collection('events');
-        var likes = [];
-        evento.get().then(async (result) => {
-            await result.docs.forEach(doc => {
-                if (doc.id == obj.id) {
-                    var retorno = true;
-                    if (Array.isArray(doc.data().like)) {
-                        doc.data().like.forEach(function (like) {
-                            if (like == loggedUser) {
-                                retorno = false;
-                            }
-                        })
-                    } else {
-                        if (doc.data().like == loggedUser) {
-                            retorno = false;
-                        }
-                    }
-                    if (retorno) {
-                        if (doc.data().like == '') {
-                            evento.doc(obj.id).update({
-                                like: loggedUser
-                            })
-                        } else if (doc.data().like != '' && !Array.isArray(doc.data().like)) {
-                            likes.push(doc.data().like);
-                            likes.push(loggedUser);
-                            evento.doc(obj.id).update({
-                                like: likes
-                            })
-                        } else {
-                            likes = doc.data().like;
-                            likes.push(loggedUser);
-                            evento.doc(obj.id).update({
-                                like: likes
-                            })
-                        }
-                        setCurti(parseInt(likes.length));
-
-                    }
-                }
-            })
-        })
-
-
+        //         }
+        //     })
+        // })
     }
 
     function funcCompartilhar(obj) {
