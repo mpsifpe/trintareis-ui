@@ -219,8 +219,13 @@
 .feed-content{
     padding-left: 5px;
 }
-.feed-content-bt-gostei{
+.feed-content-bt-like{
     display: contents;
+}
+.feed-content-bt-like span{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: normal;
+    margin-left: 3px;
 }
 .feed-comentario-gostei{
     color:cornflowerblue;
@@ -260,4 +265,10 @@
 .feedPostSingle{
   margin-top: -2px;
   margin-bottom: 0 ;
+}
+.likedColor{
+  color: red;
+}
+.notLikedColor{
+  color: white;
 }
