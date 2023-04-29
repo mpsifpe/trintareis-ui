@@ -23,8 +23,10 @@ export default function (props) {
     const {homeRefresh, setHomeRefresh} = useContext(homeRefreshContext);
 
     const [media, setMedia] = useState(<></>);
-    const [curtir, setCurti] = useState('');
+    const [like, setLike] = useState(0);
+    const [likeStyle, setLikeStyle] = useState(<HiOutlineHeart/>);
     const [curtiu, setCurtiu] = useState(0);
+    const [curtir, setCurti] = useState('');
     const [totalComentario, setTotalComentario] = useState(0);
     const [userName, setUserName] = useState('');
     const [compartilhar, setCompartilhar] = useState('');
@@ -37,21 +39,18 @@ export default function (props) {
     const [profilePhoto, setProfilePhoto] = useState(user);
     const [profileLink, setProfileLink] = useState("");
     const [postOptions, setPostOptions] = useState(<></>);
+    const [update, setUpdate] = useState(false);
+    const [loaded, setLoaded] = useState(false);
 
     useEffect(() => {
         const abortController = new AbortController();
 
         setBotaoGostei(
-            <div className='feed-content-bt-gostei'>
-                <HiOutlineHeart />
-                <span onClick={() => funcGostei({ id: props.id })} id={props.id + '_botao'} className="">Gostei</span>
+            <div className='feed-content-bt-like'>
+                {likeStyle}
+                <span onClick={() => funcGostei({ id: props.id })} id={props.id + '_botao'}>Gostei {like} </span>
             </div>
         );
-
-
-        if (!isEmpty(props.like)) {
-            setCurti(props.like)
-        }
 
         if (!isEmpty(props.share)) {
             setTotalComentario(props.share)
@@ -61,6 +60,7 @@ export default function (props) {
             setProfilePhoto(props.profilePhoto)
         }
 
+        //--------------- botão excluir ----------------------------------------------
         if (props.emailUser === loggedUser) {
             setPostOptions(
                 <div className="options_div">
@@ -91,6 +91,7 @@ export default function (props) {
             )
         }
 
+        //------------------------------------- post de midia ------------------------------------------------------
         switch (props.tipo) {
 
             case "POST_PHOTO":
@@ -124,10 +125,33 @@ export default function (props) {
                 break;
         }
 
+        //----------------------------------- like ----------------------------------
+        if(!loaded){
+            if (!isEmpty(props.like)) {
+                setLike(props.like)
+            }
+
+            api.get('/likes?postId=' + props.id)
+            .then((response) => {
+
+                response.data.map(item => {
+                    if(item.userEmail == loggedUser){
+                        setLikeStyle(<HiHeart color="red"/>)
+                    }
+                });
+                setLoaded(true);
+                setUpdate(!update)
+
+            }).catch(function (error) {
+                console.log(error);
+                notyf.error("Desculpe, ocorreu um erro");
+            })
+        }
+        
         return function cleanup() {
             abortController.abort()
         }
-    }, []);
+    }, [update]);
 
 
     function sendNotificationToast() {
@@ -192,17 +216,21 @@ export default function (props) {
                 <div className="feedPost__util">
 
                     <div className="feedPost__reaction">
-                        {botaoGostei}{curtir}
+                        {botaoGostei}
                     </div>
 
                     <div className="feedPost__reaction">
-                        <HiOutlineAnnotation />
-                        <span onClick={() => comentarios({ id: props.id }, { comentario: props.coments })} className="">Comentar ({totalComentario})</span>
+                        <div className="feed-content-bt-like">
+                            <HiOutlineAnnotation />
+                            <span onClick={() => comentarios({ id: props.id }, { comentario: props.coments })}>Comentários {totalComentario}</span>
+                        </div>
                     </div>
 
                     <div className="feedPost__reaction">
-                        <HiOutlineShare />
-                        <span onClick={() => funcCompartilhar({ id: props.id })} className="">Compartilhar</span>
+                        <div className="feed-content-bt-like">
+                            <HiOutlineShare />
+                            <span onClick={sendNotificationToast} className="">Compartilhar</span>
+                        </div>
                     </div>
                 </div>
                 <div>
@@ -219,13 +247,16 @@ export default function (props) {
                 id: props.id
             }
         })
-            .then(() => {
-                notyf.success("Sua postagem foi excluída");
-            })
-            .catch(function (error) {
-                console.log(error);
-                notyf.error("Desculpe, ocorreu um erro");
-            })
+        .then(() => {
+            notyf.success("Sua postagem foi excluída");
+        })
+        .catch(function (error) {
+            console.log(error);
+            notyf.error("Desculpe, ocorreu um erro");
+        })
+        .finally(()=>{
+            setHomeRefresh(true)
+        })
     }
 
     function postLike(obj){        
@@ -234,8 +265,9 @@ export default function (props) {
             userEmail: loggedUser
         })
         .then(()=>{
-            let size = curtir.length;
-            setCurti(size++);
+            setLike(like+1);
+            setLikeStyle(<HiHeart color="red"/>)
+            setUpdate(!update)
         })
         .catch(function (error) {
             console.log(error);
@@ -250,9 +282,10 @@ export default function (props) {
                 postId: obj.id
             }
         })
-        .then(()=>{
-            let size = curtir.length;
-            setCurti(size--);
+        .then(()=>{      
+            (like > 1) ? setLike(like-1) : setLike(0);
+            setLikeStyle(<HiOutlineHeart/>);
+            setUpdate(!update)
         })
         .catch(function (error) {
             console.log(error);
@@ -262,26 +295,26 @@ export default function (props) {
 
     function funcGostei(obj) {
         api.get('/likes/', { params: { postId: obj.id } })
-            .then((response) => {
-                let flag = false;
+        .then((response) => {
+            let flag = false;
 
-                response.data.map(item => {
-                    if(item.userEmail == loggedUser){
-                        flag = true;
-                    }
-                });
-
-                if(flag){
-                    deletetLike({ id: props.id });
+            response.data.map(item => {
+                if(item.userEmail == loggedUser){
+                    flag = true;
                 }
+            });
 
-                if(!flag){
-                    postLike({ id: props.id });
-                }
-            }).catch(function (error) {
-                console.log(error);
-                notyf.error("Desculpe, ocorreu um erro");
-            })
+            if(flag){
+                deletetLike({ id: props.id });
+            }
+
+            if(!flag){
+                postLike({ id: props.id });
+            }
+        }).catch(function (error) {
+            console.log(error);
+            notyf.error("Desculpe, ocorreu um erro");
+        })
     }
 
     function exibirComentario(props, idEvento) {
