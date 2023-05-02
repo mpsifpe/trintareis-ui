@@ -5,28 +5,100 @@
 }   
 
 body{
-    background-color: #ccc;
+    background-color: 	#f8f8f8;
 }
 
 .header{
     background-color: white;
-    height: 70px;
-    padding: 7px 0;
-    display: flex;
+    height: 55px;
+    display: inline-flex;
+    justify-content: center;
+    width: 100%;
+    box-shadow: 2px 2px 2px lightgray;
 }
 
 .header__left{
-    width: 100%;
+    width: 20%;
+    height: 100%;
+    margin-top: auto;
+    margin-bottom: auto;
+    display: inline-flex;
+    flex-direction: row;
+    justify-content: center;
+    margin-left: 40px;
+}
+
+.header__center{
+    width: 60%;
     height: 100%;
     margin-top: 0px;
-    margin-left: 6%;
-    margin-right: 10px;
+    display: inline-flex;
+    margin-left: auto;
+    margin-right: auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: 600;
+}
+
+.header__right{
+    width: 20%;
+    height: 100%;
+    margin-top: 0px;
+    display: inline-flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.header__right a{
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.img_profile img{
+    width: 45px;
+    height: 45px;
     display: flex;
+    border-radius: 25px;
+    cursor: pointer;
+    margin-top: 5px;
+    margin-bottom: auto;
 }
 
 .div__logo{
     display: flex;
     margin: 5px;
+}
+
+.logout_btn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-self: center;
+    border-radius: 25px;
+    cursor: pointer;
+    padding: 8px 10px;
+    font-size: 15px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 35px;
+    margin-right: 0;
+    width: 60px;
+}
+
+.logout_btn span{
+    justify-content: center;
+    font-weight: 500;
+    display: flex;
+    font-size: 15px;
+    color: #969595;
+}
+
+.logout_btn:hover{
+    background-color: #f8f8f8;
+}
+
+.logout_btn:hover span{
+    color: darkgray;
 }
 
 .logo__fb{
@@ -36,14 +108,12 @@ body{
     height: 100%;
     align-items: center;
     align-self: center;
-    align-self: center;
 }
 
 .logo__fb svg{
-    border: 2px solid;
-    border-radius: 3px;
     color: #45bd62;
     font-size: 40px;
+    margin-bottom: 2px;
 }
 
 .search-form{
@@ -53,6 +123,8 @@ body{
     line-height: 40px;
     padding: 8px 10px;
     align-items: center;
+    margin-top: auto;
+    margin-bottom: auto;
 }
 
 .search__fb{
@@ -60,45 +132,66 @@ body{
     align-self: center;
 }
 
-.search__fb svg{
-    color: grey;
-    font-size: 15px;
+.search__fb input{
+    width: 175px;
+    height: 40px;
+    padding-left: 12px;
+    padding-right: 5px;
+    border-width: 0px;
+    border-radius: 10px;
+    border-color: #f8f8f8;
+    background-color: #f8f8f8;
 }
 
-.search__fb input{
-    width: 280px;
-    height: 40px;
+::placeholder{
+    text-align: center;
 }
 
 .div__content_header{
     width: 100%;
-    display: flex;
+    display: inline-flex;
+    flex-direction: row;
+    justify-content: center;
     align-items: center;
-    margin: 5px;
-}
-
-.home__fb{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    cursor: pointer;
-    position: relative;
-    padding: 8px 10px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .div__content_header span{
     font-size: 12px;
 }
 
-.home__fb:hover{
-    height: 50px;
-    background-color: rgb(200, 200, 200);
-    border-radius: 5%;
+.header_button{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+    margin-left: 20px;
+    margin-right: 20px;
+    width: 50px;
+    font-weight: bold;
+    margin-top: auto;
+    margin-bottom: auto;
 }
 
-.home__fb svg{
-    color: gray;
-    font-size: 25px;
+.icon_button{
+    color: darkgray
+}
+
+.header_button:hover{
+    font-weight: bolder;
+}
+
+.header_button svg{
+    width: 30px;
+    height: 30px;
+}
+
+.header_button:hover svg{
+    color: #45bd62;
+    width: 32px;
+    height: 32px;
 }
 
 /* .home__fb span{
@@ -124,7 +217,6 @@ body{
 
 .friend__fb svg{
     color: gray;
-    font-size: 25px;
 }
 
 .friend__fb label{
@@ -282,13 +374,6 @@ body{
     font-size: 12px;
 }
 
-.header__right{
-    display: flex;    
-    width: 100%;
-    margin-right: 50px;
-    justify-content: end;
-}
-
 .div__plus_btn{
     border: 2px solid;
     display: flex;
@@ -322,6 +407,7 @@ body{
     background-color: white;
     padding: 10px;
     border-radius: 15px;
+    box-shadow: 2px 2px 2px lightgray, 1px 1px 1px lightgray inset;
 }
 
 .feedForm{
@@ -333,7 +419,7 @@ body{
     display: inline-block;
     width: 40px;
     height: 40px;
-    border-radius: 20px;
+    border-radius: 25px;
 }
 
 .feedForm input{
@@ -383,19 +469,21 @@ body{
 }
 
 .feedPostSingle{
-margin: 20px 100px;
-background-color: white;
-border-radius: 15px;
+    margin: 20px 100px;
+    background-color: white;
+    border-radius: 15px;
+    box-shadow: 2px 2px 2px lightgray ;
 }
 
 .feedPost__profile{
-    padding: 10px;
+    margin-top: 10px;
 }
 
 .feedPost__profile h3{
     display: inline-block;
     vertical-align: middle;
     padding: 8px 10px;
+    text-decoration: none;
 }
 
 .feedPost__profile h3 > span{
@@ -404,14 +492,13 @@ border-radius: 15px;
 }
 
 .feedPost__profile img{
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     display: inline-block;
     vertical-align: middle;
-    border-radius: 20px;
-    border: 2px solid black;
+    border-radius: 25px;
     cursor: pointer;
-    
+    margin: 5px;
 }
 
 .feedPost__content p{
@@ -422,6 +509,7 @@ border-radius: 15px;
 .feedPost__content img{
     width: 100%;
     display: block;
+    margin-bottom: 0;
 }
 
 .div__perfil_btn{
@@ -441,7 +529,12 @@ border-radius: 15px;
     width: 70px;
 }
 
-/* .div__perfil_btn span{
+.headerLinkStyle{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-decoration: none;
+}
+
+.div__perfil_btn span{
     justify-content: center;
     display: flex;
     font-size: 15px;
@@ -450,8 +543,160 @@ border-radius: 15px;
 .div__perfil_btn:hover{
     text-decoration: underline;
     color: #45bd62;
-} */
-
-/* .div__perfil_btn{
+}
+.div__perfil_btn{
     border: 1px solid ;
-} */
+}
+
+@import '@radix-ui/colors/blackA.css';
+@import '@radix-ui/colors/mauve.css';
+@import '@radix-ui/colors/green.css';
+@import '@radix-ui/colors/grass.css';
+
+.DropdownMenuContent,
+.DropdownMenuSubContent {
+  min-width: 220px;
+  background-color: white;
+  border-radius: 6px;
+  padding: 5px;
+  box-shadow: 0px 10px 38px -10px rgba(22, 23, 24, 0.35), 0px 10px 20px -15px rgba(22, 23, 24, 0.2);
+  animation-duration: 400ms;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, opacity;
+}
+.DropdownMenuContent[data-side='top'],
+.DropdownMenuSubContent[data-side='top'] {
+  animation-name: slideDownAndFade;
+}
+.DropdownMenuContent[data-side='right'],
+.DropdownMenuSubContent[data-side='right'] {
+  animation-name: slideLeftAndFade;
+}
+.DropdownMenuContent[data-side='bottom'],
+.DropdownMenuSubContent[data-side='bottom'] {
+  animation-name: slideUpAndFade;
+}
+.DropdownMenuContent[data-side='left'],
+.DropdownMenuSubContent[data-side='left'] {
+  animation-name: slideRightAndFade;
+}
+
+.DropdownMenuItem,
+.DropdownMenuCheckboxItem,
+.DropdownMenuRadioItem,
+.DropdownMenuSubTrigger {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 1;
+  color: black;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  height: 25px;
+  padding: 0 5px;
+  position: relative;
+  padding-left: 25px;
+  user-select: none;
+  outline: none;
+}
+.DropdownMenuSubTrigger[data-state='open'] {
+  background-color: var(--violet4);
+  color: var(--green9);
+}
+.DropdownMenuItem[data-disabled],
+.DropdownMenuCheckboxItem[data-disabled],
+.DropdownMenuRadioItem[data-disabled],
+.DropdownMenuSubTrigger[data-disabled] {
+  color: var(--mauve8);
+  pointer-events: none;
+}
+.DropdownMenuItem[data-highlighted],
+.DropdownMenuCheckboxItem[data-highlighted],
+.DropdownMenuRadioItem[data-highlighted],
+.DropdownMenuSubTrigger[data-highlighted] {
+  background-color: var(--grass11);
+  color: white;
+}
+
+.DropdownMenuLabel {
+  padding-left: 25px;
+  font-size: 12px;
+  line-height: 25px;
+  color: var(--mauve11);
+}
+
+.DropdownMenuSeparator {
+  height: 1px;
+  background-color: var(--green9);
+  margin: 5px;
+}
+
+.DropdownMenuItemIndicator {
+  position: absolute;
+  left: 0;
+  width: 25px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.DropdownMenuArrow {
+  fill: white;
+}
+
+.RightSlot {
+  margin-left: auto;
+  padding-left: 20px;
+  color: var(--mauve11);
+}
+[data-highlighted] > .RightSlot {
+  color: white;
+}
+[data-disabled] .RightSlot {
+  color: var(--mauve8);
+}
+
+@keyframes slideUpAndFade {
+  from {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideRightAndFade {
+  from {
+    opacity: 0;
+    transform: translateX(-2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideDownAndFade {
+  from {
+    opacity: 0;
+    transform: translateY(-2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideLeftAndFade {
+  from {
+    opacity: 0;
+    transform: translateX(2px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}

@@ -1,24 +1,36 @@
 .feedForm__icons{
-    padding: 7px 60px;
-    display: flex;
+    padding-top: 15px;
+    padding-left: 80px;
+    padding-right: 80px;
+    padding-bottom: 0px;
+    width: 100%;
+    display: inline-flex;
     justify-content: center;
-    align-items: center;
-    column-gap: 8px;
+    align-content: center;
+    align-self: center;
+    column-gap: auto;
     border-radius: 8px;
     transition: all 0.2s ease;
-    font-weight: 500;
+    font-weight: normal;
+    font-size: medium;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .feedForm__reaction button{
     background-color: white;
-    border: none;    
-    padding: 10px 10px;
-    display: flex;
+    border: none;
+    display: inline-flex;
     justify-content: center;
-    align-items: center;
+    align-content: center;
+    align-self: center;
     column-gap: 8px;
     border-radius: 8px;
     font-weight: 500;
+}
+
+.feedForm_svg{
+    height: 35px;
+    width: 35px;
 }
 
 .feedForm__reaction:hover button{
@@ -27,8 +39,20 @@
 }
 
 .feedForm{
+    display: grid;
+    margin-right: auto;
+    margin-left: auto;
+    margin-bottom: 0px;
+}
+
+.feedForm__link{
+    padding-top: 3px;
     display: flex;
     flex-direction: column;
+}
+
+.feedForm__link span{
+    color: black;
 }
 
 .div__header{
@@ -43,14 +67,20 @@
     height: 100%;
 }
 
+.div__foto img{
+    height: 45px;
+    width: 45px;
+}
+
 .div__button{
     display: flex;
     align-items: center;
     cursor: pointer;
     height: 100%;
     width: 100%;
-    background-color: rgba(180, 173, 173, 0.4);
-    border-radius: 25px;
+    background-color: #f8f8f8;
+    border-radius: 10px;
+    margin-left: 10px;
 }
 
 .div__span{
@@ -66,5 +96,33 @@
 }
 
 .div__button:hover{
-    background-color: rgba(128, 119, 119, 0.4);
+    background-color: #e6e6e6;
+}
+
+.div__btn_post button{
+    width: 180px;
+    height: 40px;
+    margin-top: 20px;
+    margin-left: 38%;
+    border-radius:30px;
+    font-size: 20px;
+    background-color: #6aca4f;
+    border-color: #6aca4f;
+    color: #fff;
+}
+
+.div__btn_post button:hover{
+    width: 180px;
+    height: 40px;
+    margin-top: 20px;
+    margin-left: 38%;
+    border-radius:30px;
+    font-size: 20px;
+    background-color: #59a344;
+    border-color: #59a344;
+}
+
+.radioButtonsForm{
+    margin-top: 5px;
+    right: 0;
 }

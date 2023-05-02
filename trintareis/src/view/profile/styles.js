@@ -1,17 +1,17 @@
-import stayled from 'styled-components';
+import styled from 'styled-components';
 
-export const Perfil = stayled.div`
-    margin-left: 10%;
-    background-color: rgb(124, 129, 123);
+export const Perfil = styled.div`
+    background-color: #45bd62;
     background-repeat: no-repeat;
-    background-image: url(${props => `${props.photo}`});
+    background-image: url(${props => `${props.cover}`});
     background-size: cover;
     position: relative;
-    width: 80%;
+    width: 100%;
+    height: 30vh;
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
-    padding: 100px;
-    margin-top: 15px;
+    padding: 135px;
+    margin-top: 10px;
     display: flex;
 
     label {
@@ -31,40 +31,47 @@ export const Perfil = stayled.div`
     }
 `;
 
-export const Content = stayled.div`
-    background: red;
-    margin-left: 10%;
+export const Content = styled.div`
+    background: white;
+    margin-left: auto;
+    margin-right: auto;
     background-color: white;
     background-repeat: no-repeat;
     background-size: cover;
     position: relative;
     border-bottom-left-radius: 15px;
     border-bottom-right-radius: 15px;
-    width: 80%;
-    padding: 50px;
-    // margin-top: 15px;
+    width: 100%;
+    padding-left: 50px;
     display: flex;
 
     .div__foto{
-        background: rgb(160, 235, 160);
+        background: white;
         background-image: url(${props => `${props.photoProfile}`});
+        border-radius: 50% !important;
         width: 200px;
         height: 200px;
-        margin-top: -210px;
-        margin-left: -25px;
-        border-radius: 50%;
-        border: 5px solid white;
+        overflow: hidden;
+        object-fit: cover;
+        display: flex;
+        background-size: cover;
+        background-position: 50% 50%;
+        border-color: #aaa !important;
+        border: 0px;
+        margin-top: -150px;
     }
 
     .div__main_form{
-        margin: 5px;
-        justify-content: space-between;
+        justify-content: flex-start;
     }
 
     .div__main_form span{
         margin-left: -25px;
-        font-size: 30px;
-        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+        font-size: 35px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-weight: bold;
+        font-style: normal;
+        text-decoration: none;
     }
 
     .div__main_form label{
@@ -88,22 +95,27 @@ export const Content = stayled.div`
     }
 `;
 
-export const Details = stayled.div`
-    margin-left: 10%;
+export const Details = styled.div`
+    margin-left: auto;
+    margin-right: auto;
     background-color: white;
     background-repeat: no-repeat;
     background-size: cover;
     position: relative;
     border-radius: 15px;
-    width: 80%;
-    padding: 50px;
-    margin-top: 15px;
-    display: flex;
+    width: 100%;
+    padding-left: 50px;
+    padding-bottom: 10px;
+    margin-top: 10px;
+    
 
     .div__span {
-        margin-top: -25px;
-        height: 40px;
         margin-left: -25px;
+        font-size: 35px;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        font-weight: bold;
+        font-style: normal;
+        text-decoration: none;
     }
 
     .div__p {
@@ -114,5 +126,23 @@ export const Details = stayled.div`
     span {
         font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
         font-size: 25px;
+    }
+`;
+
+export const Dropdown = styled.div`
+    margin-left: 10%;
+    background-color: white;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+    width: 80%;
+    padding-left: 50px;
+    padding-bottom: 10px;
+
+    .div__dropdown{
+        margin-left: 87%;
+        width: 90px;
+        border: 5px solid white;
+        border-radius: 2px;
     }
 `;

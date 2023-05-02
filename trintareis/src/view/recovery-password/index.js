@@ -27,13 +27,15 @@ function RecoveryPassword() {
             <div className="div__form_main">
                 <form className="div__form">
                     <h3 className="mb-3 font-weight-bold div__form_itens">Esqueceu a senha?</h3>
-                    <p className="div__form_itens">Redefinir senha!</p>
-                    <input onChange={(e => setEmail(e.target.value))} value={email} type="email" className="form-control my-2" placeholder="Email" />
+                    <p className="div__form_itens">Informe o e-mail da conta</p>
+                    <input onChange={(e => setEmail(e.target.value))} value={email} type="email" className="form-control my-2" placeholder="E-mail" />
                     {/* <span>{msg}</span> */}
-                    <button onClick={recoveryPassword} type="button" className="btn btn-lg btn-block btn-enviar">Recuperar Senha</button>
-                    <Link to="/login">
-                        <button type="button" className="btn-backhome">Voltar</button>
-                    </Link>
+                    <button onClick={recoveryPassword} type="button" className="btn btn-enviar">Recuperar Senha</button>
+                    <div className='btn-backhome-div'>
+                        <Link to="/login">
+                            <button type="button" className="btn-backhome">Voltar</button>
+                        </Link>
+                    </div>
                 </form>
             </div>
 

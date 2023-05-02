@@ -1,102 +1,201 @@
-import React, { useState, useEffect } from 'react';
-import { FaHome, FaRocketchat, FaUserFriends, FaUniversity } from "react-icons/fa";
-import { IoIosNotifications, IoIosSchool } from "react-icons/io";
-import { MdOutlineGroups } from "react-icons/md";
-import { GiHummingbird } from "react-icons/gi";
-import { MdEventNote } from "react-icons/md";
-import { useSelector, useDispatch } from 'react-redux';
-
 import './header.css';
-import '../stories/stories.css'
+import '../stories/stories.css';
+import 'react-tooltip/dist/react-tooltip.css';
+
+import React, { useState, useEffect, useContext } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { Link, Redirect } from 'react-router-dom';
+import { IoNotificationsOutline, IoHomeOutline, IoPeopleOutline, IoCompassOutline, IoChatbubblesOutline, IoLogOutOutline, IoSchoolOutline } from "react-icons/io5";
+import { GiHummingbird } from "react-icons/gi";
+import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+
+import { isEmpty, isURL } from '../../helpers/helper';
 
 import firebase from '../../config/firebase';
+import user from '../../resources/user.png';
+import loading from '../../resources/loading.gif';
+import NotyfContext from '../notyf-toast/NotyfContext';
 
-const profileFoto = "https://firebasestorage.googleapis.com/v0/b/trintareis-23e4c.appspot.com/o/profile_foto_default%2Fperfil_second(1).png?alt=media&token=f815209f-00c0-4591-ad8b-43eda529d21b"
-
-function Header() {
+function Header(props) {
+    
     const dispatch = useDispatch();
-    const [urlImageProfile, setUrlImageProfile] = useState(profileFoto);
+    const notyf = useContext(NotyfContext);
+    const storage = firebase.storage();
 
-    const emailUser = useSelector(state => state.emailUser);
+    const [urlImageProfile, setUrlImageProfile] = useState(<img src={loading} style={{opacity: '0.75'}} alt="loading"/>);
+    const [profileID, setProfileID] = useState("");
 
     useEffect(() => {
         const abortController = new AbortController()
 
-        firebase.firestore().collection('profiles').get().then(async (result) => {
-            await result.docs.forEach(doc => {
-                if (doc.data().emailUser === emailUser) {
-                    firebase.storage().ref(`profile_images/${doc.data().profilePhoto}`).getDownloadURL().then(url => setUrlImageProfile(url));
-                }
-            })
-        })
+        setProfileID(props.userData.id);
+
+        if (isEmpty(props.profilePhoto)){
+            setUrlImageProfile(<img src={user}/>);
+        } 
+        else {
+            if(isURL(props.profilePhoto)){
+                setUrlImageProfile(<img src={props.profilePhoto}/>);
+            }
+            else {
+                storage.ref("profile_images/" + props.profilePhoto).getDownloadURL().then(url => {
+                    setUrlImageProfile(<img src={url}/>);
+                })
+            }
+        }
 
         return function cleanup() {
             abortController.abort()
         }
-    }, []);
+    },[]);
+
+    function notifyBuilding(){
+
+        notyf.open({
+            type: 'info',
+            message: 'Em desenvolvimento'
+          });
+    }
 
     return (
         <div className="App">
             <div className="header">
                 <div className="header__left">
                     <div className="div__logo">
-                        <div className="logo__fb">
-                            <GiHummingbird />
-                        </div>
-                        <div className="search__fb">
+                        <Link to={{ pathname: "/home", 
+                                    state: {
+                                        firstLogin: props.firstLogin, 
+                                        profilePhoto: props.profilePhoto, 
+                                        coverPhoto: props.coverPhoto, 
+                                        userData: props.userData,
+                                        origin: props.origin }}}>
+                            <div className="logo__fb">
+                                <GiHummingbird />
+                            </div>
+                        </Link>    
+                        <div className="search__fb" onClick={notifyBuilding}>
                             <input type="search" name="header_search_query" placeholder="Pesquisar" />
                         </div>
                     </div>
+                </div>
+                <div className="header__center">
                     <div className="div__content_header">
-                        <Link to="/home">
-                            <div className="home__fb">
-                                <FaHome />
-                                <span>Início</span>
+                        <Link to={{pathname: "/home", state: {
+                                                        firstLogin: props.firstLogin, 
+                                                        profilePhoto: props.profilePhoto, 
+                                                        coverPhoto: props.coverPhoto, 
+                                                        userData: props.userData,
+                                                        origin: props.origin }}} className='headerLinkStyle'>
+                            <div className="header_button">
+                                <IoHomeOutline className='icon_button' />
+                                <span hidden={true}>Início</span>
+                            </div>
+                        </Link >
+                        <Link to={{pathname: "/explore", state: {
+                                                            firstLogin: props.firstLogin, 
+                                                            profilePhoto: props.profilePhoto, 
+                                                            coverPhoto: props.coverPhoto, 
+                                                            userData: props.userData,
+                                                            origin: props.origin }}} className='headerLinkStyle'>
+                            <div className="header_button">
+                                <IoCompassOutline className='icon_button'/>
+                                <span hidden={true}>Explorar</span>
                             </div>
                         </Link>
-                        <div className="friend__fb">
-                            <FaUserFriends />
-                            <span>Rede</span>
-                        </div>
-                        <Link to="/myfriends">
-                            <div className="group__fb link_preto">
-                                <MdOutlineGroups />
-                                <span>Amigos</span>
+                        <Link to={{pathname: "/myfriends", state: {
+                                                            firstLogin: props.firstLogin, 
+                                                            profilePhoto: props.profilePhoto, 
+                                                            coverPhoto: props.coverPhoto, 
+                                                            userData: props.userData,
+                                                            origin: props.origin }}} className='headerLinkStyle'>
+                            <div className="header_button">
+                                <IoPeopleOutline className='icon_button'/>
+                                <span hidden={true}>Amigos</span>
                             </div>
                         </Link>
-                        <div className="university__fb">
-                            <FaUniversity />
-                            <span>Instituições</span>
+                        <Link to={{pathname: "/career", state: {
+                                                            firstLogin: props.firstLogin, 
+                                                            profilePhoto: props.profilePhoto, 
+                                                            coverPhoto: props.coverPhoto, 
+                                                            userData: props.userData,
+                                                            origin: props.origin }}} className='headerLinkStyle'>
+                            <div className="header_button">
+                                <IoSchoolOutline className='icon_button'/>
+                                <span hidden={true}>Carreira</span>
+                            </div>
+                        </Link>
+                        
+                        <div className='headerLinkStyle'>
+                            <div className="header_button" onClick={notifyBuilding}>
+                                <IoNotificationsOutline className='icon_button'/>
+                                <span hidden={true}>Notificações</span>
+                            </div>
                         </div>
-                        <div className="school__fb">
-                            <IoIosSchool />
-                            <span>Cursos</span>
+                        
+                        <div className='headerLinkStyle' data-tooltip-content="Chat">
+                            <div className="header_button" onClick={notifyBuilding} >
+                                <IoChatbubblesOutline className='icon_button'/>
+                                <span hidden={true}>Chat</span>
+                            </div>
                         </div>
-                        <div className="event__fb">
-                            <MdEventNote />
-                            <span>Eventos</span>
-                        </div>
-                        <div className="notification__fb">
-                            <IoIosNotifications />
-                            <span>Notificações</span>
-                        </div>
-                        <div className="chat__fb">
-                            <FaRocketchat />
-                            <span>Chat</span>
-                        </div>
+                        
                     </div>
                 </div>
                 <div className="header__right">
-                    {useSelector(state => state.loggedUSer) == 0 ? <Redirect to='/' /> : null}
-                    <Link to="/profile">
-                        <div className="feedPost__profile">
-                            <img src={urlImageProfile} />
-                        </div>
-                    </Link>
-                    <div className="div__plus_btn">
-                        <span onClick={() => dispatch({ type: 'LOG_OUT' })}>Sair</span>
-                    </div>
+                    {useSelector(state => state.loggedUSer) === 0 ? <Redirect to='/'/> : null}
+                    <DropdownMenu.Root>
+                        <DropdownMenu.Trigger asChild>
+                            <div className="img_profile" id="profile_img">
+                                {urlImageProfile}
+                            </div>
+                        </DropdownMenu.Trigger>
+
+                        <DropdownMenu.Portal>
+                            <DropdownMenu.Content className="DropdownMenuContent" sideOffset={5}>
+                                <Link to={{ pathname: "/profile/" + profileID, 
+                                    state: {
+                                        firstLogin: props.firstLogin, 
+                                        profilePhoto: props.profilePhoto, 
+                                        coverPhoto: props.coverPhoto, 
+                                        userData: props.userData,
+                                        origin: props.origin }}} className='headerLinkStyle'>
+                                    <DropdownMenu.Item className="DropdownMenuItem">Meu perfil</DropdownMenu.Item>
+                                </Link>
+                                <DropdownMenu.Separator className="DropdownMenuSeparator" />
+                                <Link to={{ pathname: "/editProfile", 
+                                    state: {
+                                        firstLogin: props.firstLogin, 
+                                        profilePhoto: props.profilePhoto, 
+                                        coverPhoto: props.coverPhoto, 
+                                        userData: props.userData,
+                                        origin: props.origin  }}} className='headerLinkStyle'>
+                                    <DropdownMenu.Item className="DropdownMenuItem">Editar perfil</DropdownMenu.Item>
+                                </Link>
+                                <Link to={{ pathname: "/editImages", 
+                                    state: {
+                                        firstLogin: props.firstLogin, 
+                                        profilePhoto: props.profilePhoto, 
+                                        coverPhoto: props.coverPhoto, 
+                                        userData: props.userData,
+                                        image: "profile" ,
+                                        origin: props.origin  }}} className='headerLinkStyle'>
+                                    <DropdownMenu.Item className="DropdownMenuItem">Editar foto do perfil</DropdownMenu.Item>
+                                </Link>
+                                <Link to={{ pathname: "/editImages", 
+                                    state: {
+                                        firstLogin: props.firstLogin, 
+                                        profilePhoto: props.profilePhoto, 
+                                        coverPhoto: props.coverPhoto, 
+                                        userData: props.userData,
+                                        image: "cover"  ,
+                                        origin: props.origin  }}} className='headerLinkStyle'>
+                                    <DropdownMenu.Item className="DropdownMenuItem">Editar imagem de capa</DropdownMenu.Item>
+                                </Link>
+                                <DropdownMenu.Separator className="DropdownMenuSeparator" />
+                                <DropdownMenu.Item className="DropdownMenuItem" onClick={() => dispatch({ type: 'LOG_OUT' })}>Sair</DropdownMenu.Item>
+                            </DropdownMenu.Content>
+                        </DropdownMenu.Portal>
+                    </DropdownMenu.Root>
                 </div>
             </div>
         </div>

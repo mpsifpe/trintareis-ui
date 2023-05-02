@@ -1,0 +1,23 @@
+  .div__main_notifications{
+      width: 80%;
+      margin-left: 10%;
+      background-color: white;
+      border-radius: 15px;
+      padding: 10px;
+      margin-top: 15px;
+    }
+    
+    .div__title_notifications{
+      margin-left: 0px;
+    }
+    
+    .div__title_notifications span{
+      margin-left: 1.5%;
+      font-size: 28px;
+    }
+  
+    .section_notifications_list{
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;  
+    }

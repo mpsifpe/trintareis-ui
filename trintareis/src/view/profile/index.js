@@ -1,119 +1,344 @@
-import React, { useState, useEffect } from 'react';
 import './profile.css';
-import { Link } from "react-router-dom";
+import React, { useState, useEffect, useContext, createContext } from 'react';
+import { useLocation, useParams } from "react-router-dom";
+import { useSelector } from 'react-redux';
+import { MdDone, MdClose } from "react-icons/md";
+import { Perfil, Content, Details, Dropdown } from './styles';
+
+import { isEmpty, formatDate, isURL } from '../../helpers/helper';
 import Header from '../../components/header/index';
 import FeedForm from '../../components/feed-form/index';
-import TimeLine from '../../components/timeline_profile/index';
-
+import TimelineProfile from '../../components/timeline_profile';
+import loading from '../../resources/loading.gif';
+import user from '../../resources/user.png';
+import cover from '../../resources/cover.png';
 import firebase from '../../config/firebase';
-import { useSelector } from 'react-redux';
+import NotyfContext from '../../components/notyf-toast/NotyfContext';
+import api from '../../config/api';
 
-import { Perfil, Content, Details } from './styles';
 
-const profileFoto = "https://firebasestorage.googleapis.com/v0/b/trintareis-23e4c.appspot.com/o/profile_foto_default%2Fperfil_second(1).png?alt=media&token=f815209f-00c0-4591-ad8b-43eda529d21b"
-
-function Profile() {
-    const [profileInfo, setProfileInfo] = useState([]);
-    const [userName, setUserName] = useState([]);
-    const [eventos, setEventos] = useState([]);
-    const [idDoc, setIdDoc] = useState();
-    let listEventos = [];
+function Profile(props) {
 
     const emailUser = useSelector(state => state.emailUser);
-    const loggedUSer = useSelector(state => state.loggedUSer);
+    const storage = firebase.storage();
+    const events = firebase.firestore().collection('events');
+    const notyf = useContext(NotyfContext);
 
-    const [urlImageProfile, setUrlImageProfile] = useState(profileFoto);
-    const [urlImageCover, seturlImageCover] = useState();
-
+    const [eventos, setEventos] = useState([]);
+    const [urlImageProfile, setUrlImageProfile] = useState(loading);
+    const [urlImageCover, seturlImageCover] = useState(cover);
+    const [userName, setUserName] = useState("");
+    const [profileInformation, setProfileInformation] = useState("");
+    const [city, setCity] = useState("");
+    const [region, setRegion] = useState("");
+    const [details, setDetails] = useState("");
+    const [actionButton, setActionButton] = useState(<></>);
+    const [profileRefresh, setProfileRefresh] = useState(false);
+    
+    let profileEmail, idConnection = "";
+    let isFriend, inviter, pending = false;
+    let location = useLocation();
+    let params = useParams();
 
     useEffect(() => {
         const abortController = new AbortController()
 
-        firebase.firestore().collection('events').orderBy("dataTime", "desc").get().then(async (result) => {
-            await result.docs.forEach(doc => {
-                if (doc.data().emailUser === emailUser) {
-                    const date = new Date(doc.data().dataTime);
+        async function fetch() { 
 
-                    listEventos.push({
-                        id: doc.id,
-                        timePublication: date.getHours() + ':' + date.getMinutes(),
-                        ...doc.data()
-                    })
-                }
-            })
-        })
-
-        firebase.firestore().collection('profiles').get().then(async (result) => {
-            await result.docs.forEach(doc => {
-                if (doc.data().emailUser === emailUser) {
-                    if(!isEmpty(doc.data().profilePhoto)){
-                        firebase.storage().ref(`profile_images/${doc.data().profilePhoto}`).getDownloadURL().then(url => setUrlImageProfile(url));
+            //------------------profile usuario logado----------------------------
+            if(params.id === location.state.userData.id){
+                setUserName(location.state.userData.userName)   
+                setProfileInformation(location.state.userData.profileInformation)
+                setCity(location.state.userData.city)
+                setRegion(location.state.userData.region)
+                setDetails(location.state.userData.details)
+                profileEmail = emailUser
+                
+                if(!isEmpty(location.state.profilePhoto)) { 
+                    if(isURL(location.state.profilePhoto)){
+                        setUrlImageProfile(location.state.profilePhoto)
+                    } else {
+                        storage.ref("profile_images/" + location.state.profilePhoto).getDownloadURL().then(url => {
+                            setUrlImageProfile(url)
+                            updateProfileImageURL(url)
+                        })
                     }
-                    firebase.storage().ref(`profile_images/${doc.data().coverPhoto}`).getDownloadURL().then(url => seturlImageCover(url));
-
-                    setIdDoc(doc.id);
-                    setUserName(doc.data().userName);
-                    setProfileInfo(doc.data());
                 }
-            })
-        })
+                else {
+                    setUrlImageProfile(user)
+                    if(location.state.origin==="edit-images-screen-save"){ updateProfileImageURL("") }
+                }
+                
+                if(!isEmpty(location.state.coverPhoto)) {
+                    if(isURL(location.state.coverPhoto)){
+                        seturlImageCover(location.state.coverPhoto)
+                    } else {
+                        storage.ref("profile_images/" + location.state.coverPhoto).getDownloadURL().then(url => {
+                            seturlImageCover(url)
+                            updateCoverImageURL(url)
+                        })
+                        
+                    }
+                }
+                else{
+                    if(location.state.origin==="edit-images-screen-save"){ updateCoverImageURL("") }
+                }
+            } 
 
-        setEventos(listEventos);
+            //------------------profile usuario outro----------------------------
+            else {
+                api.get('/profile/get-by-id/' + params.id)
+                .then((response) => {
+                    console.log("outro profile > " + response)
+                    setUserName(response.data.userName)
+                    setProfileInformation(response.data.profileInformation)
+                    setDetails(response.data.details)
+                    setRegion(response.data.region)
+                    setCity(response.data.city)
+                    profileEmail = response.data.emailUser
+    
+                    if(!isEmpty(response.data.profilePhoto)) { 
+                        if (isURL(response.data.profilePhoto)) { 
+                            setUrlImageProfile(response.data.profilePhoto) }
+                        else {
+                            storage.ref("profile_images/" + response.data.profilePhoto).getDownloadURL()
+                            .then(url => setUrlImageProfile(url))}
+                        }
+                    else {setUrlImageProfile(user)}
+                    
+                    if(!isEmpty(response.data.coverPhoto)) {  
+                        if (isURL(response.data.coverPhoto)) { 
+                            seturlImageCover(response.data.coverPhoto) }
+                        else {
+                            storage.ref("profile_images/" + response.data.coverPhoto).getDownloadURL()
+                            .then(url => seturlImageCover(url))
+                        }
+                    }
+                })
+                .catch((error) => {
+                    console.log(error)
+                    notyf.error("Desculpe, ocorreu um erro")
+                })
+                .then(()=>{
+                    setActionButton(<label className='action_button' onClick={actionButtonClick}>Conectar</label>)
+                    api.get('/friends/',{
+                        params : {
+                            userEmail: emailUser,
+                            page: 0,
+                            size: 100
+                        }
+                    })
+                    .then(function (response) {
+                        for(let i = 0; i < response.data.content.length; i++){
+                            if(response.data.content[i].id === params.id){
+                                idConnection = response.data.content[i].idConnection;
+                                profileEmail = response.data.content[i].userEmail;
+                                inviter = response.data.content[i].inviter;
+                                isFriend = true;
+                                
+                                if(response.data.content[i].pending){
+                                    pending = true;
+                                    if(response.data.content[i].inviter){
+                                        setActionButton(<label className='action_button' onClick={actionButtonClick}>Convidado</label>);
+                                    } else { setActionButton(<label className='action_button' onClick={actionButtonClick}>Aceitar</label>); }
+                                }
+                                else{
+                                    setActionButton(<label className='action_button' onClick={actionButtonClick}>Desconectar</label>);
+                                }
+                            }
+                        }
+                    })
+                    .catch((error)=>{console.log(error)})
+                })
+                
+            }
+
+            api.get('/content/getContent/by-user-id/' + params.id)
+            .then((response)=>{    
+                let list = [];
+                console.log(response)
+                response.data.forEach(post => {
+                    if(post.profileId === params.id){
+                        list.push(post)
+                    }
+                });
+    
+                setEventos(list);
+            })
+        }
+
+        fetch()
 
         return function cleanup() {
             abortController.abort()
         }
-    }, []);
-
-    function isEmpty(value){
-        return (value == null || value.length === 0);
-      }
+    }, [profileRefresh]);
 
     return (
-        <div className="App">
-            <Header />
-            <div>
-                <Perfil photo={urlImageCover}>
-                    <div />
-                </Perfil>
-                <Content photoProfile={urlImageProfile}>
-                    <div>
-                        <form className="form">
-                            <div className="div__main_form">
-                                <div className="div__foto" />
-                                <div>
-                                    <span>{profileInfo.userName}</span>
-                                    <Link to={idDoc ? `/editProfile/${idDoc}` : `/editProfile`} style={{ textDecoration: 'none' }}>
-                                        <label>Editar</label>
-                                    </Link>
+        <div className="app">
+            <Header firstLogin={location.state.firstLogin} profilePhoto={location.state.profilePhoto} coverPhoto={location.state.coverPhoto} userData={location.state.userData} origin="profile-screen" hideTooltip={true} />
+            <profileRefreshContext.Provider value={{profileRefresh, setProfileRefresh}}>
+                <div className="main_div">
+                    <Perfil cover={urlImageCover}/>
+                    <Content photoProfile={urlImageProfile}>
+                        <div>
+                            <form className="form">
+                                <div className="div__main_form" style={{width:"500px"}}>
+                                    <div className="div__foto" />
+                                    <span>{userName}</span>
+                                    {actionButton}
+                                    <div>
+                                        <p className="p__profileInformation">{profileInformation}</p>
+                                        <p className="p__region">{city}, {region}</p>
+                                    </div>
                                 </div>
-                                <div>
-                                    <p className="p__profileInformation">{profileInfo.profileInformatio}</p>
-                                    <p className="p__region">{profileInfo.city}, {profileInfo.region}</p>
-                                </div>
+                            </form>
+                        </div>
+                    </Content>
+                    <Details>
+                        <div>
+                            <div className="div__span">
+                                <span>Sobre</span>
                             </div>
-                        </form>
-                    </div>
-                </Content>
-                <Details>
-                    <div>
-                        <div className="div__span">
-                            <span>Sobre</span>
+                            <div className="div__p">
+                                <p>{details}</p>
+                            </div>
                         </div>
-                        <div className="div__p">
-                            <p>{profileInfo.details}</p>
+                    </Details>
+                    {props.match.params.id ? null
+                        :
+                        <div className='div__feedform'>
+                            <FeedForm profilePhoto={urlImageProfile} />
                         </div>
+                    }
+                    <div className="div__timeline">
+                    {
+                        eventos.map(item => 
+                            <TimelineProfile key={item.id}
+                                id={item.id}
+                                img={item.photoName}
+                                profilePhoto={item.profilePhotoUrl}
+                                profileInformation={item.profileInformation}
+                                title={item.title}
+                                nome={item.userName}
+                                horario={formatDate(item.hour)}
+                                conteudo={item.text}
+                                emailUser={item.userEmail}
+                                profileId={item.profileId}
+                                like={item.views}
+                                share={item.share}
+                                coments={item.coments}
+                                tipo={item.typePost}
+                                stateFirstLogin={location.state.firstLogin}
+                                stateProfilePhoto={location.state.profilePhoto} 
+                                stateCoverPhoto={location.state.coverPhoto} 
+                                stateUserData={location.state.userData}/>)
+                    }
                     </div>
-                </Details>
-                <div className='div__feedform'>
-                    <FeedForm profilePhoto={urlImageProfile}/>
                 </div>
-                <div className="div__timeline">
-                    {eventos.map(item => <TimeLine key={item.id} id={item.id} userName={userName} profileInf={profileInfo.profileInformatio} profilePhoto={urlImageProfile} img={item.photo} title={item.title} nome={item.userName} horario={item.timePublication} conteudo={item.details} />)}
-                </div>
-            </div>
+            </profileRefreshContext.Provider>
         </div>
     )
+
+    //--------------------------------------profile action button handler--------------------
+    function actionButtonClick(){
+        if(isFriend){
+            if(pending){
+                if(inviter){
+                    api.delete('/friends', {
+                        params : {
+                            idConnection : idConnection
+                        }})
+                    .then(()=>{
+                        notyf.success("Conexão desfeita");
+                        setActionButton(<label className='action_button'><MdClose/></label>);
+                    })
+                    .catch((error)=>{
+                        console.log(error)
+                        notyf.error("Desculpe, ocorreu um erro");
+                        setActionButton(<></>);
+                    })
+                }
+                else{
+                    api.put('/friends?id=' + idConnection)
+                    .then(()=>{
+                        notyf.success("Convite aceito");
+                        setActionButton(<label className='action_button'><MdDone/></label>);
+                    })
+                    .catch((error)=>{
+                        console.log(error)
+                        notyf.error("Desculpe, ocorreu um erro");
+                        setActionButton(<></>);
+                    })
+                }
+            }
+            else {
+                api.delete('/friends', {
+                    params : {
+                        idConnection : idConnection
+                    }})
+                .then(()=>{
+                    notyf.success("Conexão desfeita");
+                    setActionButton(<label className='action_button'><MdClose/></label>);
+                })
+                .catch((error)=>{
+                    console.log(error)
+                    notyf.error("Desculpe, ocorreu um erro");
+                    setActionButton(<></>);
+                })
+            }
+        }
+        else{
+            api.post('/friends/create', {
+                userEmailFriend: profileEmail,
+                userEmail: emailUser
+            })
+            .then(()=>{
+                notyf.success("Convite enviado");
+                setActionButton(<label className='action_button'><MdDone/></label>);
+            })
+            .catch((error)=>{
+                console.log(error)
+                notyf.error("Desculpe, ocorreu um erro");})
+                setActionButton(<></>);
+        }
+    }
+
+    //--------------------------------------update profile imagere ference--------------------
+    function updateProfileImageURL(to){
+        storage.ref("profile_images/" + to).getDownloadURL().then((url)=>{
+            api.put('/profile/update', {
+                "id": location.state.userData.id,
+                "city": location.state.userData.city,
+                "details": location.state.userData.details,
+                "coverPhoto": location.state.coverPhoto,
+                "profileInformation": location.state.userData.profileInformation,
+                "profilePhoto": url,
+                "emailUser": emailUser,
+                "region": location.state.userData.region,
+                "userName": location.state.userData.userName
+            })          
+        })
+    }
+
+    //--------------------------------------update cover image reference--------------------
+    function updateCoverImageURL(to){
+        storage.ref("profile_images/" + to).getDownloadURL().then((url)=>{
+            api.put('/profile/update', {
+                "id": location.state.userData.id,
+                "city": location.state.userData.city,
+                "details": location.state.userData.details,
+                "coverPhoto": url,
+                "profileInformation": location.state.userData.profileInformation,
+                "profilePhoto": location.state.profilePhoto,
+                "emailUser": emailUser,
+                "region": location.state.userData.region,
+                "userName": location.state.userData.userName
+            })           
+        })
+    }
 }
 
 export default Profile;
+
+export const profileRefreshContext = createContext();

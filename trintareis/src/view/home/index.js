@@ -1,60 +1,197 @@
-import React, { useState, useEffect } from 'react';
 import './home.css';
+import React, { useState, useEffect, createContext } from 'react';
+import { useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { IoChevronDownCircleOutline } from "react-icons/io5";
+import InfiniteScroll from "react-infinite-scroll-component";
+
 import Header from '../../components/header/index'
 import FeedForm from '../../components/feed-form/index';
 import FeedPost from '../../components/feed-post/FeedPost';
+import loading from '../../resources/loading.gif';
+import user from '../../resources/user.png';
+
+import api from '../../config/api';
 import firebase from '../../config/firebase';
+import { isEmpty, formatDate, isURL } from '../../helpers/helper';
 
-import { useSelector } from 'react-redux';
-const profileFoto = "https://firebasestorage.googleapis.com/v0/b/trintareis-23e4c.appspot.com/o/profile_foto_default%2Fperfil_second(1).png?alt=media&token=f815209f-00c0-4591-ad8b-43eda529d21b"
-
-function Home() {
-    const [eventos, setEventos] = useState([]);
-    const [profileInformation, setProfileInformation] = useState('');
-    const [urlImageProfile, setUrlImageProfile] = useState(profileFoto);
-    const [userName, setUserName] = useState('');
-    let listEventos = [];
-
+export default function Home() {
+    
+    let location = useLocation();
+    const storage = firebase.storage();
     const emailUser = useSelector(state => state.emailUser);
 
+    const [visible, setVisible] = useState(false);
+    const [page, setPage] = useState(0);
+    const [posts, setPosts] = useState([]);
+    const [hasMore, setHasMore] = useState(true);
+    const [urlImageProfile, setUrlImageProfile] = useState(loading);
+    const [data, setData] = useState({});
+    const [urlUpdated, setUrlUpdated] = useState(false);
+    const [homeRefresh, setHomeRefresh] = useState(false);
+
     useEffect(() => {
-        const abortController = new AbortController()
-
-        firebase.firestore().collection('profiles').get().then(async (result) => {
-            await result.docs.forEach(doc => {
-                if (doc.data().emailUser === emailUser) {
-                    firebase.storage().ref(`profile_images/${doc.data().profilePhoto}`).getDownloadURL().then(url => setUrlImageProfile(url));
-                    setProfileInformation(doc.data().profileInformatio);
-                    setUserName(doc.data().userName);
-                }
-            })
-        })
-
-        firebase.firestore().collection('events').orderBy("dataTime", "desc").get().then(async (result) => {
-            await result.docs.forEach(doc => {
-                listEventos.push({
-                    id: doc.id,
-                    profileInformation: profileInformation,
-                    ...doc.data()
+        const abortController = new AbortController()       
+        
+        setData({ 
+            id: location.state.userData.id,
+            userName: location.state.userData.userName,
+            profileInformation: location.state.userData.profileInformation,
+            details: location.state.userData.details,
+            region: location.state.userData.region,
+            city: location.state.userData.city })
+        
+                    //update imagem profile
+        if(isEmpty(location.state.profilePhoto)) { 
+            setUrlImageProfile(user); 
+        }
+        else {
+            if(isURL(location.state.profilePhoto)){
+                setUrlImageProfile(location.state.profilePhoto)
+            } else {
+                storage.ref("profile_images/" + location.state.profilePhoto).getDownloadURL().then(url => {
+                    setUrlImageProfile(url);
+                    
+                    api.put('/profile/update', {
+                        "id": location.state.userData.id,
+                        "city": location.state.userData.city,
+                        "details": location.state.userData.details,
+                        "coverPhoto": location.state.coverPhoto,
+                        "profileInformation": location.state.userData.profileInformation,
+                        "profilePhoto": url,
+                        "emailUser": emailUser,
+                        "region": location.state.userData.region,
+                        "userName": location.state.userData.userName
+                    })          
                 })
+            }
+        }
+
+        fetch();
+        
+        //update imagem cover
+        if(!isURL(location.state.coverPhoto)){
+            storage.ref("profile_images/" + location.state.coverPhoto).getDownloadURL().then(url => {                
+                api.put('/profile/update', {
+                    "id": location.state.userData.id,
+                    "city": location.state.userData.city,
+                    "details": location.state.userData.details,
+                    "coverPhoto": url,
+                    "profileInformation": location.state.userData.profileInformation,
+                    "profilePhoto": location.state.profilePhoto,
+                    "emailUser": emailUser,
+                    "region": location.state.userData.region,
+                    "userName": location.state.userData.userName
+                })          
             })
-            setEventos(listEventos);
-        })
+        }
 
         return function cleanup() {
             abortController.abort()
         }
-    }, []);
+    }, [homeRefresh]);
+
+    function fetch(){
+        api.get('/content/getContent/',{
+            params : {
+                page: page,
+                size: 10
+            }
+        })
+        .then((response)=>{
+            /*
+            console.log("page ", page);
+            console.log("lenght ", response.data.content.length);
+            console.log("more ", hasMore);*/
+
+            setPosts(response.data.content.map((item) => (
+                            
+                <FeedPost key={item.id}
+                    id={item.id}
+                    img={item.photoName}
+                    profilePhoto={item.profilePhotoUrl}
+                    profileInformation={item.profileInformation}
+                    title={item.title}
+                    nome={item.userName}
+                    comments={item.comments}
+                    horario={formatDate(item.hour)}
+                    conteudo={item.text}
+                    emailUser={item.userEmail}
+                    profileId={item.profileId}
+                    like={item.likes}
+                    share={item.share}
+                    coments={item.coments}
+                    tipo={item.typePost}
+                    stateFirstLogin={location.state.firstLogin}
+                    stateProfilePhoto={location.state.profilePhoto} 
+                    stateCoverPhoto={location.state.coverPhoto} 
+                    stateUserData={location.state.userData}/>
+            )));
+
+            (response.data.content.length < 10) ? setHasMore(false) : setHasMore(true);
+            //isEmpty(posts) ? setPosts(response.data.content) : setPosts([...posts, response.data.content]);
+            //setPosts(response.data.content)
+            setHomeRefresh(false);
+            setPage(page+1);
+            setVisible(true);
+        })
+        .catch((error)=>{
+            console.log(error)
+        })
+    }
 
     return (
         <div className="App">
-            <Header />
-            <div className="feed_content">
-                <FeedForm profilePhoto={urlImageProfile} />
-                {eventos.map(item => <FeedPost key={item.id} id={item.id} img={item.photo} profilePhoto={urlImageProfile} profileInformation={profileInformation} title={item.title} nome={userName} horario={item.hour} conteudo={item.details} />)}
-            </div>
+                <Header 
+                    firstLogin={location.state.firstLogin} 
+                    profilePhoto={urlUpdated ? urlImageProfile : location.state.profilePhoto} 
+                    coverPhoto={location.state.coverPhoto} 
+                    userData={location.state.userData}
+                    id={location.state.userData.id}
+                    origin="home"/>
+            <homeRefreshContext.Provider value={{homeRefresh, setHomeRefresh}}>
+                <div className="feed_content">
+                    <FeedForm profilePhoto={urlImageProfile} stateFirstLogin={location.state.firstLogin} stateProfilePhoto={location.state.profilePhoto} stateCoverPhoto={location.state.coverPhoto} stateUserData={location.state.userData}/>
+                    {posts
+                    }
+                    {/*visible && 
+                    <InfiniteScroll
+                        dataLength={posts.length}
+                        next={fetch}
+                        hasMore={hasMore}
+                        loader={<h4>Loading...</h4>}>
+
+                        {posts.map((item, index) => (
+                            
+                            <FeedPost key={item.id}
+                                id={item.id}
+                                img={item.photoName}
+                                profilePhoto={item.profilePhotoUrl}
+                                profileInformation={item.profileInformation}
+                                title={item.title}
+                                nome={item.userName}
+                                horario={formatDate(item.hour)}
+                                conteudo={item.text}
+                                emailUser={item.userEmail}
+                                profileId={item.profileId}
+                                like={item.views}
+                                share={item.share}
+                                coments={item.coments}
+                                tipo={item.typePost}
+                                stateFirstLogin={location.state.firstLogin}
+                                stateProfilePhoto={location.state.profilePhoto} 
+                                stateCoverPhoto={location.state.coverPhoto} 
+                                stateUserData={location.state.userData}/>
+                        ))}
+                    </InfiniteScroll>
+                        */}
+                    <div className='more_button'>
+                        <IoChevronDownCircleOutline className='more_button_icon'/>
+                    </div>
+                </div>
+            </homeRefreshContext.Provider>
         </div>
     )
 }
 
-export default Home;
+export const homeRefreshContext = createContext();
