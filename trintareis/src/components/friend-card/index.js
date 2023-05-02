@@ -22,10 +22,13 @@ export default function FriendCard(props) {
     const [idConnection, setIdConnection] = useState("");
     const [name, setName] = useState("loading");
     const [city, setCity] = useState("loading");
+    const [details, setDetails] = useState("");
     const [inviter, setInviter] = useState("loading");
     const [isFriend, setIsFriend] = useState(false);
     const [pendingInvite, setPendingInvite] = useState(false);
     const [profileId, setProfileId] = useState("");
+    const [profileInfo, setProfileInfo] = useState("");
+    const [profileType, setProfileType] = useState("");
 
     const [cardImage, setCardImage] = useState(loading);
     const [cardEmail, setCardEmail] = useState("loading");
@@ -48,13 +51,16 @@ export default function FriendCard(props) {
             }  
         }
         
-        setIdConnection(props.idConnection)
-        setCity(props.city)
-        setCardEmail(props.email)
+        setIdConnection(props.idConnection);
+        setCity(props.city);
+        setCardEmail(props.email);
+        setDetails(props.details);
         setIsFriend(props.isFriend);
         setPendingInvite(props.pending);
-        setInviter(props.inviter)
-        setProfileId(props.profileId)
+        setInviter(props.inviter);
+        setProfileId(props.profileId);
+        setProfileInfo(props.profileInfo);
+        setProfileType(props.profileType);
 
         chooseButton();
     };
@@ -66,16 +72,29 @@ export default function FriendCard(props) {
     }
 
     function chooseButton(){
-        if (isFriend){
-            if(pendingInvite){
-                if(inviter){
-                    setCardButton(<button className='card-button' onClick={clickAction}>Convidado</button>)}
-                else {
-                    setCardButton(<button className='card-button' onClick={clickAction}>Aceitar</button>)}}
-            else {
-                setCardButton(<button className='card-button' onClick={clickAction}>Desconectar</button>)}}
-        else { 
-            setCardButton(<button className='card-button' onClick={clickAction}>Conectar</button>)}
+        switch(profileType){
+
+            case "INSTITUTIONAL":
+                //onClick={()=> window.open(details, "_blank")}
+                setCardButton(
+                    <Link to={{ pathname: '/institution/' + profileId, state: { firstLogin: location.state.firstLogin, profilePhoto: location.state.profilePhoto, coverPhoto: location.state.coverPhoto, userData: location.state.userData, origin:"friend-card" } }} style={{textDecoration: "none"}}>
+                        <button className='card-button'>Conhecer</button>
+                    </Link>
+                )
+                break;
+
+            case "PERSONAL":
+                if (isFriend){
+                    if(pendingInvite){
+                        if(inviter){
+                            setCardButton(<button className='card-button' onClick={clickAction}>Convidado</button>)}
+                        else {
+                            setCardButton(<button className='card-button' onClick={clickAction}>Aceitar</button>)}}
+                    else {
+                        setCardButton(<button className='card-button' onClick={clickAction}>Desconectar</button>)}}
+                else { 
+                    setCardButton(<button className='card-button' onClick={clickAction}>Conectar</button>)}
+        }
     }
     
     return(
@@ -85,7 +104,7 @@ export default function FriendCard(props) {
                         <span className="friend-content">
                             <img className="friend-img" src={cardImage} alt="user image"/>
                             <div>{name}</div>
-                            <p className="friend-course">{city}</p>
+                            <p className="friend-course">{profileInfo}</p>
                             {//<p className="friend-usertype">{cardEmail}</p>
                             }
                         </span>

@@ -135,14 +135,13 @@ export default function (props) {
 
             api.get('/likes?postId=' + props.id)
                 .then((response) => {
-
                     response.data.map(item => {
-                        if (item.userEmail == loggedUser) {
+                        if(item.userEmail == loggedUser) {
                             setLikeStyle(<HiHeart color="red" />)
                         }
                     });
                     setLoaded(true);
-                    setUpdate(!update)
+                    setUpdate(!update);
 
                 }).catch(function (error) {
                     console.log(error);
@@ -153,6 +152,7 @@ export default function (props) {
         return function cleanup() {
             abortController.abort()
         }
+
     }, [update]);
 
 

@@ -1,7 +1,6 @@
 import './career.css';
 import React, {useEffect, useContext, useState} from 'react';
 import { useLocation, Redirect } from 'react-router-dom';
-import { v4 as uuidv4 } from 'uuid';
 
 import api from '../../config/api';
 import Header from '../../components/header/index';
@@ -12,10 +11,10 @@ export default function Career() {
 
     const notyf = useContext(NotyfContext);
     const [courseList, setCourseList] = useState([]);
-    const [instList, setInstList] = useState([]);
-    const [cardList, setCardList] = useState(<span> </span>);
+    const [cardList, setCardList] = useState(<div> </div>);
     const [redirect, setRedirect] = useState(<></>);
     const [loaded, setLoaded] = useState(false);
+    const [update, setUpdate] = useState(false);
 
     let location = useLocation();
 
@@ -24,12 +23,31 @@ export default function Career() {
 
         if(!loaded){
             fetch();
+        } else {
+            setCardList(<div> </div>);
+            setCardList(
+                courseList.map(course => (
+                    <div className='course_div'>
+                        <CourseCard 
+                            key={course.id}
+                            id={course.id}
+                            title={course.title}
+                            description={course.description}
+                            stateFirstLogin={location.state.firstLogin}
+                            stateProfilePhoto={location.state.profilePhoto} 
+                            stateCoverPhoto={location.state.coverPhoto} 
+                            stateUserData={location.state.userData}
+                            type="course"
+                        />
+                    </div>
+                ))
+            )
         }
 
         return function cleanup() {
             abortController.abort();
         }  
-    },[]);
+    },[update]);
 
     return (
         <div className="App">
@@ -42,10 +60,9 @@ export default function Career() {
 
                     <span className='note'>Explore diversas opções de cursos e descubra onde são ofertados </span>
                     <select className="sortSelector" id="sort-selector">
-                        <option key={uuidv4()} value="alfabetically">A-Z</option>
-                        <option key={uuidv4()} value="alfabeticallyInverse">Z-A</option>
+                        <option key='az' onClick={()=>{sortHandler("alfabetically")}} value="alfabetically">A-Z</option>
+                        <option key='za' onClick={()=>{sortHandler("alfabeticallyInverse")}} value="alfabeticallyInverse">Z-A</option>
                     </select>
-                    <button onClick={sortHandler} className='sortButton'>Ordenar</button>
 
                     <section className="section_course_list" id="sec-bd5e">
                         {cardList}
@@ -55,11 +72,12 @@ export default function Career() {
     )
 
     function fetch(){
-
+        //------------------ fetch cursos -----------------------
         api.get('/course')
         .then((response) => {
 
-            let ordered = response.data.sort((a, b) => {
+            setCourseList(
+                response.data.sort((a, b) => {
                 let fa = a.title.toLowerCase(),
                     fb = b.title.toLowerCase();
             
@@ -70,54 +88,23 @@ export default function Career() {
                     return 1;
                 }
                 return 0;
-            })
-
-            setCourseList(ordered);
-
-            setLoaded(true);
-
-            setCardList(
-                ordered.map((course) => (
-                    <div className='course_div'>
-                        <CourseCard 
-                            key={uuidv4()}
-                            id={course.id}
-                            title={course.title}
-                            description={course.description}
-                            stateFirstLogin={location.state.firstLogin}
-                            stateProfilePhoto={location.state.profilePhoto} 
-                            stateCoverPhoto={location.state.coverPhoto} 
-                            stateUserData={location.state.userData}
-                            institutions={instList}
-                        />
-                    </div>
-                ))
+                })
             )
+            setLoaded(true);
+            setUpdate(!update);
         })
         .catch((error)=>{
             console.log(error);
             notyf.error("Desculpe, ocorreu um erro")
             setRedirect(<Redirect to={{ pathname: '/home', state: { firstLogin: location.state.firstLogin, profilePhoto: location.state.profilePhoto, coverPhoto: location.state.coverPhoto, userData: location.state.userData , origin: "career-error"}}}/>)
         })
-        //-----------------------------------------------------
-        api.get('/profile/get-by-profile-type?profileType=INSTITUTIONAL')
-        .then((profiles) => {
-            let list = []
-            profiles.data.forEach((profile)=>{
-                list.push([profile.id, profile.userName])
-            });
-            setInstList(list);
-        })
-        .catch((error) => { console.log(error) })
     }
 
-    function sortHandler(){
-
+    function sortHandler(s){
         let list = courseList;
-
-        switch(document.getElementById('sort-selector').value){
-
+        switch(s){
             case "alfabeticallyInverse":
+                setCourseList(
                     list.sort((a, b) => {
                         let fa = a.title.toLowerCase(),
                             fb = b.title.toLowerCase();
@@ -130,55 +117,26 @@ export default function Career() {
                         }
                         return 0;
                     })
-                
-                    setCardList(
-                        list.map((course) => (
-                            <div className='course_div'>
-                                <CourseCard 
-                                    key={uuidv4()}
-                                    id={course.id}
-                                    title={course.title}
-                                    description={course.description}
-                                    stateFirstLogin={location.state.firstLogin}
-                                    stateProfilePhoto={location.state.profilePhoto} 
-                                    stateCoverPhoto={location.state.coverPhoto} 
-                                    stateUserData={location.state.userData}
-                                />
-                            </div>
-                        ))
-                    )
+                );
+                setUpdate(!update);
                 break;
 
             case "alfabetically":
-                list.sort((a, b) => {
-                    let fa = a.title.toLowerCase(),
-                        fb = b.title.toLowerCase();
-                
-                    if (fa < fb) {
-                        return -1;
-                    }
-                    if (fa > fb) {
-                        return 1;
-                    }
-                    return 0;
-                })
-            
-                setCardList(
-                    list.map((course) => (
-                        <div className='course_div'>
-                            <CourseCard 
-                                key={uuidv4()}
-                                id={course.id}
-                                title={course.title}
-                                description={course.description}
-                                stateFirstLogin={location.state.firstLogin}
-                                stateProfilePhoto={location.state.profilePhoto} 
-                                stateCoverPhoto={location.state.coverPhoto} 
-                                stateUserData={location.state.userData}
-                            />
-                        </div>
-                    ))
-                )
+                setCourseList(
+                    list.sort((a, b) => {
+                        let fa = a.title.toLowerCase(),
+                            fb = b.title.toLowerCase();
+                    
+                        if (fa < fb) {
+                            return -1;
+                        }
+                        if (fa > fb) {
+                            return 1;
+                        }
+                        return 0;
+                    })
+                );
+                setUpdate(!update);
                 break;
         }
     }
