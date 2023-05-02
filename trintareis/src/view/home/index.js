@@ -113,6 +113,7 @@ export default function Home() {
                     profileInformation={item.profileInformation}
                     title={item.title}
                     nome={item.userName}
+                    comments={item.comments}
                     horario={formatDate(item.hour)}
                     conteudo={item.text}
                     emailUser={item.userEmail}
