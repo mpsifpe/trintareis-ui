@@ -10,7 +10,8 @@ import { useLocation, Redirect } from 'react-router-dom';
 
 export default function ExploreScreen() {
     
-    const [cardList, setCardList] = useState(<span> </span>);
+    const [personList, setPersonList] = useState(<span> </span>);
+    const [instList, setInstList] = useState(<span> </span>);
     const [redirect, setRedirect] = useState(<></>);
     
     const emailUser = useSelector(state => state.emailUser);
@@ -20,30 +21,59 @@ export default function ExploreScreen() {
     useEffect(()=>{
         let abortController = new AbortController();
 
-        api.get('/friends/has-not-connection', {
-            params : {
-                userEmail: emailUser,
-                page: 0,
-                size: 10
-            }
-        })
+        api.get('/profile/get-by-profile-type?profileType=PERSONAL')
         .then(function (response) {
-            //console.log(response)
-            setCardList (   
+            setPersonList (   
                 <span className='cards-display'>
-                    {response.data.content.map((u, i) => (
-                                    <FriendCard 
-                                        key={i}
-                                        idConnection={""}
-                                        nome={u.userName}
-                                        profilePhoto={u.profilePhoto}
-                                        email={u.userEmail}
-                                        profileId={u.id}
-                                        isFriend={false}
-                                        city={u.city}
-                                        inviter={false}
-                                    /> 
-                    ))}
+                {
+                    response.data.map((profile, i) => 
+                        <FriendCard 
+                            key = {i}
+                            idConnection = {""}
+                            nome = {profile.userName}
+                            profilePhoto = {profile.profilePhoto}
+                            email = {profile.userEmail}
+                            profileId = {profile.id}
+                            profileInfo = {profile.profileInformation}
+                            details = {profile.details}
+                            isFriend = {false}
+                            city = {profile.city}
+                            inviter = {false}
+                            profileType = "PERSONAL"
+                        /> 
+                    )
+                }
+                </span>
+            )
+        })
+        .catch(function (error) {
+            console.log(error);
+            notyf.error("Desculpe, ocorreu um erro")
+            setRedirect(<Redirect to={{ pathname: '/home', state: { firstLogin: location.state.firstLogin, profilePhoto: location.state.profilePhoto, coverPhoto: location.state.coverPhoto, userData: location.state.userData } }}/>)
+        })
+
+        api.get('/profile/get-by-profile-type?profileType=INSTITUTIONAL')
+        .then(function (response) {
+            setInstList (   
+                <span className='cards-display'>
+                {
+                    response.data.map((profile, i) => 
+                        <FriendCard 
+                            key={i}
+                            idConnection={""}
+                            nome={profile.userName}
+                            profilePhoto={profile.profilePhoto}
+                            email={profile.userEmail}
+                            profileId={profile.id}
+                            profileInfo = {profile.profileInformation}
+                            details = {profile.details}
+                            isFriend={false}
+                            city={profile.city}
+                            inviter={false}
+                            profileType = "INSTITUTIONAL"
+                        /> 
+                    )
+                }
                 </span>
             );
         })
@@ -64,11 +94,20 @@ export default function ExploreScreen() {
             <Header firstLogin={location.state.firstLogin} profilePhoto={location.state.profilePhoto} coverPhoto={location.state.coverPhoto} userData={location.state.userData} origin="explore-screen"/>
                 <div className="div__main_explore">
                     <div className="div__title_explore">
-                        <span>Explorar</span>
+                        <span style={{fontWeight:"600"}}>Explorar</span><br/>
+                        <span>Pessoas</span>
                     </div>
                     
                     <section className="section_cards_list" id="sec-bd5e">
-                        {cardList}
+                        {personList}
+                    </section>
+
+                    <div className="div__title_explore">
+                        <span>Instituições</span>
+                    </div>
+
+                    <section className="section_cards_list" id="sec-bd5e">
+                        {instList}
                     </section>
                 </div>
         </div>
