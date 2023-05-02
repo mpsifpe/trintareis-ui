@@ -218,9 +218,9 @@ export default function DataRegistryScreen(){
             "title": courseTitle,
             "category": document.getElementById('category-selector').value
         }).
-        then((()=>{
+        then(()=>{
             setMessage("cadastrado com sucesso")
-        }))
+        })
         .catch(()=>{
             setMessage("erro")
         })
@@ -309,9 +309,9 @@ export default function DataRegistryScreen(){
                         profileImage: name,
                         profileType: "INSTITUTIONAL"
                     })
-                    .then((()=>{
+                    .then(()=>{
                         setMessage("cadastrado com sucesso")
-                    }))
+                    })
                     .catch(()=>{
                         setMessage("erro")
                     })
@@ -322,9 +322,9 @@ export default function DataRegistryScreen(){
                 userName: instName,
                 profileType: "INSTITUTIONAL"
             })
-            .then((()=>{
+            .then(()=>{
                 setMessage("cadastrado com sucesso")
-            }))
+            })
             .catch(()=>{
                 setMessage("erro")
             })

@@ -140,7 +140,7 @@ export default function (props) {
                     }
                 });
                 setLoaded(true);
-                setUpdate(!update)
+                setUpdate(!update);
 
             }).catch(function (error) {
                 console.log(error);

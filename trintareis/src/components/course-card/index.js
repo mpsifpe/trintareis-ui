@@ -17,8 +17,6 @@ function CourseCard(props) {
     if (!isEmpty(props.title) && props.title != undefined){ setTitle(props.title)  }
     if (!isEmpty(props.description) && props.description != undefined){ setDdescription(props.description)  }
 
-    //console.log(props)
-
     return function cleanup() {
         abortController.abort()
     }
@@ -30,19 +28,30 @@ function CourseCard(props) {
         <AccordionTrigger>{title}</AccordionTrigger>
         <AccordionContent>
           <div>{description}</div>
-          <Link to={{pathname: "/careerDetail/" + props.id,
-                      state: {
-                        firstLogin: props.stateFirstLogin,
-                        profilePhoto: props.stateProfilePhoto,
-                        coverPhoto: props.stateCoverPhoto,
-                        userData: props.stateUserData,
-                        origin: "career",
-                        courseID: props.id,
-                        courseTitle: title,
-                        courseDesc: description,
-                        institutions: props.institutions }}}>
-            <button className="more_button"> <label className='button_label'>SAIBA MAIS</label> </button>
-          </Link>
+          {
+            (props.type === "course") &&
+            <div>
+              <Link to={{pathname: "/careerDetail/" + props.id,
+                          state: {
+                            firstLogin: props.stateFirstLogin,
+                            profilePhoto: props.stateProfilePhoto,
+                            coverPhoto: props.stateCoverPhoto,
+                            userData: props.stateUserData,
+                            origin: "career",
+                            courseID: props.id,
+                            courseTitle: title,
+                            courseDesc: description,
+                            institutions: props.institutions }}}>
+                <button className="more_button"> <label className='button_label'>SAIBA MAIS</label> </button>
+              </Link>
+            </div>
+          }
+          {
+            (props.type === "custom") &&
+              <div>
+               <button className="more_button" href={props.customLink}> <label className='button_label'>SAIBA MAIS</label> </button>
+              </div>
+          }
         </AccordionContent>
       </Accordion.Item>
     </Accordion.Root>
