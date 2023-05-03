@@ -41,7 +41,6 @@ export default function (props) {
     const [postOptions, setPostOptions] = useState(<></>);
     const [update, setUpdate] = useState(false);
     const [loaded, setLoaded] = useState(false);
-
     const [comment, setComment] = useState('');
 
     useEffect(() => {
@@ -136,7 +135,7 @@ export default function (props) {
             api.get('/likes?postId=' + props.id)
                 .then((response) => {
                     response.data.map(item => {
-                        if(item.userEmail == loggedUser) {
+                        if (item.userEmail == loggedUser) {
                             setLikeStyle(<HiHeart color="red" />)
                         }
                     });
@@ -247,33 +246,28 @@ export default function (props) {
             params: {
                 id: props.id
             }
+        }).then(() => {
+            notyf.success("Sua postagem foi excluída");
+        }).catch(function (error) {
+            console.log(error);
+            notyf.error("Desculpe, ocorreu um erro");
+        }).finally(() => {
+            setHomeRefresh(true)
         })
-            .then(() => {
-                notyf.success("Sua postagem foi excluída");
-            })
-            .catch(function (error) {
-                console.log(error);
-                notyf.error("Desculpe, ocorreu um erro");
-            })
-            .finally(() => {
-                setHomeRefresh(true)
-            })
     }
 
     function postLike(obj) {
         api.post('/likes', {
             postId: obj.id,
             userEmail: loggedUser
+        }).then(() => {
+            setLike(like + 1);
+            setLikeStyle(<HiHeart color="red" />)
+            setUpdate(!update)
+        }).catch(function (error) {
+            console.log(error);
+            notyf.error("Desculpe, ocorreu um erro");
         })
-            .then(() => {
-                setLike(like + 1);
-                setLikeStyle(<HiHeart color="red" />)
-                setUpdate(!update)
-            })
-            .catch(function (error) {
-                console.log(error);
-                notyf.error("Desculpe, ocorreu um erro");
-            })
     }
 
     function deletetLike(obj) {
@@ -282,16 +276,14 @@ export default function (props) {
                 userEmail: loggedUser,
                 postId: obj.id
             }
+        }).then(() => {
+            (like > 1) ? setLike(like - 1) : setLike(0);
+            setLikeStyle(<HiOutlineHeart />);
+            setUpdate(!update)
+        }).catch(function (error) {
+            console.log(error);
+            notyf.error("Desculpe, ocorreu um erro");
         })
-            .then(() => {
-                (like > 1) ? setLike(like - 1) : setLike(0);
-                setLikeStyle(<HiOutlineHeart />);
-                setUpdate(!update)
-            })
-            .catch(function (error) {
-                console.log(error);
-                notyf.error("Desculpe, ocorreu um erro");
-            })
     }
 
     function funcGostei(obj) {
@@ -351,7 +343,6 @@ export default function (props) {
             console.log("props.comentario");
             console.log(props.comentario);
 
-            // listItems2 = Array.prototype.forEach.call(props.comentario, number => {
             listItems2 = reordenar.map(
                 (number) =>
                     <div>
@@ -603,7 +594,7 @@ export default function (props) {
                                 origin: ("post." + props.id)
                             }
                         }} style={{ textDecoration: 'none' }}>
-                            <img src={profilePhoto} />
+                            <img src={props.stateProfilePhoto} />
                         </Link>
                     </div>
                     <div className="div__button">
@@ -637,7 +628,6 @@ export default function (props) {
 
     function limparComentario(obj) {
         alert('limpou comentario.');
-
 
         let evento = firebase.firestore().collection('events');
         evento.doc(obj.id).update({

@@ -256,6 +256,14 @@
   margin-right: 10px;
 }
 
+.div__SlOptions:hover {
+  background-color: rgb(186, 174, 174);
+  border-radius: 40%;
+  margin-top: -3px;
+  height: 25px;
+  margin-right: 10px;
+}
+
 .div__comment {
   font-size: 13px;
   padding-left: 5px;
@@ -395,6 +403,7 @@
 }
 
 .div__button input {
+  padding: 12px;
   border: gray;
   border-radius: 50px;
   height: 100%;
