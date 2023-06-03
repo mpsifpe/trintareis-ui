@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import loading from '../../resources/loading.gif';
 import user from '../../resources/user.png';
 import firebase from '../../config/firebase';
-//import { notifyFriendInvite, findAndUpdateInviteNotification, notifyAcceptInvite, deleteFriendInviteNotifications } from '../../helpers/notification-helper';
+import { notifyFriendInvite, findAndUpdateInviteNotification, notifyAcceptInvite, deleteFriendInviteNotifications } from '../../helpers/notification-helper';
 import { isEmpty, isURL } from '../../helpers/helper';
 import api from '../../config/api';
 import NotyfContext from '../notyf-toast/NotyfContext';
@@ -34,7 +34,7 @@ export default function FriendCard(props) {
     const [cardEmail, setCardEmail] = useState("loading");
     const [cardButton, setCardButton] = useState(<button className='card-button'/>);
 
-    async function updateInfo(){ //método chamado na div principal ao montar componente
+    function updateInfo(){ //método chamado na div principal ao montar componente
         setName(<span className='friendcardLinkStyle'>{props.nome}</span>)    
 
         if(isEmpty(props.profilePhoto)) {
@@ -148,17 +148,16 @@ export default function FriendCard(props) {
             console.log(error);
             notyf.error("Desculpe, ocorreu um erro");
         })
-        //notifyFriendInvite(cardEmail,emailUser);
-
+        notifyFriendInvite(cardEmail,emailUser);
     }
 
     function acceptInvite(){
         api.put('/friends?id=' + idConnection)
-        .then((response)=>{
+        .then(()=>{
             notyf.success("Convite aceito");
             setCardButton(<button className='card-button'>Desconectar</button>);
-            //findAndUpdateInviteNotification(cardEmail, emailUser);
-            //notifyAcceptInvite(cardEmail, emailUser);  
+            findAndUpdateInviteNotification(cardEmail, emailUser);
+            notifyAcceptInvite(cardEmail, emailUser);  
         })
         .catch(function (error) {
             console.log(error);
