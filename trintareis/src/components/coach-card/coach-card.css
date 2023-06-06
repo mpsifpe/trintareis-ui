@@ -1,0 +1,149 @@
+.friend-card{
+    background-color: rgb(243, 243, 243);
+    width: 190px;
+    height: 360px;
+    border-radius: 10px;
+    border: 1px solid;
+    border-color: #f8f8ff;
+    display: flex;
+    flex-direction: column;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    position: relative;
+}
+
+.friend-content{
+    padding: 0 10px;
+    margin: 0;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.friend-img{
+    border-radius: 50% !important;
+    width: 150px;
+    height: 150px;
+    overflow: hidden;
+    object-fit: cover;
+    display: flex;
+    background-size: cover;
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    background-color: white;
+    border: 0px solid;
+    box-sizing: border-box;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.div__card-button{
+    position: absolute;
+    bottom: 10px;
+    align-self: center;
+}
+
+.card-button{
+    border: 1px;
+    border-radius: 15px;
+    border-color: rgb(241, 241, 241);
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: rgb(243, 243, 243);
+    height: 35px;
+    width: 175px;
+    background-color: #45bd62;
+}
+
+.card-button:hover {
+    border: 1px;
+    color: rgb(243, 243, 243);
+    background-color: #206130;
+    border-color: #206130;
+}
+
+.friendcardLinkStyle{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: bold;
+    font-size: large;
+    font-style: normal;
+    text-decoration: none;
+}
+
+.friend-course{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: normal;
+    font-size: medium;
+    font-style: normal;
+    margin-top: 10px;
+}
+
+.friend-usertype{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-weight: normal;
+    font-size: medium;
+    font-style: normal;
+}
+
+.div__description{
+    display: flex;
+    flex-direction: column;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin-top: 20px;
+}
+
+.coach_name{
+    font-size: 26px;
+    font-weight: 600;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    width: max-content;
+}
+
+.coach_info{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 20px;
+    font-weight: 500;
+    margin-top: 5px;
+}
+
+.coach_details{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 18px;
+    margin-top: 5px;
+    font-weight: 400;
+}
+
+.form{
+    position: absolute;
+    height: max-content;
+}
+
+.main_modal_div{
+    display: flex;
+    height: max-content;
+}
+
+.div__image{
+    margin-left: 35px;
+    margin-right: 35px;
+}
+
+.div_calendar{
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+    width: inherit;
+}
+
+.div__btn_post{
+    margin-top: 20px;
+}
+
+.row{
+    display: flex;
+}

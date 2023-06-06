@@ -205,41 +205,39 @@ export default function EditProfileScreen(){
             <div className="div_main_editprofile">
                 <h3>{titleText}</h3>
                 <hr />
-                <div>
-                    <form className="form">
-                        <div className="form-title">
-                            <label className="field_title_label">Nome<span style={{color: 'red'}}>*</span></label>
-                            <input onChange={handleFieldChange} name="userName" value={getValue(userData.userName)} type="text" className="form-control" placeholder="Nome completo"/>
-                        </div>
-                        <div className="row">
+                <form className="form">
+                    <div className="row">
+                        <div className="form-group">
                             <div className="form-group">
-                                <div className="form-group">
-                                    <label className="field_title_label">Profissão<span style={{color: 'red'}}>*</span></label>
-                                    <input onChange={handleFieldChange} name="profileInformation" value={getValue(userData.profileInformation)} type="text" className="form-control" rows="3" placeholder="Ex.: Estudante, Professor, Engenheiro, etc"/>
-                                </div>
-                                <div className="form-group">
-                                    <label className="field_title_label">Descreva quem é você</label>
-                                    <textarea onChange={handleFieldChange} name="details" value={getValue(userData.details)} type="text"className="form-control" rows="3" placeholder="Ex.: Formação, hobby, interesses, currículo acadêmico, etc"/>
-                                </div>
-                                <div className="form-group">
-                                    <label className="field_title_label">País<span style={{color: 'red'}}>*</span></label>
-                                    <CountrySelector onChange={(e) => setUserData({ ...userData, region: e.target.value})} region={userData.region}/>
-                                </div>
-                                <div className="form-group">
-                                    <label className="field_title_label">Cidade</label>
-                                    <input onChange={handleFieldChange} name="city" value={getValue(userData.city)} type="text" className="form-control" rows="1"/>
-                                </div>
+                                <label className="field_title_label">Nome<span style={{color: 'red'}}>*</span></label>
+                                <input onChange={handleFieldChange} name="userName" value={getValue(userData.userName)} type="text" className="form-control" placeholder="Nome completo"/>
+                            </div>
+                            <div className="form-group">
+                                <label className="field_title_label">Profissão<span style={{color: 'red'}}>*</span></label>
+                                <input onChange={handleFieldChange} name="profileInformation" value={getValue(userData.profileInformation)} type="text" className="form-control" rows="3" placeholder="Ex.: Estudante, Professor, Engenheiro, etc"/>
+                            </div>
+                            <div className="form-group">
+                                <label className="field_title_label">Descreva quem é você</label>
+                                <textarea onChange={handleFieldChange} name="details" value={getValue(userData.details)} type="text"className="form-control" rows="3" placeholder="Ex.: Formação, hobby, interesses, currículo acadêmico, etc"/>
+                            </div>
+                            <div className="form-group">
+                                <label className="field_title_label">País<span style={{color: 'red'}}>*</span></label>
+                                <CountrySelector onChange={(e) => setUserData({ ...userData, region: e.target.value})} region={userData.region}/>
+                            </div>
+                            <div className="form-group">
+                                <label className="field_title_label">Cidade</label>
+                                <input onChange={handleFieldChange} name="city" value={getValue(userData.city)} type="text" className="form-control" rows="1"/>
                             </div>
                         </div>
-                        <div className="div_buttons_row">
-                            <div className="div_buttons_center">
-                                {cancelButton}
-                                <button onClick={saveBtnClick} type="button" className="w-50 btn btn-salvar fw-bold bor">{saveButton}</button>
-                            </div>
+                    </div>
+                    <div className="div_buttons_row">
+                        <div className="div_buttons_center">
+                            {cancelButton}
+                            <button onClick={saveBtnClick} type="button" className="w-50 btn btn-salvar fw-bold bor">{saveButton}</button>
                         </div>
-                    </form>
-                    {redirect}
-                </div>
+                    </div>
+                </form>
+                {redirect}
             </div>
         </div>
     )

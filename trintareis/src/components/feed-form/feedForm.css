@@ -126,3 +126,9 @@
     margin-top: 5px;
     right: 0;
 }
+
+.feedForm_span span{
+    font-weight: normal;
+    font-size: medium;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
