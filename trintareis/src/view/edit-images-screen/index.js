@@ -37,7 +37,7 @@ export default function EditImagesScreen(){
                 <div className="container">
                     <input onChange={(e) => setNewProfileImage(e.target.files[0])} type="file" className="w-60 form-control" style={{height:"40px"}} accept=".jpg, .png, .jpeg, .bmp"/>
                     { isEmpty(location.state.profilePhoto) ? <></> :
-                      <button onClick={()=>{deletePhotoClick("profilePhoto")}} type="button" className="btn btn-salvar fw-bold bor" style={{height:"40px", width:"90px", marginLeft:"5px", marginTop:"-1px"}}>Apagar</button> }
+                      <button onClick={()=>{deletePhotoClick("profilePhoto")}} type="button" className="btn btn-salvar fw-bold bor" style={{height:"40px", width:"fit-content", marginLeft:"5px", marginTop:"-1px"}}>Apagar</button> }
                 </div>
             ); 
         } 
@@ -47,7 +47,7 @@ export default function EditImagesScreen(){
                 <div className="container">
                     <input onChange={(e) => setNewCoverImage(e.target.files[0])} type="file" className="w-60 form-control" style={{height:"40px"}} accept=".jpg, .png, .jpeg, .bmp"/>
                     { isEmpty(location.state.coverPhoto) ? <></> :
-                        <button onClick={()=>{deletePhotoClick("coverPhoto")}} type="button" className="btn btn-salvar fw-bold bor" style={{height:"40px", width:"90px", marginLeft:"5px", marginTop:"-1px"}}>Apagar</button> }
+                        <button onClick={()=>{deletePhotoClick("coverPhoto")}} type="button" className="btn btn-salvar fw-bold bor" style={{height:"40px", width:"fit-content", marginLeft:"5px", marginTop:"-1px"}}>Apagar</button> }
                 </div>
             );
          }

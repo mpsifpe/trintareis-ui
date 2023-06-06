@@ -4,7 +4,7 @@ import firebase from '../../config/firebase';
 import 'firebase/auth';
 import './registerScreen.css';
 
-import Header from '../../components/header-register/index';
+import Header from '../../components/header-login/index';
 import welcome from '../../resources/welcome.png';
 import NotyfContext from "../../components/notyf-toast/NotyfContext";
 import { enterHandler, focusChangeOnEnter } from "../../helpers/helper";
@@ -14,7 +14,7 @@ function RegisterScreen() {
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
     const [redirect, setRedirect] = useState(<></>);
-    const [visible, setVisible] = useState(true);
+    const [visible, setVisible] = useState(false);
 
     const notyf = useContext(NotyfContext);
     const passwordRef = useRef(null);
@@ -85,6 +85,7 @@ function RegisterScreen() {
                             <label>Senha</label>
                             <input id="homescreen_passw_npt" onKeyDown={(e) => enterHandler(e, cadastrar)} onChange={(e) => setSenha(e.target.value)} ref={passwordRef} value={senha} type="password" className="form-control my-2" placeholder="Digite sua Senha" />
                         </fieldset>
+                        {/*
                         <span className="span__agreement">
                             Ao clicar em Aceite e cadastre-se, você aceita o
                             <a id="homescreen_contract_link">Contrato do Usuário</a>
@@ -94,8 +95,10 @@ function RegisterScreen() {
                             <a id="homescreen__cookies_link">Política de Cookies</a>
                             do Trinta Reis.
                         </span>
+                        */}
                         <div className="div__register_btn">
-                            <button id="homescreen_accept_btn" onClick={cadastrar} type="button">Aceitar e cadastrar</button>
+                            <button id="homescreen_accept_btn" onClick={cadastrar} type="button">Cadastrar</button>
+                            <button id="homescreen_accept_btn" onClick={()=>{setRedirect(<Redirect to={{pathname: '/login'}}/>)}} type="button" className="btn-entrar">Entrar</button>
                             {visible &&
 
                                 <button id="homescreen_accept_btn" onClick={openDataRegistryScreen} type="button">Registro de cursos</button>

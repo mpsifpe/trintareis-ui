@@ -3,13 +3,13 @@ import './recoveryPassword.css';
 
 import firebase from '../../config/firebase';
 import 'firebase/auth';
-import { Link } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 
-import Header from '../../components/header-recoveryPassword/index';
+import Header from '../../components/header-login/index';
 
 function RecoveryPassword() {
     const [email, setEmail] = useState();
-    // const [msg, setMsg] = useState();
+    const [redirect, setRedirect] = useState(<></>);
 
     function recoveryPassword() {
         firebase.auth().sendPasswordResetEmail(email).then(result => {
@@ -30,17 +30,14 @@ function RecoveryPassword() {
                     <div className="textfield">
                         <span className="textfield">Informe o e-mail da conta</span>
                         <input onChange={(e => setEmail(e.target.value))} value={email} type="email" className="form-control" placeholder="E-mail" />
-                    </div>
-                    {/* <span>{msg}</span> */}
-                    <div className='buttons'>
-                        <button onClick={recoveryPassword} type="button" className="btn-enviar">Recuperar Senha</button>
-                        <Link to="/login">
-                            <button type="button" className="btn-backhome">Voltar</button>
-                        </Link>                        
+                        <div className='buttons'>
+                            <button onClick={recoveryPassword} type="button" className="btn-enviar">Recuperar Senha</button><br/>
+                            <button onClick={()=>{setRedirect(<Redirect to={{pathname: '/login'}}/>)}} type="button" className="btn-backhome">Voltar</button>                    
+                        </div>
                     </div>
                 </form>
             </div>
-
+        {redirect}
         </div>
 
     )

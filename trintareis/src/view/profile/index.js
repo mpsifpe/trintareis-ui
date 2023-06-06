@@ -7,7 +7,6 @@ import { Perfil, Content, Details } from './styles';
 
 import { isEmpty, formatDate, isURL } from '../../helpers/helper';
 import Header from '../../components/header/index';
-import FeedForm from '../../components/feed-form/index';
 import FeedPost from '../../components/feed-post/FeedPost';
 import loading from '../../resources/loading.gif';
 import user from '../../resources/user.png';
@@ -55,7 +54,7 @@ function Profile(props) {
                         list.push(post)
                     }
                 });
-
+                
                 setEventos(
                     list.map(item => 
                         <div className='div_post'>
@@ -97,36 +96,21 @@ function Profile(props) {
                 <div className="main_div">
                     <Perfil cover={urlImageCover}/>
                     <Content photoProfile={urlImageProfile}>
-                        <div>
-                            <form className="form">
-                                <div className="div__main_form" style={{width:"500px"}}>
-                                    <div className="div__foto" />
-                                    <span>{userName}</span>
-                                    {actionButton}
-                                    <div>
-                                        <p className="p__profileInformation">{profileInformation}</p>
-                                        <p className="p__region">{city}, {region}</p>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
+                        <form className="form">
+                            <div className="div__main_form">
+                                <div className="div__foto" />
+                            </div>
+                        </form>
                     </Content>
                     <Details>
-                        <div>
-                            <div className="div__span">
-                                <span>Sobre</span>
-                            </div>
-                            <div className="div__p">
-                                <p>{details}</p>
-                            </div>
+                        <div className="div_profile_data">
+                            <span className="nome">{userName}<br/></span>
+                            <span className="data">{profileInformation}<br/></span>
+                            <span className="data">{details}<br/></span>
+                            <span className="data">{city}, {region}<br/></span>
+                            {actionButton}
                         </div>
                     </Details>
-                    {props.match.params.id ? null
-                        :
-                        <div className='div__feedform'>
-                            <FeedForm profilePhoto={urlImageProfile} />
-                        </div>
-                    }
                     <div className="div__timeline">
                     { !isEmpty(eventos) && eventos }
                     </div>
@@ -213,7 +197,7 @@ function Profile(props) {
                 notyf.error("Desculpe, ocorreu um erro")
             })
             .then(()=>{
-                setActionButton(<label className='action_button' onClick={actionButtonClick}>Conectar</label>)
+                setActionButton(<button className='action_button' onClick={actionButtonClick}>Conectar</button>)
                 //
                 api.get('/friends/',{
                     params : {
@@ -233,11 +217,11 @@ function Profile(props) {
                             if(response.data.content[i].pending){
                                 pending = true;
                                 if(response.data.content[i].inviter){
-                                    setActionButton(<label className='action_button' onClick={actionButtonClick}>Convidado</label>);
-                                } else { setActionButton(<label className='action_button' onClick={actionButtonClick}>Aceitar</label>); }
+                                    setActionButton(<button className='action_button' onClick={actionButtonClick}>Convidado</button>);
+                                } else { setActionButton(<button className='action_button' onClick={actionButtonClick}>Aceitar</button>); }
                             }
                             else{
-                                setActionButton(<label className='action_button' onClick={actionButtonClick}>Desconectar</label>);
+                                setActionButton(<button className='action_button' onClick={actionButtonClick}>Desconectar</button>);
                             }
                         }
                     }
@@ -262,7 +246,7 @@ function Profile(props) {
                         }})
                     .then(()=>{
                         notyf.success("Conexão desfeita");
-                        setActionButton(<label className='action_button'><MdClose/></label>);
+                        setActionButton(<button className='action_button'><MdClose className='action_button_icon'/>Desconectado</button>);
                     })
                     .catch((error)=>{
                         console.log(error)
@@ -274,7 +258,7 @@ function Profile(props) {
                     api.put('/friends?id=' + idConnection)
                     .then(()=>{
                         notyf.success("Convite aceito");
-                        setActionButton(<label className='action_button'><MdDone/></label>);
+                        setActionButton(<button className='action_button'><MdDone className='action_button_icon'/>Convidado</button>);
                     })
                     .catch((error)=>{
                         console.log(error)
@@ -290,7 +274,7 @@ function Profile(props) {
                     }})
                 .then(()=>{
                     notyf.success("Conexão desfeita");
-                    setActionButton(<label className='action_button'><MdClose/></label>);
+                    setActionButton(<button className='action_button'><MdClose className='action_button_icon'/>Desconectado</button>);
                 })
                 .catch((error)=>{
                     console.log(error)
@@ -306,7 +290,7 @@ function Profile(props) {
             })
             .then(()=>{
                 notyf.success("Convite enviado");
-                setActionButton(<label className='action_button'><MdDone/></label>);
+                setActionButton(<button className='action_button'><MdDone className='action_button_icon'/>Convidado</button>);
             })
             .catch((error)=>{
                 console.log(error)

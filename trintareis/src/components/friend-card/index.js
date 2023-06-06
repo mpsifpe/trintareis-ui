@@ -84,10 +84,12 @@ export default function FriendCard(props) {
                 break;
 
             case "PERSONAL":
+                console.log("inviter> " + inviter);
+                console.log("pending> " + pendingInvite);
                 if (isFriend){
                     if(pendingInvite){
                         if(inviter){
-                            setCardButton(<button className='card-button' onClick={clickAction}>Convidado</button>)}
+                            setCardButton(<button className='card-button' onClick={clickAction} onMouseOver={mouseHover} onMouseLeave={mouseLeave}>Convidado</button>)}
                         else {
                             setCardButton(<button className='card-button' onClick={clickAction}>Aceitar</button>)}}
                     else {
@@ -163,5 +165,26 @@ export default function FriendCard(props) {
             console.log(error);
             notyf.error("Desculpe, ocorreu um erro"); 
         })
+    }
+
+    function mouseHover(){
+        if (profileType==="PERSONAL"){
+            if (isFriend){
+                if(pendingInvite){
+                    if(inviter){
+                        setCardButton(<button className='card-button' onClick={clickAction} onMouseOver={mouseHover} onMouseLeave={mouseLeave}>Cancelar convite</button>)}}
+            }
+        }
+    }
+
+    function mouseLeave(){
+        if (profileType==="PERSONAL"){
+            if (isFriend){
+                if(pendingInvite){
+                    if(inviter){
+                        setCardButton(<button className='card-button' onClick={clickAction} onMouseOver={mouseHover} onMouseLeave={mouseLeave}>Convidado</button>)}
+                }
+            }
+        }
     }
 }
