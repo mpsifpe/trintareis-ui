@@ -32,27 +32,25 @@ export default function MyFriends() {
         .then(function (response) {
 
             setFriendsCount(response.data.content.length);
-            setCardList (   <span className='cards-display'>
-                                {
-                                    response.data.content.map((profile, i) => (
-                                        <FriendCard 
-                                            key = {i}
-                                            idConnection = {profile.idConnection}
-                                            nome = {profile.name}
-                                            profilePhoto = {profile.profilePhoto}
-                                            email = {profile.emailUser}
-                                            profileId = {profile.id}
-                                            isFriend = {true}
-                                            city = {profile.city}
-                                            inviter = {profile.inviter}
-                                            pending = {profile.pending}
-                                            profileType = "PERSONAL"
-                                        /> 
-                                    ))
-                                }
-                            </span>
+            setCardList (   
+                <span className='cards-display'>
+                    {response.data.content.map((profile, i) => (
+                        <FriendCard 
+                            key = {i}
+                            idConnection = {profile.idConnection}
+                            nome = {profile.name}
+                            profilePhoto = {profile.profilePhoto}
+                            email = {profile.emailUser}
+                            profileId = {profile.id}
+                            isFriend = {true}
+                            city = {profile.city}
+                            inviter = {profile.inviter}
+                            pending = {profile.pending}
+                            profileType = "PERSONAL"
+                        /> 
+                    ))}
+                </span>
             );
-            //console.log( response.data.content);
         })
         .catch(function (error) {
             console.log(error);

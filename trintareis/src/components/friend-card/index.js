@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import loading from '../../resources/loading.gif';
 import user from '../../resources/user.png';
 import firebase from '../../config/firebase';
-import { notifyFriendInvite, findAndUpdateInviteNotification, notifyAcceptInvite, deleteFriendInviteNotifications } from '../../helpers/notification-helper';
+import { notifyFriendInvite, findAndUpdateInviteNotification, notifyAcceptInvite } from '../../helpers/notification-helper';
 import { isEmpty, isURL } from '../../helpers/helper';
 import api from '../../config/api';
 import NotyfContext from '../notyf-toast/NotyfContext';
@@ -75,7 +75,6 @@ export default function FriendCard(props) {
         switch(profileType){
 
             case "INSTITUTIONAL":
-                //onClick={()=> window.open(details, "_blank")}
                 setCardButton(
                     <Link to={{ pathname: '/institution/' + profileId, state: { firstLogin: location.state.firstLogin, profilePhoto: location.state.profilePhoto, coverPhoto: location.state.coverPhoto, userData: location.state.userData, origin:"friend-card" } }} style={{textDecoration: "none"}}>
                         <button className='card-button'>Conhecer</button>
@@ -84,8 +83,6 @@ export default function FriendCard(props) {
                 break;
 
             case "PERSONAL":
-                console.log("inviter> " + inviter);
-                console.log("pending> " + pendingInvite);
                 if (isFriend){
                     if(pendingInvite){
                         if(inviter){
@@ -107,8 +104,6 @@ export default function FriendCard(props) {
                             <img className="friend-img" src={cardImage} alt="user image"/>
                             <div>{name}</div>
                             <p className="friend-course">{profileInfo}</p>
-                            {//<p className="friend-usertype">{cardEmail}</p>
-                            }
                         </span>
                     </Link>
                     

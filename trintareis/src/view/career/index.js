@@ -238,7 +238,6 @@ export default function Career() {
         //------------------ fetch cursos -----------------------
         api.get('/course')
         .then((response) => {
-            console.log(response.data);
             setCourseList(
                 response.data.sort((a, b) => {
                 let fa = a.title.toLowerCase(),

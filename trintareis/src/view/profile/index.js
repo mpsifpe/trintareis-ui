@@ -91,7 +91,7 @@ function Profile(props) {
 
     return (
         <div className="app">
-            <Header firstLogin={location.state.firstLogin} profilePhoto={location.state.profilePhoto} coverPhoto={location.state.coverPhoto} userData={location.state.userData} origin="profile-screen" hideTooltip={true} />
+            <Header firstLogin={location.state.firstLogin} profilePhoto={location.state.profilePhoto} coverPhoto={location.state.coverPhoto} userData={location.state.userData} origin="profile-screen"  />
             <homeRefreshContext.Provider value={{homeRefresh, setHomeRefresh}}>
                 <div className="main_div">
                     <Perfil cover={urlImageCover}/>
