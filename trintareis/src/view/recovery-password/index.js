@@ -27,7 +27,7 @@ function RecoveryPassword() {
             <div className="div__form_main">
                 <form className="div__form">
                     <h3 className="mb-3 font-weight-bold div__form_itens">Esqueceu a senha?</h3>
-                    <div className="textfield">
+                    <div className="textfield" style={{alignItems:"center"}}>
                         <span className="textfield">Informe o e-mail da conta</span>
                         <input onChange={(e => setEmail(e.target.value))} value={email} type="email" className="form-control" placeholder="E-mail" />
                         <div className='buttons'>
