@@ -20,8 +20,8 @@ export const Content = styled.div`
     background-color: white;
     background-repeat: no-repeat;
     background-size: cover;
-    border-bottom-left-radius: 15px;
-    border-bottom-right-radius: 15px;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
     width: 100%;
     padding-left: 50px;
     padding-bottom: 40px;
@@ -48,7 +48,9 @@ export const Details = styled.div`
     background-repeat: no-repeat;
     background-size: cover;
     border-radius: 15px;
-    width: 100%;    
+    width: 100%;
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
 `;
 
 export const Dropdown = styled.div`
