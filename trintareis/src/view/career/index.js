@@ -96,10 +96,10 @@ export default function Career() {
                 </div>
                 <div className="div__main_career">
                     <div className="div__title_career">
-                        <span>Vocacional</span>
+                        <span>Cursos</span>
                     </div>
                     <div className='content'>
-                        <span className='note'>Cursos</span>
+                        <span className='note'>Ordenar</span>
                         <select className="sortSelector" id="sort-selector">
                             <option key='az' onClick={()=>{sortHandler("alfabetically")}} value="alfabetically">A-Z</option>
                             <option key='za' onClick={()=>{sortHandler("alfabeticallyReverse")}} value="alfabeticallyReverse">Z-A</option>
@@ -111,7 +111,7 @@ export default function Career() {
                         
                         {/* mock */}
                         <div className="div__title_career">
-                            <span><br/>Orientação de carreira</span>
+                            <span><br/>Orientação vocacional</span>
                         </div>
                         <section className="section_coach_list" id="sec-bd5e">
                             <div onClick={openCoach1}>

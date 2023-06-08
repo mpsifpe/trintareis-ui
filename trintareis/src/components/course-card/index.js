@@ -33,8 +33,8 @@ function CourseCard(props) {
                       userData: props.stateUserData,
                       origin: "career",
                       courseID: props.id,
-                      courseTitle: title,
-                      courseDesc: description,
+                      courseTitle: props.title,
+                      courseDesc: props.description,
                       institutions: props.institutions }}}>
                 <button className="more_button">
                   <label className='button_label'>Saiba mais</label>
