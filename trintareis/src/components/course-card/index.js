@@ -16,9 +16,13 @@ function CourseCard(props) {
   useEffect(() => {
     const abortController = new AbortController()
 
-    if (!isEmpty(props.title) && props.title != undefined){ setTitle(props.title)  }
+    if (!isEmpty(props.title) && props.title != undefined){ 
+      (props.title.length > 30) ? 
+        setTitle((props.title.substring(0, 27)) + "...") : 
+        setTitle(props.title) }
 
-    if (!isEmpty(props.description) && props.description != undefined){ setDdescription(props.description)  }
+    if (!isEmpty(props.description) && props.description != undefined){ 
+      setDdescription(props.description)  }
     
     switch (props.type){
       case "course":
@@ -33,8 +37,8 @@ function CourseCard(props) {
                       userData: props.stateUserData,
                       origin: "career",
                       courseID: props.id,
-                      courseTitle: title,
-                      courseDesc: description,
+                      courseTitle: props.title,
+                      courseDesc: props.description,
                       institutions: props.institutions }}}>
                 <button className="more_button">
                   <label className='button_label'>Saiba mais</label>
@@ -67,7 +71,7 @@ function CourseCard(props) {
       <Accordion.Item className="AccordionItem" value={"item-3"} type="single">
         <AccordionTrigger>{title}</AccordionTrigger>
         <AccordionContent>
-          <div>{description}</div>
+          <div><strong>{props.title}</strong><br/><br/>{description}</div>
           {moreButton}
         </AccordionContent>
       </Accordion.Item>
