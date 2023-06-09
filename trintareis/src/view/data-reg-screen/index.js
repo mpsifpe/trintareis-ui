@@ -218,8 +218,9 @@ export default function DataRegistryScreen(){
             "title": courseTitle,
             "category": document.getElementById('category-selector').value
         }).
-        then(()=>{
-            setMessage("cadastrado com sucesso")
+        then(()=>{            
+            notyf.success('cadastrado com sucesso');
+            clearAll();
         })
         .catch(()=>{
             setMessage("erro")
@@ -236,14 +237,14 @@ export default function DataRegistryScreen(){
                         <label>Curso</label><br/>
                         <select className="formInst" name="courses" placeholder="Selecione" defaultValue="Selecione">
                             <option value="Selecione">Selecione</option>
-                            {courseData.map((course, index) => <option key={index} value={course.id} onChange={(e) => setCourseID(course.id)}>{course.title}</option>)}
+                            {courseData.map((course, index) => <option key={index} value={course.id} onChange={(e) => setCourseID(e.target.value)}>{course.title}</option>)}
                         </select>
                     </div>
                     <div>
                         <label>Instituição</label><br/>
                         <select className="formInst" name="courses" placeholder="Selecione" defaultValue="Selecione">
                             <option value="Selecione">Selecione</option>
-                            { institutions.map( (i, index) => <option key={index} value={i[0]} onChange={(e) => setInstID(i[0])}> {i[1]} </option> )}
+                            { institutions.map( (i, index) => <option key={index} value={i[index]} onChange={(e) => setInstID(e.target.value)}> {i[1]} </option> )}
                         </select>
                     </div>
                     <fieldset>
@@ -269,7 +270,8 @@ export default function DataRegistryScreen(){
             "descriptionLink": personalizationLink
         })
         .then((()=>{
-            setMessage("cadastrado com sucesso")
+            notyf.success('cadastrado com sucesso');
+            clearAll();
         }))
         .catch(()=>{
             setMessage("erro")
@@ -310,7 +312,8 @@ export default function DataRegistryScreen(){
                         profileType: "INSTITUTIONAL"
                     })
                     .then(()=>{
-                        setMessage("cadastrado com sucesso")
+                        notyf.success('cadastrado com sucesso');
+                        clearAll();
                     })
                     .catch(()=>{
                         setMessage("erro")
@@ -323,7 +326,8 @@ export default function DataRegistryScreen(){
                 profileType: "INSTITUTIONAL"
             })
             .then(()=>{
-                setMessage("cadastrado com sucesso")
+                notyf.success('cadastrado com sucesso');
+                clearAll();
             })
             .catch(()=>{
                 setMessage("erro")

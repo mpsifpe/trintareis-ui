@@ -136,13 +136,13 @@ function Profile(props) {
                 } else {
                     storage.ref("profile_images/" + location.state.profilePhoto).getDownloadURL().then(url => {
                         setUrlImageProfile(url)
-                        updateProfileImageURL(url)
+                        //updateProfileImageURL(url)
                     })
                 }
             }
             else {
                 setUrlImageProfile(user)
-                if(location.state.origin==="edit-images-screen-save"){ updateProfileImageURL("") }
+                if(location.state.origin === "edit-profile-image-save"){ updateProfileImageURL("") }
             }
             
             if(!isEmpty(location.state.coverPhoto)) {
@@ -151,13 +151,13 @@ function Profile(props) {
                 } else {
                     storage.ref("profile_images/" + location.state.coverPhoto).getDownloadURL().then(url => {
                         seturlImageCover(url)
-                        updateCoverImageURL(url)
+                        //updateCoverImageURL(url)
                     })
                     
                 }
             }
             else{
-                if(location.state.origin==="edit-images-screen-save"){ updateCoverImageURL("") }
+                if(location.state.origin === "edit-cover-image-save"){ updateCoverImageURL("") }
             }
             setLoaded(true);
         } 
@@ -312,7 +312,13 @@ function Profile(props) {
                 "emailUser": emailUser,
                 "region": location.state.userData.region,
                 "userName": location.state.userData.userName
-            })          
+            })
+            .catch((error)=>{
+                console.log(error)
+                if(error.code === "404"){
+                    fetch();
+                }
+            })      
         })
     }
 
@@ -330,6 +336,12 @@ function Profile(props) {
                 "region": location.state.userData.region,
                 "userName": location.state.userData.userName
             })           
+        })
+        .catch((error)=>{
+            console.log(error)
+            if(error.code === "404"){
+                fetch();
+            }
         })
     }
 }

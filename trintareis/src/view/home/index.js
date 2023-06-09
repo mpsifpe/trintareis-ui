@@ -32,9 +32,11 @@ export default function Home() {
     const [page, setPage] = useState(0);
     const [posts, setPosts] = useState([]);
     const [hasMore, setHasMore] = useState(true);
-    const [urlImageProfile, setUrlImageProfile] = useState(loading);
     const [data, setData] = useState({});
-    const [urlUpdated, setUrlUpdated] = useState(false);
+    const [urlImageProfile, setUrlImageProfile] = useState(loading);    
+    const [profImageUpdated, setProfImageUpdated] = useState(false);
+    const [urlImageCover, setUrlImageCover] = useState(loading);
+    const [coverImageUpdated, setCoverImageUpdated] = useState(false);
     const [homeRefresh, setHomeRefresh] = useState(false);
     const [loaded, setLoaded] = useState(false);
 
@@ -64,8 +66,8 @@ export default function Home() {
         <div className="App">
                 <Header 
                     firstLogin={location.state.firstLogin} 
-                    profilePhoto={urlUpdated ? urlImageProfile : location.state.profilePhoto} 
-                    coverPhoto={location.state.coverPhoto} 
+                    profilePhoto={profImageUpdated ? urlImageProfile : location.state.profilePhoto} 
+                    coverPhoto={coverImageUpdated ? urlImageCover : location.state.coverPhoto} 
                     userData={location.state.userData}
                     id={location.state.userData.id}
                     origin="home"/>
@@ -189,7 +191,6 @@ export default function Home() {
         if(isEmpty(location.state.profilePhoto)) { 
             setUrlImageProfile(user); 
         } 
-        
         else {
             if(isURL(location.state.profilePhoto)){
                 setUrlImageProfile(location.state.profilePhoto)
@@ -207,28 +208,42 @@ export default function Home() {
                         "emailUser": emailUser,
                         "region": location.state.userData.region,
                         "userName": location.state.userData.userName
-                    })          
+                    })
+                    .catch(error => console.log(error))
+                    .finally(()=>{
+                        setProfImageUpdated(true);
+                    })      
                 })
             }
         }
 
         //update imagem cover
-        if(!isURL(location.state.coverPhoto)){
-            storage.ref("profile_images/" + location.state.coverPhoto).getDownloadURL().then(url => {                
-                api.put('/profile/update', {
-                    "id": location.state.userData.id,
-                    "city": location.state.userData.city,
-                    "details": location.state.userData.details,
-                    "coverPhoto": url,
-                    "profileInformation": location.state.userData.profileInformation,
-                    "profilePhoto": location.state.profilePhoto,
-                    "emailUser": emailUser,
-                    "region": location.state.userData.region,
-                    "userName": location.state.userData.userName
-                })          
-            })
-        }
+        if(!isEmpty(location.state.coverPhoto)){
+            if (isURL(location.state.coverPhoto)){
+                setUrlImageCover(location.state.coverPhoto)
+            } else {
+                storage.ref("profile_images/" + location.state.coverPhoto).getDownloadURL().then(url => {  
+                    setUrlImageCover(url);
 
+                    api.put('/profile/update', {
+                        "id": location.state.userData.id,
+                        "city": location.state.userData.city,
+                        "details": location.state.userData.details,
+                        "coverPhoto": url,
+                        "profileInformation": location.state.userData.profileInformation,
+                        "profilePhoto": location.state.profilePhoto,
+                        "emailUser": emailUser,
+                        "region": location.state.userData.region,
+                        "userName": location.state.userData.userName
+                    })
+                    .catch(error => console.log(error))
+                    .finally(()=>{
+                        setCoverImageUpdated(true);
+                    })        
+                })
+            }
+        }
+        
         setLoaded(true);
         setHomeRefresh(!homeRefresh);
     }

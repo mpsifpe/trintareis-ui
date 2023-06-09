@@ -14,7 +14,6 @@ function RegisterScreen() {
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
     const [redirect, setRedirect] = useState(<></>);
-    const [visible, setVisible] = useState(false);
 
     const notyf = useContext(NotyfContext);
     const passwordRef = useRef(null);
@@ -99,9 +98,12 @@ function RegisterScreen() {
                         <div className="div__register_btn">
                             <button id="homescreen_accept_btn" onClick={cadastrar} type="button">Cadastrar</button>
                             <button id="homescreen_accept_btn" onClick={()=>{setRedirect(<Redirect to={{pathname: '/login'}}/>)}} type="button" className="btn-entrar">Entrar</button>
-                            {visible &&
+                            {
+                            //---------------------botão para tela de cadastro, só alterar para true em ambiente de desenvolvimento---------------------
+                                false &&
 
                                 <button id="homescreen_accept_btn" onClick={openDataRegistryScreen} type="button">Registro de cursos</button>
+                            //--------------------------------------------------------------------------------------------------------------------------
                             }
                         </div>
                     </form>

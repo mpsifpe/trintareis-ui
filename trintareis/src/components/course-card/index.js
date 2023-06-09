@@ -16,9 +16,13 @@ function CourseCard(props) {
   useEffect(() => {
     const abortController = new AbortController()
 
-    if (!isEmpty(props.title) && props.title != undefined){ setTitle(props.title)  }
+    if (!isEmpty(props.title) && props.title != undefined){ 
+      (props.title.length > 30) ? 
+        setTitle((props.title.substring(0, 27)) + "...") : 
+        setTitle(props.title) }
 
-    if (!isEmpty(props.description) && props.description != undefined){ setDdescription(props.description)  }
+    if (!isEmpty(props.description) && props.description != undefined){ 
+      setDdescription(props.description)  }
     
     switch (props.type){
       case "course":
@@ -67,7 +71,7 @@ function CourseCard(props) {
       <Accordion.Item className="AccordionItem" value={"item-3"} type="single">
         <AccordionTrigger>{title}</AccordionTrigger>
         <AccordionContent>
-          <div>{description}</div>
+          <div><strong>{props.title}</strong><br/><br/>{description}</div>
           {moreButton}
         </AccordionContent>
       </Accordion.Item>

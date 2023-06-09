@@ -1,6 +1,7 @@
 import './institution-screen.css';
 import React, {useEffect, useState} from 'react';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useParams, Link } from 'react-router-dom';
+import { IoChevronBack } from "react-icons/io5";
 
 import api from '../../config/api';
 import Header from '../../components/header/index';
@@ -68,9 +69,17 @@ export default function InstitutionScreen() {
             <Header firstLogin={location.state.firstLogin} profilePhoto={location.state.profilePhoto} coverPhoto={location.state.coverPhoto} userData={location.state.userData} origin="careerDetail"/>
                 <div className="div__main_courseDetail">
                     <div className="div__title_courseDetail">
+                        <Link to={{pathname: "/explore",
+                                    state: {
+                                        firstLogin: location.state.firstLogin,
+                                        profilePhoto: location.state.profilePhoto,
+                                        coverPhoto: location.state.coverPhoto,
+                                        userData: location.state.userData,
+                                        origin: "institution-detail"}}}>
+                            <div className='chevron'><IoChevronBack/></div>
+                        </Link>
                         <span>{name}</span>
                     </div>
-                    
                     <span className='note'>{info}</span>
                     <section className="section_courseDetail_list" id="sec-bd5e"> 
                         {(ready === true) && customizations}
