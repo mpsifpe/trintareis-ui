@@ -137,8 +137,8 @@
   font-size: 16px;
 }
 
-.feedPost__util {
-  background-color: yellow;
+.feedPost__util{
+  background-color: white;
   display: flex;
   justify-content: space-around;
   align-items: center;

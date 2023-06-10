@@ -56,8 +56,8 @@ export default function (props) {
             </div>
         );
 
-        if (!isEmpty(props.share)) {
-            setTotalComentario(props.comments.length)
+        if (!isEmpty(props.coments)) {
+            setTotalComentario(props.coments.length)
         }
 
         if (!isEmpty(props.profilePhoto)) {
@@ -227,7 +227,7 @@ export default function (props) {
                     <div className="feedPost__reaction">
                         <div className="feed-content-bt-like">
                             <HiOutlineAnnotation />
-                            <span onClick={() => comentarios({ props: props }, { comentario: props.comments })}>Comentários {totalComentario}</span>
+                            <span onClick={() => comentarios({ props: props }, { comentario: props.coments })}>Comentários {totalComentario}</span>
                         </div>
                     </div>
 
