@@ -14,6 +14,7 @@ const ModalFooter = styled.div`
     border-top: 0px solid #EAEAEA;
     padding: 1rem;
     opacity: 1;
+    margin-top: 10px;
     ${isButtonsRow && modalFooterModifiers.isAButtonsRow()}
   `}
 `;

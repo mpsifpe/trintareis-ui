@@ -11,7 +11,8 @@ import user from '../../resources/user.png';
 import firebase from '../../config/firebase';
 import NotyfContext from '../notyf-toast/NotyfContext';
 import { isEmpty, isURL } from '../../helpers/helper';
-import { homeRefreshContext } from '../../view/home';
+import { homeRefreshContext as homeContext } from '../../view/home';
+import { homeRefreshContext as profileContext } from '../../view/profile';
 import { GoThreeBars } from "react-icons/go";
 
 
@@ -20,7 +21,8 @@ export default function (props) {
     const notyf = useContext(NotyfContext);
     const loggedUser = useSelector(state => state.emailUser);
     const date = new Date();
-    const { homeRefresh, setHomeRefresh } = useContext(homeRefreshContext);
+
+    const {homeRefresh, setHomeRefresh} = (props.origin === "home") ? useContext(homeContext) : useContext(profileContext);
 
     const [media, setMedia] = useState(<></>);
     const [like, setLike] = useState(0);
@@ -69,7 +71,9 @@ export default function (props) {
                     {/*<HiOutlinePencilAlt className="options_button"/>*/}
                     <AlertDialog.Root>
                         <AlertDialog.Trigger asChild>
-                            <HiOutlineTrash className="options_button" />
+                            <div className="options_button" >
+                                <HiOutlineTrash />
+                            </div>
                         </AlertDialog.Trigger>
                         <AlertDialog.Portal>
                             <AlertDialog.Overlay className="AlertDialogOverlay" />
@@ -136,18 +140,18 @@ export default function (props) {
             api.get('/likes?postId=' + props.id)
                 .then((response) => {
 
-                    response.data.map(item => {
-                        if (item.userEmail == loggedUser) {
-                            setLikeStyle(<HiHeart color="red" />)
-                        }
-                    });
-                    setLoaded(true);
-                    setUpdate(!update)
+                response.data.map(item => {
+                    if(item.userEmail == loggedUser){
+                        setLikeStyle(<HiHeart color="red"/>)
+                    }
+                });
+                setLoaded(true);
+                setUpdate(!update);
 
-                }).catch(function (error) {
-                    console.log(error);
-                    notyf.error("Desculpe, ocorreu um erro");
-                })
+            }).catch(function (error) {
+                console.log(error);
+                notyf.error("Desculpe, ocorreu um erro");
+            })
         }
 
         return function cleanup() {
@@ -248,16 +252,16 @@ export default function (props) {
                 id: props.id
             }
         })
-            .then(() => {
-                notyf.success("Sua postagem foi excluída");
-            })
-            .catch(function (error) {
-                console.log(error);
-                notyf.error("Desculpe, ocorreu um erro");
-            })
-            .finally(() => {
-                setHomeRefresh(true)
-            })
+        .then(() => {
+            notyf.success("Sua postagem foi excluída");
+        })
+        .catch(function (error) {
+            console.log(error);
+            notyf.error("Desculpe, ocorreu um erro");
+        })
+        .finally(()=>{
+            setHomeRefresh(!homeRefresh);
+        })
     }
 
     function postLike(obj) {

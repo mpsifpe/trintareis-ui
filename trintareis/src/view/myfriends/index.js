@@ -26,30 +26,31 @@ export default function MyFriends() {
             params : {
                 userEmail: emailUser,
                 page: 0,
-                size: 10
+                size: 20
             }
         })
         .then(function (response) {
 
             setFriendsCount(response.data.content.length);
-            setCardList (   <span className='cards-display'>
-                                {response.data.content.map((u, i) => (
-                                                <FriendCard 
-                                                    key={i}
-                                                    idConnection={u.idConnection}
-                                                    nome={u.name}
-                                                    profilePhoto={u.profilePhoto}
-                                                    email={u.userEmail}
-                                                    profileId={u.id}
-                                                    isFriend={true}
-                                                    pending={u.pending}
-                                                    city={u.city}
-                                                    inviter={u.inviter}
-                                                /> 
-                                ))}
-                            </span>
+            setCardList (   
+                <span className='cards-display'>
+                    {response.data.content.map((profile, i) => (
+                        <FriendCard 
+                            key = {i}
+                            idConnection = {profile.idConnection}
+                            nome = {profile.name}
+                            profilePhoto = {profile.profilePhoto}
+                            email = {profile.emailUser}
+                            profileId = {profile.id}
+                            isFriend = {true}
+                            city = {profile.city}
+                            inviter = {profile.inviter}
+                            pending = {profile.pending}
+                            profileType = "PERSONAL"
+                        /> 
+                    ))}
+                </span>
             );
-            //console.log( response.data.content);
         })
         .catch(function (error) {
             console.log(error);

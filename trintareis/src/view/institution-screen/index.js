@@ -1,21 +1,22 @@
-import './career-detail-screen.css';
+import './institution-screen.css';
 import React, {useEffect, useState} from 'react';
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation, useParams, Link } from 'react-router-dom';
 import { IoChevronBack } from "react-icons/io5";
 
 import api from '../../config/api';
 import Header from '../../components/header/index';
 import CourseCard from '../../components/course-card';
 
-export default function CareerDetail() {
+export default function InstitutionScreen() {
     
     let location = useLocation();
+    let params = useParams();
 
+    const [name, setName] = useState("");
+    const [info, setInfo] = useState("");
+    const [courseData, setCourseData] = useState([]);
     const [customData, setCustomData] = useState([]);
-    const [title, setTitle] = useState("");
-    const [desc, setDesc] = useState("");
     const [customizations, setCustomizations] = useState(<></>);
-    const [instList, setInstList] = useState([]);
     const [loaded, setLoaded] = useState(false);
     const [ready, setReady] = useState(false);
     const [update, setUpdate] = useState(false);
@@ -24,40 +25,37 @@ export default function CareerDetail() {
         let abortController = new AbortController();
         
         if(!loaded){
-            setTitle(location.state.courseTitle);
-            setDesc(location.state.courseDesc);
             fetch();
         } else {
             if(!ready){
                 new Promise( (resolve, reject) => {
                     try{
+                        console.log("course" , courseData)
+                        console.log("custom" , customData)
                         setCustomizations(
-                            customData.map(course => {
-                                let name = getInstitutionName(course.institutionId)
-                                return (
+                            customData.map(custom =>
                                 <div className='course_div'>
                                     <CourseCard 
-                                        key={course.id}
-                                        id={course.id}
-                                        title={name}
-                                        description={course.courseDescriptionCustomization}
+                                        key={custom.id}
+                                        id={custom.id}
+                                        title={courseData[custom.courseId]}
+                                        description={custom.courseDescriptionCustomization}
                                         stateFirstLogin={location.state.firstLogin}
                                         stateProfilePhoto={location.state.profilePhoto} 
                                         stateCoverPhoto={location.state.coverPhoto} 
                                         stateUserData={location.state.userData}
-                                        customLink={course.descriptionLink}
+                                        customLink={custom.descriptionLink}
                                         type="custom"
                                     />
                                 </div>
-                            )})
+                            )
                         )
-                        setReady(true);
                         resolve("Promise resolved successfully");
                     } catch{
                         reject(Error("Promise rejected"));
                     }
                        
-                 })
+                }).then(()=>{setReady(true)})
             }
         }
 
@@ -69,22 +67,21 @@ export default function CareerDetail() {
     return (
         <div className="App">
             <Header firstLogin={location.state.firstLogin} profilePhoto={location.state.profilePhoto} coverPhoto={location.state.coverPhoto} userData={location.state.userData} origin="careerDetail"/>
-                <div className="div__main_custom">
-                    <div className="div__title_custom">
-                        <Link to={{pathname: "/career",
+                <div className="div__main_courseDetail">
+                    <div className="div__title_courseDetail">
+                        <Link to={{pathname: "/explore",
                                     state: {
                                         firstLogin: location.state.firstLogin,
                                         profilePhoto: location.state.profilePhoto,
                                         coverPhoto: location.state.coverPhoto,
                                         userData: location.state.userData,
-                                        origin: "career-detail"}}}>
+                                        origin: "institution-detail"}}}>
                             <div className='chevron'><IoChevronBack/></div>
                         </Link>
-                        <span>{title}</span>
+                        <span>{name}</span>
                     </div>
-                    <span className='note'>{desc}</span>
-
-                    <section className="section_course_list" id="sec-bd5e">
+                    <span className='note'>{info}</span>
+                    <section className="section_courseDetail_list" id="sec-bd5e"> 
                         {(ready === true) && customizations}
                     </section>
                 </div>
@@ -92,29 +89,36 @@ export default function CareerDetail() {
     )
 
     function fetch(){
-
-        api.get('/customization/get-by-course-id?courseId=' + location.state.courseID)
-        .then( custom => { setCustomData(custom.data) })
-        .catch( error => { console.log(error) })
+        
+        api.get('/profile/get-by-id/'+ params.id)
+        .then( profiles => { 
+            setName(profiles.data.userName);
+            setInfo(profiles.data.profileInformation);
+         })
+        .catch( error  => { console.log(error) })
         .finally(()=>{
-            api.get('/profile/get-by-profile-type?profileType=INSTITUTIONAL')
-            .then( profiles => { 
-                setInstList(profiles.data);
+            api.get('/course')
+            .then( courses => {
+                let list = {};
+                
+                for (let i = 0; i < courses.data.length; i++){
+                    list[courses.data[i].id] = courses.data[i].title;
+                    if (i === (courses.data.length - 1)){
+                        setCourseData(list) 
+                        console.log(list)
+                    }
+                }
             })
-            .catch((error) => { console.log(error) })
-            . finally(()=>{
-                setLoaded(true);
-                setUpdate(!update);
-            })        
+            .catch( error  => { console.log(error) })
+            .finally(()=>{
+                api.get('/customization/get-all-customization?institutionId=' + params.id)
+                .then( custom => { setCustomData(custom.data) })
+                .catch( error => { console.log(error) })
+                .finally(()=>{
+                    setLoaded(true);
+                    setUpdate(!update);
+                })           
+            })
         })
     }    
-
-    function getInstitutionName(id){
-        for(let i = 0; i<instList.length; i++){
-            if(instList[i].id === id){
-                return instList[i].userName
-            }
-        }
-    }
-
 }

@@ -3,13 +3,13 @@ import './recoveryPassword.css';
 
 import firebase from '../../config/firebase';
 import 'firebase/auth';
-import { Link } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 
-import Header from '../../components/header-recoveryPassword/index';
+import Header from '../../components/header-login/index';
 
 function RecoveryPassword() {
     const [email, setEmail] = useState();
-    // const [msg, setMsg] = useState();
+    const [redirect, setRedirect] = useState(<></>);
 
     function recoveryPassword() {
         firebase.auth().sendPasswordResetEmail(email).then(result => {
@@ -27,18 +27,17 @@ function RecoveryPassword() {
             <div className="div__form_main">
                 <form className="div__form">
                     <h3 className="mb-3 font-weight-bold div__form_itens">Esqueceu a senha?</h3>
-                    <p className="div__form_itens">Informe o e-mail da conta</p>
-                    <input onChange={(e => setEmail(e.target.value))} value={email} type="email" className="form-control my-2" placeholder="E-mail" />
-                    {/* <span>{msg}</span> */}
-                    <button onClick={recoveryPassword} type="button" className="btn btn-enviar">Recuperar Senha</button>
-                    <div className='btn-backhome-div'>
-                        <Link to="/login">
-                            <button type="button" className="btn-backhome">Voltar</button>
-                        </Link>
+                    <div className="textfield" style={{alignItems:"center"}}>
+                        <span className="textfield">Informe o e-mail da conta</span>
+                        <input onChange={(e => setEmail(e.target.value))} value={email} type="email" className="form-control" placeholder="E-mail" />
+                        <div className='buttons'>
+                            <button onClick={recoveryPassword} type="button" className="btn-enviar">Recuperar Senha</button><br/>
+                            <button onClick={()=>{setRedirect(<Redirect to={{pathname: '/login'}}/>)}} type="button" className="btn-backhome">Voltar</button>                    
+                        </div>
                     </div>
                 </form>
             </div>
-
+        {redirect}
         </div>
 
     )

@@ -85,13 +85,13 @@ function Login() {
                             details: response.data.details,
                             region: response.data.region,
                             city: response.data.city })
-        
+                            
                         if(!isEmpty(response.data.profilePhoto)) {  setProfilePhoto(response.data.profilePhoto)
                         } else {  setProfilePhoto("") };
                         
                         if(!isEmpty(response.data.coverPhoto)) {  setCoverPhoto(response.data.coverPhoto)
                         } else {  setCoverPhoto("") };
-            
+                        
                         loginExists.push(true);
                     }
                 })
@@ -99,6 +99,11 @@ function Login() {
                     console.log(error)
 
                     switch(error.code) {
+                        case 'ERR_BAD_RESPONSE':
+                            dispatch({ type: 'LOG_OUT' });
+                            notyf.error("Desculpe, ocorreu um erro no servidor");
+                            setLoginRedirect(<Redirect to='/login'/>);
+                            break;
                         case 'ERR_NETWORK':
                             dispatch({ type: 'LOG_OUT' });
                             notyf.error("Desculpe, ocorreu um erro no servidor");
@@ -141,11 +146,11 @@ function Login() {
                         <h1 className="title">Bem-vindo de volta!</h1>
                         <p className="subtitle">Informe seu email e senha de cadastro para entrar</p>
                         <fieldset className="textfield">
-                            <span className="textfield">E-mail</span>
+                            <span className="textfield" style={{float:"left"}}>E-mail</span>
                             <input id="login2_email_npt" onChange={(e) => setEmail(e.target.value)} onKeyDown={(e) => focusChangeOnEnter(e, passwordRef)} type="email" className="form-control" placeholder="e-mail" autoFocus/>
                         </fieldset>
                         <fieldset className="textfield">
-                            <span className="textfield">Senha</span>
+                            <span className="textfield" style={{float:"left"}}>Senha</span>
                             <input id="login2_passw_npt" onChange={(e) => setSenha(e.target.value)} onKeyDown={(e) => enterHandler(e, singIn)} ref={passwordRef} type="password" className="form-control" placeholder="senha" />
                         </fieldset>
                         <div className="link__recovery">

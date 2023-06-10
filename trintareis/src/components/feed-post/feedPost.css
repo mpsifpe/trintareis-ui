@@ -61,11 +61,12 @@
 
 .DialogButton.red {
   background-color: red;
-  color: red;
+  color: white;
 }
 
 .DialogButton.red:hover {
   background-color: var(--red5);
+  color: red;
 }
 
 .DialogButton.mauve {

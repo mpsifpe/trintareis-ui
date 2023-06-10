@@ -10,14 +10,56 @@ function CourseCard(props) {
 
   const [title, setTitle] = useState("");
   const [description, setDdescription] = useState("");
+  const [moreButton, setMoreButton] = useState(<></>);
+  const [customLink, setCustomLink] = useState("");
 
   useEffect(() => {
     const abortController = new AbortController()
 
-    if (!isEmpty(props.title) && props.title != undefined){ setTitle(props.title)  }
-    if (!isEmpty(props.description) && props.description != undefined){ setDdescription(props.description)  }
+    if (!isEmpty(props.title) && props.title != undefined){ 
+      (props.title.length > 30) ? 
+        setTitle((props.title.substring(0, 27)) + "...") : 
+        setTitle(props.title) }
 
-    //console.log(props)
+    if (!isEmpty(props.description) && props.description != undefined){ 
+      setDdescription(props.description)  }
+    
+    switch (props.type){
+      case "course":
+        setMoreButton(
+          <div>
+              <Link to={{
+                    pathname: "/careerDetail/" + props.id,
+                    state: {
+                      firstLogin: props.stateFirstLogin,
+                      profilePhoto: props.stateProfilePhoto,
+                      coverPhoto: props.stateCoverPhoto,
+                      userData: props.stateUserData,
+                      origin: "career",
+                      courseID: props.id,
+                      courseTitle: props.title,
+                      courseDesc: props.description,
+                      institutions: props.institutions }}}>
+                <button className="more_button">
+                  <label className='button_label'>Saiba mais</label>
+                </button>
+              </Link>
+          </div>
+        )
+        break;
+      
+        case "custom":
+          setMoreButton(
+            <div>
+              <a href={props.customLink} target="_blank">
+                <button className="more_button">
+                  <label className='button_label'>Acesse o site</label>
+                </button>
+              </a>
+            </div>
+          )
+        break;
+    }
 
     return function cleanup() {
         abortController.abort()
@@ -29,20 +71,8 @@ function CourseCard(props) {
       <Accordion.Item className="AccordionItem" value={"item-3"} type="single">
         <AccordionTrigger>{title}</AccordionTrigger>
         <AccordionContent>
-          <div>{description}</div>
-          <Link to={{pathname: "/careerDetail/" + props.id,
-                      state: {
-                        firstLogin: props.stateFirstLogin,
-                        profilePhoto: props.stateProfilePhoto,
-                        coverPhoto: props.stateCoverPhoto,
-                        userData: props.stateUserData,
-                        origin: "career",
-                        courseID: props.id,
-                        courseTitle: title,
-                        courseDesc: description,
-                        institutions: props.institutions }}}>
-            <button className="more_button"> <label className='button_label'>SAIBA MAIS</label> </button>
-          </Link>
+          <div><strong>{props.title}</strong><br/><br/>{description}</div>
+          {moreButton}
         </AccordionContent>
       </Accordion.Item>
     </Accordion.Root>

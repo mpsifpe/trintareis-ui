@@ -1,0 +1,71 @@
+.cards-display{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.div__main_courseDetail{
+    width: 80%;
+    margin-left: 10%;
+    margin-right: 10%;
+    background-color: white;
+    border-radius: 15px;
+    padding: 10px;
+    margin-top: 15px; 
+  }
+  
+  .div__title_courseDetail{
+    margin-left: 0px;
+    font-size: 28px;
+    font-style: bold;
+    display: flex;
+  }
+  
+  .div__title_courseDetail span{
+    margin-left: 5px;
+    margin-bottom: 5px;
+    margin-top: 3px;
+    font-size: 28px;
+    font-style: bold;
+  }
+  
+  .section_courseDetail_list{
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    margin-top: 10px;
+  }
+
+  .course_div{
+    position: relative;
+  }
+
+  .note{
+    margin-left: 10px;
+    margin-right: 15px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: large;
+  }
+
+  .chevron{
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+  
+  base {
+    display: none;
+  }
+  /* ESSA PROPRIEDADE ESTÁ INTERFERINDO NO SPAN DO HEADER, VERIFICAR DEPOIS*/
+  a {
+    color: black;
+  }
+  a:hover {
+    color: black;
+  }
+
+  .desc{
+    max-width: 75%;
+    margin-top: 10px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: justify;
+  }
