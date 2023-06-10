@@ -58,6 +58,7 @@ export default function (props) {
 
         if (!isEmpty(props.coments)) {
             setTotalComentario(props.coments.length)
+            console.log(props.coments)
         }
 
         if (!isEmpty(props.profilePhoto)) {
@@ -628,15 +629,21 @@ export default function (props) {
             "postId": obj.props.id,
             "text": text,
             "userEmail": loggedUser
-        }).then(function (response) {
+        })
+        .then(function (response) {
             if (response.status === 201) {
                 notyf.success("Comentário criado com sucesso!");
                 document.getElementById("comment").value = '';
             }
-        }).catch(function (error) {
+        })
+        .catch(function (error) {
             console.log(error.status)
             notyf.error("Ocorreu um erro, favor tente novamente");
         })
+        .finally(()=>{
+            setHomeRefresh(!homeRefresh);
+        })
+        
     }
 
     function limparComentario(obj) {

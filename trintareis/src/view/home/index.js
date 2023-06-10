@@ -273,7 +273,7 @@ export default function Home() {
                                 profileId={item.profileId}
                                 like={item.likes}
                                 share={item.share}
-                                coments={item.coments}
+                                coments={item.comments}
                                 tipo={item.typePost}
                                 stateFirstLogin={location.state.firstLogin}
                                 stateProfilePhoto={location.state.profilePhoto} 
@@ -287,10 +287,6 @@ export default function Home() {
                     </div>
                 </div>    
             );
-
-            (response.data.content.length < 10) ? setHasMore(false) : setHasMore(true);
-            //setPage(page+1);
-            setVisible(true);
         })
         .catch((error)=>{
             console.log(error)
@@ -337,14 +333,16 @@ export default function Home() {
                     console.log(docRef);
                     setButton(<button type="button" disabled={false} onClick={clickButtonHandle}>Postar</button>);
                     closePost();
-                    setHomeRefresh(!homeRefresh);
     
                 }).catch((error) => {
                     console.error("Error adding document: ", error);
                     notyf.error("Opa, ocorreu um erro. Favor tentar novamente mais tarde");
                     setButton(<button type="button" disabled={false} onClick={clickButtonHandle}>Postar</button>);
                     setHomeRefresh(!homeRefresh);
-                });
+                })
+                .finally(()=>{
+                    setHomeRefresh(!homeRefresh);
+                })
             });
         }
         
@@ -368,12 +366,14 @@ export default function Home() {
                 console.log(docRef);
                 setButton(<button type="button" disabled={false} onClick={clickButtonHandle}>Postar</button>);
                 closePost();
-                setHomeRefresh(!homeRefresh);
 
             }).catch((error) => {
                 console.error("Error adding document: ", error);
                 notyf.error("Opa, ocorreu um erro. Favor tentar novamente mais tarde");
                 setButton(<button type="button" disabled={false} onClick={clickButtonHandle}>Postar</button>);
+                setHomeRefresh(!homeRefresh);
+            })
+            .finally(()=>{
                 setHomeRefresh(!homeRefresh);
             })
 
@@ -399,8 +399,12 @@ export default function Home() {
             }).catch((error) => {
                 console.error("Error adding document: ", error);
                 notyf.error("Opa, ocorreu um erro. Favor tentar novamente mais tarde");
-                setButton(<button type="button" disabled={false} onClick={clickButtonHandle}>Postar</button>)   });
-                setHomeRefresh(!homeRefresh);
+                setButton(<button type="button" disabled={false} onClick={clickButtonHandle}>Postar</button>)
+            })
+            .finally(()=>{
+                    setHomeRefresh(!homeRefresh);
+                })
+                
         }
     }
 
