@@ -13,6 +13,8 @@ import NotyfContext from '../notyf-toast/NotyfContext';
 import { isEmpty, isURL } from '../../helpers/helper';
 import { homeRefreshContext } from '../../view/home';
 import { GoThreeBars } from "react-icons/go";
+import { homeRefreshContext as homeContext } from '../../view/home';
+import { homeRefreshContext as profileContext } from '../../view/profile';
 
 
 export default function (props) {
@@ -20,7 +22,7 @@ export default function (props) {
     const notyf = useContext(NotyfContext);
     const loggedUser = useSelector(state => state.emailUser);
     const date = new Date();
-    const { homeRefresh, setHomeRefresh } = useContext(homeRefreshContext);
+    const {homeRefresh, setHomeRefresh} = (props.origin === "home") ? useContext(homeContext) : useContext(profileContext);
 
     const [media, setMedia] = useState(<></>);
     const [like, setLike] = useState(0);
@@ -68,7 +70,9 @@ export default function (props) {
                     {/*<HiOutlinePencilAlt className="options_button"/>*/}
                     <AlertDialog.Root>
                         <AlertDialog.Trigger asChild>
-                            <HiOutlineTrash className="options_button" />
+                            <div className="options_button" >
+                                <HiOutlineTrash />
+                            </div>
                         </AlertDialog.Trigger>
                         <AlertDialog.Portal>
                             <AlertDialog.Overlay className="AlertDialogOverlay" />
@@ -251,8 +255,9 @@ export default function (props) {
         }).catch(function (error) {
             console.log(error);
             notyf.error("Desculpe, ocorreu um erro");
-        }).finally(() => {
-            setHomeRefresh(true)
+        })
+        .finally(()=>{
+            setHomeRefresh(!homeRefresh);
         })
     }
 

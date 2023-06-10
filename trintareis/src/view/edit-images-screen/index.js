@@ -28,8 +28,8 @@ export default function EditImagesScreen(){
     useEffect(() => {
         let abortController = new AbortController();
 
-        console.log("profile url>>> " + isURL(location.state.profilePhoto))
-        console.log("cover url>>> " + isURL(location.state.coverPhoto))
+        //console.log("profile url>>> " + isURL(location.state.profilePhoto))
+        //console.log("cover url>>> " + isURL(location.state.coverPhoto))
 
         if(location.state.image === "profile"){
             setTitleText("Editar foto do perfil");
@@ -37,7 +37,7 @@ export default function EditImagesScreen(){
                 <div className="container">
                     <input onChange={(e) => setNewProfileImage(e.target.files[0])} type="file" className="w-60 form-control" style={{height:"40px"}} accept=".jpg, .png, .jpeg, .bmp"/>
                     { isEmpty(location.state.profilePhoto) ? <></> :
-                      <button onClick={()=>{deletePhotoClick("profilePhoto")}} type="button" className="btn btn-salvar fw-bold bor" style={{height:"40px", width:"90px", marginLeft:"5px", marginTop:"-1px"}}>Apagar</button> }
+                      <button onClick={()=>{deletePhotoClick("profilePhoto")}} type="button" className="btn btn-salvar fw-bold bor" style={{height:"40px", width:"fit-content", marginLeft:"5px", marginTop:"-1px"}}>Apagar</button> }
                 </div>
             ); 
         } 
@@ -47,7 +47,7 @@ export default function EditImagesScreen(){
                 <div className="container">
                     <input onChange={(e) => setNewCoverImage(e.target.files[0])} type="file" className="w-60 form-control" style={{height:"40px"}} accept=".jpg, .png, .jpeg, .bmp"/>
                     { isEmpty(location.state.coverPhoto) ? <></> :
-                        <button onClick={()=>{deletePhotoClick("coverPhoto")}} type="button" className="btn btn-salvar fw-bold bor" style={{height:"40px", width:"90px", marginLeft:"5px", marginTop:"-1px"}}>Apagar</button> }
+                        <button onClick={()=>{deletePhotoClick("coverPhoto")}} type="button" className="btn btn-salvar fw-bold bor" style={{height:"40px", width:"fit-content", marginLeft:"5px", marginTop:"-1px"}}>Apagar</button> }
                 </div>
             );
          }
@@ -119,6 +119,19 @@ export default function EditImagesScreen(){
                         "emailUser": emailUser,
                         "region": location.state.userData.region,
                         "userName": location.state.userData.userName
+                    }).then(()=>{
+                        setRedirect(
+                            <Redirect to={{ 
+                                pathname: ("/profile/" + location.state.userData.id), 
+                                state: {
+                                    firstLogin: false, 
+                                    profilePhoto: "",
+                                    coverPhoto: location.state.coverPhoto, 
+                                    userData: location.state.userData,
+                                    origin: "edit-profile-image-save"
+                                }}}
+                            />
+                        )
                     })
                 })
                 .catch(function (error) {
@@ -127,27 +140,13 @@ export default function EditImagesScreen(){
                     notyf.error("Desculpe, ocorreu um erro ao apagar sua foto");
                     setRedirect(
                         <Redirect to={{ 
-                            pathname: '/profile', 
+                            pathname: ("/profile/" + location.state.userData.id),
                             state: {
                                 firstLogin: false, 
                                 profilePhoto: location.state.profilePhoto,
                                 coverPhoto: location.state.coverPhoto, 
                                 userData: location.state.userData,
                                 origin: "edit-images-screen-error"
-                            }}}
-                        />
-                    )
-                })
-                .finally(()=>{
-                    setRedirect(
-                        <Redirect to={{ 
-                            pathname: ("/profile/" + location.state.userData.id), 
-                            state: {
-                                firstLogin: false, 
-                                profilePhoto: "",
-                                coverPhoto: location.state.coverPhoto, 
-                                userData: location.state.userData,
-                                origin: "edit-images-screen-save"
                             }}}
                         />
                     )
@@ -166,6 +165,19 @@ export default function EditImagesScreen(){
                         "emailUser": emailUser,
                         "region": location.state.userData.region,
                         "userName": location.state.userData.userName
+                    }).then(()=>{
+                        setRedirect(
+                            <Redirect to={{ 
+                                pathname: ("/profile/" + location.state.userData.id), 
+                                state: {
+                                    firstLogin: false, 
+                                    profilePhoto: "",
+                                    coverPhoto: location.state.coverPhoto, 
+                                    userData: location.state.userData,
+                                    origin: "edit-profile-image-save"
+                                }}}
+                            />
+                        )
                     })
                 })
                 .catch(function (error) {
@@ -174,27 +186,13 @@ export default function EditImagesScreen(){
                     notyf.error("Desculpe, ocorreu um erro ao apagar sua foto");
                     setRedirect(
                         <Redirect to={{ 
-                            pathname: '/profile', 
+                            pathname: ("/profile/" + location.state.userData.id),
                             state: {
                                 firstLogin: false, 
                                 profilePhoto: location.state.profilePhoto,
                                 coverPhoto: location.state.coverPhoto, 
                                 userData: location.state.userData,
                                 origin: "edit-images-screen-error"
-                            }}}
-                        />
-                    )
-                })
-                .finally(()=>{
-                    setRedirect(
-                        <Redirect to={{ 
-                            pathname: ("/profile/" + location.state.userData.id), 
-                            state: {
-                                firstLogin: false, 
-                                profilePhoto: "",
-                                coverPhoto: location.state.coverPhoto, 
-                                userData: location.state.userData,
-                                origin: "edit-images-screen-save"
                             }}}
                         />
                     )
@@ -217,6 +215,19 @@ export default function EditImagesScreen(){
                         "emailUser": emailUser,
                         "region": location.state.userData.region,
                         "userName": location.state.userData.userName
+                    }).then(()=>{
+                        setRedirect(
+                            <Redirect to={{ 
+                                pathname: ("/profile/" + location.state.userData.id), 
+                                state: {
+                                    firstLogin: false, 
+                                    profilePhoto: location.state.profilePhoto,
+                                    coverPhoto: "", 
+                                    userData: location.state.userData,
+                                    origin: "edit-cover-image-save"
+                                }}}
+                            />
+                        )
                     })
                 })
                 .catch(function (error) {
@@ -225,27 +236,13 @@ export default function EditImagesScreen(){
                     notyf.error("Desculpe, ocorreu um erro ao apagar sua foto");
                     setRedirect(
                         <Redirect to={{ 
-                            pathname: '/profile', 
+                            pathname: ("/profile/" + location.state.userData.id), 
                             state: {
                                 firstLogin: false, 
                                 profilePhoto: location.state.profilePhoto,
                                 coverPhoto: location.state.coverPhoto, 
                                 userData: location.state.userData,
                                 origin: "edit-images-screen-error"
-                            }}}
-                        />
-                    )
-                })
-                .finally(()=>{
-                    setRedirect(
-                        <Redirect to={{ 
-                            pathname: ("/profile/" + location.state.userData.id), 
-                            state: {
-                                firstLogin: false, 
-                                profilePhoto: location.state.profilePhoto,
-                                coverPhoto: "", 
-                                userData: location.state.userData,
-                                origin: "edit-images-screen-save"
                             }}}
                         />
                     )
@@ -264,6 +261,19 @@ export default function EditImagesScreen(){
                         "emailUser": emailUser,
                         "region": location.state.userData.region,
                         "userName": location.state.userData.userName
+                    }).then(()=>{
+                        setRedirect(
+                            <Redirect to={{ 
+                                pathname: ("/profile/" + location.state.userData.id), 
+                                state: {
+                                    firstLogin: false, 
+                                    profilePhoto: location.state.profilePhoto,
+                                    coverPhoto: "", 
+                                    userData: location.state.userData,
+                                    origin: "edit-cover-image-save"
+                                }}}
+                            />
+                        )
                     })
                 })
                 .catch(function (error) {
@@ -272,27 +282,13 @@ export default function EditImagesScreen(){
                     notyf.error("Desculpe, ocorreu um erro ao apagar sua foto");
                     setRedirect(
                         <Redirect to={{ 
-                            pathname: '/profile', 
+                            pathname: ("/profile/" + location.state.userData.id), 
                             state: {
                                 firstLogin: false, 
                                 profilePhoto: location.state.profilePhoto,
                                 coverPhoto: location.state.coverPhoto, 
                                 userData: location.state.userData,
                                 origin: "edit-images-screen-error"
-                            }}}
-                        />
-                    )
-                })
-                .finally(()=>{
-                    setRedirect(
-                        <Redirect to={{ 
-                            pathname: ("/profile/" + location.state.userData.id), 
-                            state: {
-                                firstLogin: false, 
-                                profilePhoto: location.state.profilePhoto,
-                                coverPhoto: "", 
-                                userData: location.state.userData,
-                                origin: "edit-images-screen-save"
                             }}}
                         />
                     )
@@ -321,7 +317,8 @@ export default function EditImagesScreen(){
                         "emailUser": emailUser,
                         "region": location.state.userData.region,
                         "userName": location.state.userData.userName
-                    }).catch(()=>{
+                    })
+                    .catch(()=>{
                         storage.ref("profile_images/" + profileImageName).delete();
                         notyf.error("Desculpe, ocorreu um erro ao atualizar a imagem");
                         setRedirect(
@@ -333,6 +330,20 @@ export default function EditImagesScreen(){
                                     coverPhoto: location.state.coverPhoto, 
                                     userData: location.state.userData,
                                     origin: "edit-images-screen-error"
+                                }}}
+                            />
+                        )
+                    })
+                    .finally(()=>{
+                        setRedirect(
+                            <Redirect to={{ 
+                                pathname: ("/profile/" + location.state.userData.id), 
+                                state: {
+                                    firstLogin: false, 
+                                    profilePhoto: profileImageName,
+                                    coverPhoto: location.state.coverPhoto, 
+                                    userData: location.state.userData,
+                                    origin: "edit-profile-image-save"
                                 }}}
                             />
                         )
@@ -351,20 +362,6 @@ export default function EditImagesScreen(){
                                 coverPhoto: location.state.coverPhoto, 
                                 userData: location.state.userData,
                                 origin: "edit-images-screen-error"
-                            }}}
-                        />
-                    )
-                })
-                .finally(()=>{
-                    setRedirect(
-                        <Redirect to={{ 
-                            pathname: ("/profile/" + location.state.userData.id), 
-                            state: {
-                                firstLogin: false, 
-                                profilePhoto: profileImageName,
-                                coverPhoto: location.state.coverPhoto, 
-                                userData: location.state.userData,
-                                origin: "edit-images-screen-save"
                             }}}
                         />
                     )
@@ -404,7 +401,20 @@ export default function EditImagesScreen(){
                                 />
                             )
                         }) 
-                        
+                        .finally(()=>{
+                            setRedirect(
+                                <Redirect to={{ 
+                                    pathname: ("/profile/" + location.state.userData.id), 
+                                    state: {
+                                        firstLogin: false, 
+                                        profilePhoto: profileImageName,
+                                        coverPhoto: location.state.coverPhoto, 
+                                        userData: location.state.userData,
+                                        origin: "edit-profile-image-save"
+                                    }}}
+                                />
+                            )
+                        })
                     })
                     .catch((error) => {
                         console.log("Erro ao carregar profilePhoto - ");
@@ -419,20 +429,6 @@ export default function EditImagesScreen(){
                                     coverPhoto: location.state.coverPhoto, 
                                     userData: location.state.userData,
                                     origin: "edit-images-screen-error"
-                                }}}
-                            />
-                        )
-                    })
-                    .finally(()=>{
-                        setRedirect(
-                            <Redirect to={{ 
-                                pathname: ("/profile/" + location.state.userData.id), 
-                                state: {
-                                    firstLogin: false, 
-                                    profilePhoto: profileImageName,
-                                    coverPhoto: location.state.coverPhoto, 
-                                    userData: location.state.userData,
-                                    origin: "edit-images-screen-save"
                                 }}}
                             />
                         )
@@ -479,7 +475,8 @@ export default function EditImagesScreen(){
                         "emailUser": emailUser,
                         "region": location.state.userData.region,
                         "userName": location.state.userData.userName
-                    }).catch(()=>{
+                    })
+                    .catch(()=>{
                         storage.ref("profile_images/" + coverImageName).delete();
                         notyf.error("Desculpe, ocorreu um erro ao atualizar a imagem");
                         setRedirect(
@@ -491,6 +488,20 @@ export default function EditImagesScreen(){
                                     coverPhoto: location.state.coverPhoto, 
                                     userData: location.state.userData,
                                     origin: "edit-images-screen-error"
+                                }}}
+                            />
+                        )
+                    })
+                    .finally(()=>{
+                        setRedirect(
+                            <Redirect to={{ 
+                                pathname: ("/profile/" + location.state.userData.id), 
+                                state: {
+                                    firstLogin: false, 
+                                    profilePhoto: location.state.profilePhoto,
+                                    coverPhoto: coverImageName, 
+                                    userData: location.state.userData,
+                                    origin: "edit-cover-image-save"
                                 }}}
                             />
                         )
@@ -513,20 +524,6 @@ export default function EditImagesScreen(){
                         />
                     )
                 })
-                .finally(()=>{
-                    setRedirect(
-                        <Redirect to={{ 
-                            pathname: ("/profile/" + location.state.userData.id), 
-                            state: {
-                                firstLogin: false, 
-                                profilePhoto: location.state.profilePhoto,
-                                coverPhoto: coverImageName, 
-                                userData: location.state.userData,
-                                origin: "edit-images-screen-save"
-                            }}}
-                        />
-                    )
-                })
 
         // perfil com coverPhoto
         } else {
@@ -539,9 +536,9 @@ export default function EditImagesScreen(){
                             "id": location.state.userData.id,
                             "city": location.state.userData.city,
                             "details": location.state.userData.details,
-                            "coverPhoto": location.state.coverPhoto,
+                            "coverPhoto": coverImageName,
                             "profileInformation": location.state.userData.profileInformation,
-                            "profilePhoto": coverImageName,
+                            "profilePhoto": location.state.profilePhoto,
                             "emailUser": emailUser,
                             "region": location.state.userData.region,
                             "userName": location.state.userData.userName
@@ -561,7 +558,21 @@ export default function EditImagesScreen(){
                                     }}}
                                 />
                             )
-                        }) 
+                        })
+                        .finally(()=>{
+                            setRedirect(
+                                <Redirect to={{ 
+                                    pathname: ("/profile/" + location.state.userData.id), 
+                                    state: {
+                                        firstLogin: false, 
+                                        profilePhoto: location.state.profilePhoto,
+                                        coverPhoto: coverImageName, 
+                                        userData: location.state.userData,
+                                        origin: "edit-cover-image-save"
+                                    }}}
+                                />
+                            )
+                        })
                         
                     })
                     .catch((error) => {
@@ -577,20 +588,6 @@ export default function EditImagesScreen(){
                                     coverPhoto: location.state.coverPhoto, 
                                     userData: location.state.userData,
                                     origin: "edit-images-screen-error"
-                                }}}
-                            />
-                        )
-                    })
-                    .finally(()=>{
-                        setRedirect(
-                            <Redirect to={{ 
-                                pathname: ("/profile/" + location.state.userData.id), 
-                                state: {
-                                    firstLogin: false, 
-                                    profilePhoto: coverImageName,
-                                    coverPhoto: location.state.coverPhoto, 
-                                    userData: location.state.userData,
-                                    origin: "edit-images-screen-save"
                                 }}}
                             />
                         )

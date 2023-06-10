@@ -1,6 +1,5 @@
 import './header.css';
 import '../stories/stories.css';
-import 'react-tooltip/dist/react-tooltip.css';
 
 import React, { useState, useEffect, useContext } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
@@ -132,7 +131,7 @@ function Header(props) {
                             </div>
                         </div>
                         
-                        <div className='headerLinkStyle' data-tooltip-content="Chat">
+                        <div className='headerLinkStyle' >
                             <div className="header_button" onClick={notifyBuilding} >
                                 <IoChatbubblesOutline className='icon_button'/>
                                 <span hidden={true}>Chat</span>

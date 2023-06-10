@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 import loading from '../../resources/loading.gif';
 import user from '../../resources/user.png';
 import firebase from '../../config/firebase';
-//import { notifyFriendInvite, findAndUpdateInviteNotification, notifyAcceptInvite, deleteFriendInviteNotifications } from '../../helpers/notification-helper';
+import { notifyFriendInvite, findAndUpdateInviteNotification, notifyAcceptInvite } from '../../helpers/notification-helper';
 import { isEmpty, isURL } from '../../helpers/helper';
 import api from '../../config/api';
 import NotyfContext from '../notyf-toast/NotyfContext';
@@ -34,7 +34,7 @@ export default function FriendCard(props) {
     const [cardEmail, setCardEmail] = useState("loading");
     const [cardButton, setCardButton] = useState(<button className='card-button'/>);
 
-    async function updateInfo(){ //método chamado na div principal ao montar componente
+    function updateInfo(){ //método chamado na div principal ao montar componente
         setName(<span className='friendcardLinkStyle'>{props.nome}</span>)    
 
         if(isEmpty(props.profilePhoto)) {
@@ -75,7 +75,6 @@ export default function FriendCard(props) {
         switch(profileType){
 
             case "INSTITUTIONAL":
-                //onClick={()=> window.open(details, "_blank")}
                 setCardButton(
                     <Link to={{ pathname: '/institution/' + profileId, state: { firstLogin: location.state.firstLogin, profilePhoto: location.state.profilePhoto, coverPhoto: location.state.coverPhoto, userData: location.state.userData, origin:"friend-card" } }} style={{textDecoration: "none"}}>
                         <button className='card-button'>Conhecer</button>
@@ -87,7 +86,7 @@ export default function FriendCard(props) {
                 if (isFriend){
                     if(pendingInvite){
                         if(inviter){
-                            setCardButton(<button className='card-button' onClick={clickAction}>Convidado</button>)}
+                            setCardButton(<button className='card-button' onClick={clickAction} onMouseOver={mouseHover} onMouseLeave={mouseLeave}>Convidado</button>)}
                         else {
                             setCardButton(<button className='card-button' onClick={clickAction}>Aceitar</button>)}}
                     else {
@@ -105,8 +104,6 @@ export default function FriendCard(props) {
                             <img className="friend-img" src={cardImage} alt="user image"/>
                             <div>{name}</div>
                             <p className="friend-course">{profileInfo}</p>
-                            {//<p className="friend-usertype">{cardEmail}</p>
-                            }
                         </span>
                     </Link>
                     
@@ -148,21 +145,41 @@ export default function FriendCard(props) {
             console.log(error);
             notyf.error("Desculpe, ocorreu um erro");
         })
-        //notifyFriendInvite(cardEmail,emailUser);
-
+        notifyFriendInvite(cardEmail,emailUser);
     }
 
     function acceptInvite(){
         api.put('/friends?id=' + idConnection)
-        .then((response)=>{
+        .then(()=>{
             notyf.success("Convite aceito");
             setCardButton(<button className='card-button'>Desconectar</button>);
-            //findAndUpdateInviteNotification(cardEmail, emailUser);
-            //notifyAcceptInvite(cardEmail, emailUser);  
+            findAndUpdateInviteNotification(cardEmail, emailUser);
+            notifyAcceptInvite(cardEmail, emailUser);  
         })
         .catch(function (error) {
             console.log(error);
             notyf.error("Desculpe, ocorreu um erro"); 
         })
+    }
+
+    function mouseHover(){
+        if (profileType==="PERSONAL"){
+            if (isFriend){
+                if(pendingInvite){
+                    if(inviter){
+                        setCardButton(<button className='card-button' onClick={clickAction} onMouseOver={mouseHover} onMouseLeave={mouseLeave}>Cancelar convite</button>)}}
+            }
+        }
+    }
+
+    function mouseLeave(){
+        if (profileType==="PERSONAL"){
+            if (isFriend){
+                if(pendingInvite){
+                    if(inviter){
+                        setCardButton(<button className='card-button' onClick={clickAction} onMouseOver={mouseHover} onMouseLeave={mouseLeave}>Convidado</button>)}
+                }
+            }
+        }
     }
 }

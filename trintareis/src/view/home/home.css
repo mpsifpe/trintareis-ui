@@ -20,4 +20,47 @@
     color: #f8f8f8;
     background-color: #45bd62;
     border-radius: 15px;
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+.radioButtonsForm{
+    margin-top: 5px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+    right: 0;
+    display: flex;
+}
+
+.form-check{
+    margin-right: 25px;
+}
+
+.form{
+    width: 100%;
+}
+
+.row{
+    width: 90%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.media{
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.video{
+    width: 80%;
+}
+
+.post-text{
+    width: 100%;
+}
+
+.div__description{
+    width: 100%;
 }

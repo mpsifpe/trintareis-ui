@@ -32,7 +32,7 @@ export default function ExploreScreen() {
                             idConnection = {""}
                             nome = {profile.userName}
                             profilePhoto = {profile.profilePhoto}
-                            email = {profile.userEmail}
+                            email = {profile.emailUser}
                             profileId = {profile.id}
                             profileInfo = {profile.profileInformation}
                             details = {profile.details}

@@ -15,13 +15,35 @@
     width: 100%;
     margin-top: 15px;
 }
+.div_post{
+    width: 100%;
+}
 .action_button{
     display: inline;
     white-space: nowrap;
     text-overflow: ellipsis;
     overflow: hidden;
-    width: 100%;
+    width: fit-content;
     align-content: center;
+    color: #007900;
+    border-color: #007900;
+    background-color: white;
+    border-radius: 25px;
+    border-style: solid;
+    border-width: 2px;
+    font-size: 18px;
+    font-weight: 600;
+    padding: 4px;
+    margin-top: 7px;
+    margin-bottom: 10px;
+}
+.action_button:hover{
+    color: white !important;
+    background-color: #007900 !important;
+    font-weight: 500;
+}
+.action_button_icon{
+    margin-bottom: 3px;
 }
 .main_div{
     width: 70%;
@@ -32,4 +54,21 @@
 .app{
     margin-left: auto;
     margin-right: auto;
+}
+.data{
+    font-size: 18px;
+    font-weight: normal;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.nome{
+    font-size: 30px;
+    font-weight: bold;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.div_profile_data {
+    text-decoration: none;
+    padding-top: 5px !important;
+    margin-left: 15px !important;
+    margin-bottom: 15px;
+    display: block !important;
 }
