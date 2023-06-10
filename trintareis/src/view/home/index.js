@@ -255,12 +255,11 @@ export default function Home() {
                 size: 20
             }
         })
-        .then((response)=>{
-        
+        .then((response)=>{        
             setPosts(
                 <div>
                     {
-                        response.data.content.map((item) => (                  
+                        response.data.content.map((item) => (     
                             <FeedPost key={item.id}
                                 id={item.id}
                                 img={item.photoName}
