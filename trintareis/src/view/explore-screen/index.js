@@ -23,10 +23,18 @@ export default function ExploreScreen() {
 
         api.get('/profile/get-by-profile-type?profileType=PERSONAL')
         .then(function (response) {
+            let list = [];
+
+            response.data.forEach(person => {
+                if(person.emailUser != emailUser){
+                    list.push(person)
+                }
+            });
+
             setPersonList (   
                 <span className='cards-display'>
                 {
-                    response.data.map((profile, i) => 
+                    list.map((profile, i) => 
                         <FriendCard 
                             key = {i}
                             idConnection = {""}
