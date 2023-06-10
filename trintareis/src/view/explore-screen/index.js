@@ -21,26 +21,25 @@ export default function ExploreScreen() {
     useEffect(()=>{
         let abortController = new AbortController();
 
-        api.get('/profile/get-by-profile-type?profileType=PERSONAL')
+        api.get('/friends/has-not-connection',{
+            params : {
+                userEmail: emailUser,
+                page: 0,
+                size: 20
+            }
+        })
         .then(function (response) {
-            let list = [];
-
-            response.data.forEach(person => {
-                if(person.emailUser != emailUser){
-                    list.push(person)
-                }
-            });
-
+            console.log(response.data.content)
             setPersonList (   
                 <span className='cards-display'>
                 {
-                    list.map((profile, i) => 
+                    response.data.content.map((profile, i) => 
                         <FriendCard 
                             key = {i}
                             idConnection = {""}
                             nome = {profile.userName}
                             profilePhoto = {profile.profilePhoto}
-                            email = {profile.emailUser}
+                            email = {profile.userEmail}
                             profileId = {profile.id}
                             profileInfo = {profile.profileInformation}
                             details = {profile.details}
@@ -60,23 +59,26 @@ export default function ExploreScreen() {
             setRedirect(<Redirect to={{ pathname: '/home', state: { firstLogin: location.state.firstLogin, profilePhoto: location.state.profilePhoto, coverPhoto: location.state.coverPhoto, userData: location.state.userData } }}/>)
         })
 
+        //api.get('/profile/get-by-profile-type?profileType=PERSONAL')
+        
+
         api.get('/profile/get-by-profile-type?profileType=INSTITUTIONAL')
         .then(function (response) {
             setInstList (   
                 <span className='cards-display'>
                 {
-                    response.data.map((profile, i) => 
+                    response.data.map((institution, i) => 
                         <FriendCard 
                             key={i}
                             idConnection={""}
-                            nome={profile.userName}
-                            profilePhoto={profile.profilePhoto}
-                            email={profile.userEmail}
-                            profileId={profile.id}
-                            profileInfo = {profile.profileInformation}
-                            details = {profile.details}
+                            nome={institution.userName}
+                            profilePhoto={institution.profilePhoto}
+                            email={institution.userEmail}
+                            profileId={institution.id}
+                            profileInfo = {institution.profileInformation}
+                            details = {institution.details}
                             isFriend={false}
-                            city={profile.city}
+                            city={institution.city}
                             inviter={false}
                             profileType = "INSTITUTIONAL"
                         /> 

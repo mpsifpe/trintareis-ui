@@ -145,7 +145,6 @@ export default function FriendCard(props) {
             console.log(error);
             notyf.error("Desculpe, ocorreu um erro");
         })
-        notifyFriendInvite(cardEmail,emailUser);
     }
 
     function acceptInvite(){
@@ -154,7 +153,6 @@ export default function FriendCard(props) {
             notyf.success("Convite aceito");
             setCardButton(<button className='card-button'>Desconectar</button>);
             findAndUpdateInviteNotification(cardEmail, emailUser);
-            notifyAcceptInvite(cardEmail, emailUser);  
         })
         .catch(function (error) {
             console.log(error);
