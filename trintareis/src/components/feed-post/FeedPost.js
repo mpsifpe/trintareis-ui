@@ -1,4 +1,3 @@
-
 import './feedPost.css'
 import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
@@ -14,6 +13,7 @@ import NotyfContext from '../notyf-toast/NotyfContext';
 import { isEmpty, isURL } from '../../helpers/helper';
 import { homeRefreshContext as homeContext } from '../../view/home';
 import { homeRefreshContext as profileContext } from '../../view/profile';
+import { GoThreeBars } from "react-icons/go";
 
 
 export default function (props) {
@@ -26,7 +26,7 @@ export default function (props) {
 
     const [media, setMedia] = useState(<></>);
     const [like, setLike] = useState(0);
-    const [likeStyle, setLikeStyle] = useState(<HiOutlineHeart/>);
+    const [likeStyle, setLikeStyle] = useState(<HiOutlineHeart />);
     const [curtiu, setCurtiu] = useState(0);
     const [curtir, setCurti] = useState('');
     const [totalComentario, setTotalComentario] = useState(0);
@@ -44,6 +44,8 @@ export default function (props) {
     const [update, setUpdate] = useState(false);
     const [loaded, setLoaded] = useState(false);
 
+    const [comment, setComment] = useState('');
+
     useEffect(() => {
         const abortController = new AbortController();
 
@@ -55,7 +57,7 @@ export default function (props) {
         );
 
         if (!isEmpty(props.share)) {
-            setTotalComentario(props.share)
+            setTotalComentario(props.comments.length)
         }
 
         if (!isEmpty(props.profilePhoto)) {
@@ -130,13 +132,13 @@ export default function (props) {
         }
 
         //----------------------------------- like ----------------------------------
-        if(!loaded){
+        if (!loaded) {
             if (!isEmpty(props.like)) {
                 setLike(props.like)
             }
 
             api.get('/likes?postId=' + props.id)
-            .then((response) => {
+                .then((response) => {
 
                 response.data.map(item => {
                     if(item.userEmail == loggedUser){
@@ -151,7 +153,7 @@ export default function (props) {
                 notyf.error("Desculpe, ocorreu um erro");
             })
         }
-        
+
         return function cleanup() {
             abortController.abort()
         }
@@ -218,7 +220,6 @@ export default function (props) {
                 </div>
                 <hr />
                 <div className="feedPost__util">
-
                     <div className="feedPost__reaction">
                         {botaoGostei}
                     </div>
@@ -226,7 +227,7 @@ export default function (props) {
                     <div className="feedPost__reaction">
                         <div className="feed-content-bt-like">
                             <HiOutlineAnnotation />
-                            <span onClick={() => comentarios({ id: props.id }, { comentario: props.coments })}>Comentários {totalComentario}</span>
+                            <span onClick={() => comentarios({ props: props }, { comentario: props.comments })}>Comentários {totalComentario}</span>
                         </div>
                     </div>
 
@@ -263,66 +264,67 @@ export default function (props) {
         })
     }
 
-    function postLike(obj){        
+    function postLike(obj) {
         api.post('/likes', {
             postId: obj.id,
             userEmail: loggedUser
         })
-        .then(()=>{
-            setLike(like+1);
-            setLikeStyle(<HiHeart color="red"/>)
-            setUpdate(!update)
-        })
-        .catch(function (error) {
-            console.log(error);
-            notyf.error("Desculpe, ocorreu um erro");
-        })
+            .then(() => {
+                setLike(like + 1);
+                setLikeStyle(<HiHeart color="red" />)
+                setUpdate(!update)
+            })
+            .catch(function (error) {
+                console.log(error);
+                notyf.error("Desculpe, ocorreu um erro");
+            })
     }
 
-    function deletetLike(obj){        
+    function deletetLike(obj) {
         api.delete('/likes', {
-            params : {
+            params: {
                 userEmail: loggedUser,
                 postId: obj.id
             }
         })
-        .then(()=>{      
-            (like > 1) ? setLike(like-1) : setLike(0);
-            setLikeStyle(<HiOutlineHeart/>);
-            setUpdate(!update)
-        })
-        .catch(function (error) {
-            console.log(error);
-            notyf.error("Desculpe, ocorreu um erro");
-        })
+            .then(() => {
+                (like > 1) ? setLike(like - 1) : setLike(0);
+                setLikeStyle(<HiOutlineHeart />);
+                setUpdate(!update)
+            })
+            .catch(function (error) {
+                console.log(error);
+                notyf.error("Desculpe, ocorreu um erro");
+            })
     }
 
     function funcGostei(obj) {
         api.get('/likes/', { params: { postId: obj.id } })
-        .then((response) => {
-            let flag = false;
+            .then((response) => {
+                let flag = false;
 
-            response.data.map(item => {
-                if(item.userEmail == loggedUser){
-                    flag = true;
+                response.data.map(item => {
+                    if (item.userEmail == loggedUser) {
+                        flag = true;
+                    }
+                });
+
+                if (flag) {
+                    deletetLike({ id: props.id });
                 }
-            });
 
-            if(flag){
-                deletetLike({ id: props.id });
-            }
-
-            if(!flag){
-                postLike({ id: props.id });
-            }
-        }).catch(function (error) {
-            console.log(error);
-            notyf.error("Desculpe, ocorreu um erro");
-        })
+                if (!flag) {
+                    postLike({ id: props.id });
+                }
+            }).catch(function (error) {
+                console.log(error);
+                notyf.error("Desculpe, ocorreu um erro");
+            })
     }
 
     function exibirComentario(props, idEvento) {
         let listItems2 = [];
+
         var coment = "";
         if (props.comentario) {
             coment = props.comentario;
@@ -348,29 +350,42 @@ export default function (props) {
                 reordenar.unshift(coment)
             })
 
-            console.log(reordenar);
+            console.log("props");
+            console.log(props);
+            console.log("props.comentario");
+            console.log(props.comentario);
 
+            // listItems2 = Array.prototype.forEach.call(props.comentario, number => {
             listItems2 = reordenar.map(
                 (number) =>
                     <div>
-                        <div className='feed-comentario-top'>
-                            <div className='div__foto feedPost__profile '>
-                                <img src="https://firebasestorage.googleapis.com/v0/b/trintareis-23e4c.appspot.com/o/profile_images%2Ftumblr_lq5hiexyPo1qmr4xc.bmp?alt=media&amp;token=d4bbdbd8-f761-4bba-8cab-9daa103aebbe" />
+                        <div className='div__comentario'>
+                            <div className="div__foto feedPost__profile">
+                                <img src={number.profilePhoto} />
                             </div>
                             <div className='feed-comentario-texto'>
-                                <div className='feed-comentario-metad-left'><h5>{number.autor}</h5></div>
-                                <div className='feed-content'>{number.content}</div>
-                                <div className='feed-data-modificada'>{calcularHoras(number.data, number.tipo_comentario)}</div>
+                                <div className="div__comentario_metad_left">
+                                    <div className="div__header_comment">
+                                        <div><span>{number.userName}</span></div>
+                                        <div><p>{number.profileInformation}</p></div>
+                                    </div>
+                                    <div className="div__SlOptions">
+                                        <GoThreeBars />
+                                    </div>
+                                </div>
+                                <div className='div__comment'>{number.text}</div>
+                                {/* <div className='feed-data-modificada'>{calcularHoras(number.data, number.tipo_comentario)}</div> */}
                             </div>
 
-                            <div className='feed-comentario-metad-right'>
+                            {/* <div className='feed-comentario-metad-right'>
                                 <a onClick={() => atualizarComentario({ json }, number.order, idEvento, 'true')} className="shadow-interpolacao-feed"><HiDotsVertical /></a>
-                            </div>
+                            </div> */}
                         </div>
                         <br />
                     </div>
             );
             setTodosComentarios(listItems2);
+            setUpdate(!update);
         }
     }
 
@@ -574,33 +589,54 @@ export default function (props) {
     }
 
     function comentarios(obj, comentarios) {
+        if (comentarios != null) {
+            exibirComentario(comentarios, obj.id);
+        }
 
-        sendNotificationToast()
+        setElement(
+            <div className="feedPost__profile">
+                <div className="div__coment_main">
+                    <div>
+                        <Link to={{
+                            pathname: ("/profile/" + props.profileId),
+                            state: {
+                                firstLogin: props.stateFirstLogin,
+                                profilePhoto: props.stateProfilePhoto,
+                                coverPhoto: props.stateCoverPhoto,
+                                userData: props.stateUserData,
+                                origin: ("post." + props.id)
+                            }
+                        }} style={{ textDecoration: 'none' }}>
+                            <img src={profilePhoto} />
+                        </Link>
+                    </div>
+                    <div className="div__button">
+                        <input id="comment" type='text' placeholder="Adicione um comentário..." />
+                    </div>
+                    <div className='save_button'>
+                        <button onClick={() => saveComment({ props: props })} type="submit">salvar</button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
 
-        /*
-      let listaFoto = [];
-      firebase.firestore().collection('profiles').get().then(async (result) => {
-          await result.docs.forEach(doc => {
-              listaFoto.push({ email: doc.data().emailUser, foto: doc.data().profilePhoto });
-          })
-      })
-      setListaFotos(<div>listaFoto</div>);
-      if (comentarios.comentario != null) {
-          exibirComentario(comentarios, obj.id);
-      }
-      setElement(
-          <form onSubmit={salvarComentario}>
-              <div>
-                  <h5>Comentários</h5>
-                  <div className='feedPost__util feed__coments'>
-                      <input type="textComent" className="form-control my-2" defaultValue="" id={obj.id + '_texto'} placeholder="Comentário" />
-                      <input type="hidden" value={obj.id} />
-                      <input type="submit" value="Salvar" className="w-10 btn btn-coments fw-bold bor" />
-                  </div>
-              </div>
-          </form>
-      );
-      */
+    function saveComment(obj) {
+        let text = document.getElementById("comment").value;
+
+        api.post('/comment', {
+            "postId": obj.props.id,
+            "text": text,
+            "userEmail": loggedUser
+        }).then(function (response) {
+            if (response.status === 201) {
+                notyf.success("Comentário criado com sucesso!");
+                document.getElementById("comment").value = '';
+            }
+        }).catch(function (error) {
+            console.log(error.status)
+            notyf.error("Ocorreu um erro, favor tente novamente");
+        })
     }
 
     function limparComentario(obj) {
