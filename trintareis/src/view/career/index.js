@@ -38,7 +38,7 @@ export default function Career() {
 
     let coach3Name = "Zelda Alves";
     let coach3Info = "Psicóloga";
-    let coach3Details = "Orientação vocacional";
+    let coach3Details = "Especialista em Orientação Vocacional";
     let coach3Pic = "https://firebasestorage.googleapis.com/v0/b/trintareis-23e4c.appspot.com/o/profile_images%2Fzelda%20alves%20profile.jpg?alt=media&token=c7753275-6cdc-4cfd-828e-26cb664e0daa&_gl=1*1azdm5o*_ga*MjQwMjAzNTAwLjE2MzY4MzA5Mzg.*_ga_CW55HF8NVT*MTY4NTc2MzM4Ny42LjEuMTY4NTc2MzQzMS4wLjAuMA.."
 
     const [date, setDate] = useState([]);
@@ -142,7 +142,7 @@ export default function Career() {
                                     pic = {coach3Pic}/>
                             </div>
                         </section>
-                        <Modal title='Orientação de carreira' isOpen={isCoach1Open} onClose={closeCoach1} size='large'>
+                        <Modal title='Orientação vocacional' isOpen={isCoach1Open} onClose={closeCoach1} size='large'>
                             <Modal.Content>
                                 <form className="form">
                                     <div className="row">
@@ -166,11 +166,11 @@ export default function Career() {
                             </Modal.Content>
                             <Modal.Footer>
                                 <div className="div__btn_post">
-                                    <button onClick={notifyDev}>Entrar em contato</button>
+                                    <button onClick={notifyDev}>Contratar</button>
                                 </div>
                             </Modal.Footer>
                         </Modal>
-                        <Modal title='Orientação de carreira' isOpen={isCoach2Open} onClose={closeCoach2} size='large'>
+                        <Modal title='Orientação vocacional' isOpen={isCoach2Open} onClose={closeCoach2} size='large'>
                             <Modal.Content>
                                 <form className="form">
                                     <div className="row">
@@ -194,11 +194,11 @@ export default function Career() {
                             </Modal.Content>
                             <Modal.Footer>
                                 <div className="div__btn_post">
-                                    <button onClick={notifyDev}>Entrar em contato</button>
+                                    <button onClick={notifyDev}>Contratar</button>
                                 </div>
                             </Modal.Footer>
                         </Modal>
-                        <Modal title='Orientação de carreira' isOpen={isCoach3Open} onClose={closeCoach3} size='large'>
+                        <Modal title='Orientação vocacional' isOpen={isCoach3Open} onClose={closeCoach3} size='large'>
                             <Modal.Content>
                                 <form className="form">
                                     <div className="row">
@@ -222,7 +222,7 @@ export default function Career() {
                             </Modal.Content>
                             <Modal.Footer>
                                 <div className="div__btn_post">
-                                    <button onClick={notifyDev}>Entrar em contato</button>
+                                    <button onClick={notifyDev}>Contratar</button>
                                 </div>
                             </Modal.Footer>
                         </Modal>
